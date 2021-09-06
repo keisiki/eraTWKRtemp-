@@ -1,0 +1,86 @@
+﻿;-------------------------------------------------
+;自由行動に付き合う
+;-------------------------------------------------
+@COM368
+#DIM 경과시간
+#DIM 행동완료
+#DIM 시간계수
+
+VARSET LOCAL
+
+경과시간 = FreeAct_Time(TARGET)
+SIF !경과시간
+	경과시간 = MIN(Activity_Duration:TARGET, 30)
+
+;행동완료するまで経過してたら행동완료
+IF 경과시간 >= Activity_Duration:TARGET
+	행동완료 = 1
+ELSE
+	행동완료 = 0
+ENDIF
+
+;取得ソースの倍率
+시간계수 = MAX(경과시간 / 10, 1)
+TRYCALLFORM 자유행동내용_{Activity_Type:TARGET}(TARGET, "소스", 시간계수)
+
+TIME += 경과시간
+
+RETURN 1
+
+;-------------------------------------------------
+;実行判定
+;-------------------------------------------------
+@COM_ABLE368
+;停止中は不可
+SIF FLAG:70
+	RETURN 0
+SIF !TFLAG:100
+	RETURN 0
+;一括管理
+SIF GLOBAL_COMABLE(368)
+	RETURN RESULT
+;기력0
+SIF BASE:MASTER:기력 <= 0
+	RETURN 0
+;自由行動中でない（自由行動条件参照）
+SIF !Activity_Duration:TARGET
+	RETURN 0
+;;付き合えない自由行動
+;SIF GROUPMATCH(CFLAG:TARGET:ActivityType, )
+;	RETURN 0
+RETURN 1
+
+@FreeAct_ID(ARG:0, ARGS:0, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS V_NAME                  ;作成する変数名
+#DIMS C_NAME, OBJ_ID_LAST + 1 ;データ保持
+#DIM  O_ID                    ;参照用
+IF ARGS:0 == "RESET"
+	VARSET C_NAME
+	FOR O_ID, 1, OBJ_ID_LAST + 1
+		C_NAME:O_ID = %GET_STR(, "캐릭터데이터", O_ID, "명칭")%
+	NEXT
+ELSE
+	O_ID = FINDELEMENT(C_NAME, ESCAPE(ARGS:0), , , 1)
+	CALLF MAKE_INT(V_NAME, O_ID)
+ENDIF
+
+@EXIST_FreeAct_ID
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@FreeAct_Name(ARG)
+#FUNCTIONS
+SIF Activity_Type:ARG == 0 && UNIQUE_FA_NAME:ARG != ""
+	RETURNF UNIQUE_FA_NAME:ARG
+RETURNF GET_STR(ARG, "FreeAct", Activity_Type:ARG, "명칭")
+
+@FreeAct_Time(ARG)
+#FUNCTION
+RETURNF GET_INT(0, "FreeAct", Activity_Type:ARG, "경과시간")
+
+@FreeAct_Chain(ARG)
+#FUNCTION
+RETURNF GET_INT(0, "FreeAct", Activity_Type:ARG, "CHAIN")

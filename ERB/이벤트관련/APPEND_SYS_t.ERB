@@ -1,0 +1,128 @@
+﻿;FileName_APPEND_SYS.ERB --------------------------- Rev1.00
+;era 명련사_시스템 변경계 이벤트 통괄
+;CALL		USER
+;ARG		VOID
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+;EVENT_NO_LIST ============================== FLAG:1
+;FLAG:1=1 사당 멤버 출현 이벤트
+;FLAG:1=2 마미조 내방 이벤트
+;FLAG:1=3 명련사멤버 추가 이벤트
+;FLAG:1=4 
+;FLAG:1=5 
+
+@SYS_EVENT
+;--- 이벤트 자기 정의 블록 ---
+
+;--- 이벤트 실행 블록 ---
+
+;	;자택에 SUMIKOMI_ROOM가 설정되어 있다
+	IF FLAG:더부살이캐릭터== 0 && !FLAG:더부살이이벤트 && SUMIKOMI_ROOM && CFLAG:MASTER:현재위치 != OMANEKIBEYA()
+		CALL NEWMEMBER_ADD
+	ENDIF
+;ENDIF
+
+
+
+;이하, 각 이벤트 함수 ===============================
+
+;더부살이 EX캐릭터 결정 이벤트
+@NEWMEMBER_ADD
+#DIM 인원수
+#DIM ROOM_N
+#DIM C_ID
+VARSET LOCAL
+인원수 = 0
+FOR LOCAL,1,CHARANUM
+	;이미 살고 있는 멤버는 제외한다
+	SIF CFLAG:LOCAL:신사거주 > 0
+		CONTINUE
+	SIF TALENT:LOCAL:스침
+		CONTINUE
+	IF TALENT:LOCAL:연모 && EXP:LOCAL:애정경험 >= 200 
+		인원수 ++
+		LOCAL:LOCAL = 1
+		LOCALS = %CALLNAME:LOCAL%
+	ENDIF
+NEXT
+SIF !인원수 || (DAY:3 != 1)
+	RETURN
+PRINTL
+DRAWLINE
+PRINTFORML 아침, 잠에서 일어난 %CALLNAME:MASTER%의 앞에 내방자가 나타났다
+
+PRINTFORML %LOCALS%\@ 인원수 > 1 ? 들은 # %조사만처리(LOCALS,"는")% \@ %CALLNAME:MASTER%에게 %GET_MAPNAME(MAIN_MAP)%에 살고 싶다고 말했다
+PRINTL
+IF MAIN_MAP == 2
+	PRINTFORML 연립주택에 빈 방이 있으니, 이사하는 일은 간단할 것이다
+	IF TALENT:NameToID(LOCALS):인간
+		PRINTFORMW %CALLNAME:거점_주인%에게도 특별히 거절할 이유는 없는 것 같다
+	ELSE
+		PRINTFORMW %CALLNAME:거점_주인%에게는 정체를 숨기면 된다고 %조사처리(LOCALS,"는")% 말하고 있다
+	ENDIF
+ELSEIF SUMIKOMI_ROOM == 1303 ;KR판 오리지날 주택 더부살이 패치
+	PRINTFORML %조사처리(NAME_FROM_PLACE(SUMIKOMI_ROOM),"를")% 정리하면, 두 사람 정도는 같이 살 수 있을 것이다
+ELSE
+	PRINTFORML %조사처리(NAME_FROM_PLACE(SUMIKOMI_ROOM),"를")% 개장하면, 한 사람 정도는 살 수 있을 것이다
+	PRINTFORMW %CALLNAME:거점_주인%들은 제대로 설명하면 환영해 줄 것 같다
+ENDIF
+PRINTFORML %마스터는%…
+C_ID = 1
+FOR LOCAL,1,CHARANUM
+	;이미 살고 있는 멤버는 제외한다
+	SIF CFLAG:LOCAL:신사거주 > 0
+		CONTINUE
+	IF TALENT:LOCAL:연모 && EXP:LOCAL:애정경험 >= 200
+		C_ID = LOCAL
+		PRINTFORML [{LOCAL}] - %CALLNAME:LOCAL%의 이사를 인정한다
+	ENDIF
+NEXT
+PRINTFORML [999] - 인정하지 않는다
+$INPUT_LOOP
+INPUT
+IF RESULT == 999
+	PRINTFORMW %마스터가% 고개를 가로젓자 %LOCALS%\@ 인원수 > 1 ? 들은 # %조사만처리(LOCALS,"는")% \@ 아쉽다는 듯이 고개를 숙이고 %CALLNAME:MASTER%의 방을 뒤로 했다…
+	;이 방식이라면 한사람 밖에 말을 부를 수 없지만 좋은 방법은 없는 것인가
+	;우선 다수의 경우에 각각의 캐릭터의 말을 호출할 수 있도록(듯이) 해 본다, 다만 실제로 할 수 있을지 어떨지는 테스트 되어 있지 않기 때문에 자신은 없다
+	IF 인원수 > 1
+		FOR LOCAL,1,CHARANUM
+			;이미 살고 있는 멤버는 제외한다
+			SIF CFLAG:LOCAL:신사거주 > 0
+				CONTINUE
+			IF TALENT:LOCAL:연모 && EXP:LOCAL:애정경험 >= 200
+				CALL KOJO_MESSAGE_SEND("EVENT",19,LOCAL,2,0)
+				PRINTL 
+			ENDIF
+		NEXT
+	ELSE
+		CALL KOJO_MESSAGE_SEND("EVENT",19,C_ID,2,0)
+	ENDIF
+	RETURN 0
+ELSEIF RESULT >= CHARANUM
+	CLEARLINE 1
+	GOTO INPUT_LOOP
+ELSEIF !LOCAL:RESULT
+	CLEARLINE 1
+	GOTO INPUT_LOOP
+ENDIF
+
+IF SUMIKOMI_ROOM == 1303
+	PRINTFORML %CALLNAME:RESULT%의 손을 잡고, 같이 지내고 싶다고 말하자 %조사처리(CALLNAME:RESULT,"는")% 기쁜듯이 미소짓고 있다
+	PRINTFORMW %마스터는% %조사처리(CALLNAME:RESULT,"와")% 같이 방을 정리하며, 앞으로의 계획에 대해 이야기했다…
+	PRINTL
+	PRINTFORMW - %조사처리(CALLNAME:RESULT,"와")% %GET_MAPNAME(MAIN_MAP)%에서 동거가 시작되었습니다 -
+ELSE
+	PRINTFORML %CALLNAME:RESULT%의 손을 잡고, %CALLNAME:거점_주인%에게 부탁해보겠다고 말하자 %조사처리(CALLNAME:RESULT,"는")% 기쁜듯이 미소짓고 있다
+	PRINTFORMW 그대로 %CALLNAME:거점_주인%에게 부탁하러 가자 흔쾌히 승낙해 주었다…
+	PRINTL
+	PRINTFORMW - %조사처리(CALLNAME:RESULT,"가")% 새로 %GET_MAPNAME(MAIN_MAP)%의 동료로 참가했습니다 -
+ENDIF
+PRINTL
+FLAG:더부살이캐릭터= RESULT
+CFLAG:(FLAG:더부살이캐릭터):311 = SUMIKOMI_ROOM
+CFLAG:(FLAG:더부살이캐릭터):신사거주 = SUMIKOMI_ROOM
+
+CALL KOJO_MESSAGE_SEND("EVENT",19,RESULT,1,0)
+
+CALL ROOMSETTING

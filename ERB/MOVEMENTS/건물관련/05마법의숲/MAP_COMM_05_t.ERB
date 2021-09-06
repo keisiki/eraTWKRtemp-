@@ -1,0 +1,73 @@
+﻿;--------------------------------------------------
+;	맵내 이동 처리 확장 패치 부속
+;	명련사MAP용 함수
+;--------------------------------------------------
+
+@MAP_PLACENAME_5(ARG)
+#FUNCTIONS
+#DIM PLACEID
+
+IF GET_MAPID(ARG) == MAIN_MAP
+	SELECTCASE ARG
+		CASE 501 TO (MAXROOM - 1)
+			RETURNF STR:(ARG + 8000)
+		CASE 598
+			RETURNF OMANEKI_PLACE()
+		CASE 599
+			RETURNF "스키마 공간"
+		CASE MAXROOM
+			RETURNF "숲의 밖"
+		CASEELSE
+			RETURNF "불명"
+	ENDSELECT
+ELSE
+	RETURNF "불명"
+ENDIF
+
+@MAP_VIEWING_5(AA)
+#DIMS REF AA, 0
+IF !TFLAG:맵변환
+	SELECTCASE CFLAG:MASTER:현재위치
+		CASE 510 TO 515
+			TFLAG:맵변환 = 3
+		CASE 521 TO 533
+			TFLAG:맵변환 = 2
+		CASE 534 TO 537
+			TFLAG:맵변환 = 4
+		CASEELSE
+			TFLAG:맵변환 = 1
+	ENDSELECT
+ENDIF
+CALL DRAW_INFORMATIONLINE(@"%MAPNAME:(TFLAG:맵변환)%")
+PRINTFORML 
+TRYCALLFORM MAP_FOREST_{TFLAG:맵변환}(AA)
+
+@MAP_CAN_MOVE_5(ARG, ARG:1)
+#FUNCTION
+#DIM 재택
+SELECTCASE ARG
+	;코우린도
+	CASE 502
+		IF !INRANGE(TIME,600,1080)
+			TFLAG:이동불능메시지 = ARG
+			RETURNF 0
+		ENDIF
+ENDSELECT
+RETURNF 1
+
+
+
+@MAP_CANNOT_WORD_5(ARG)
+SELECTCASE TFLAG:이동불능메시지
+	CASE 502
+		PRINTFORMW 영업시간 외다
+	CASEELSE
+ENDSELECT
+
+@MAP소개_5
+;とりあえず5行
+PRINTFORML 마리사 집과 인형관, 푹신푹신한 엘렌 가게를 중심으로 한 지역.
+PRINTFORML 아이템 없이도 조합이 가능한 장소나, 복수의 채집 포인트를 가진다.
+PRINTFORML 그 중에서도 「버섯군생지」는 이 거점을 선택했을 때만 채집 장소가 되니, 버섯계 아이템이 채집하고 싶은 경우에는 추천.
+PRINTFORML 방도 그 나름대로 많아 청소 기술 뽐내기에는 보람은 있지만, 도울 수 있는 거점 내에서의 일은 약간 적을 듯하다.
+PRINTFORML 무연총에서는 중유의 길로 이동할 수 있다.

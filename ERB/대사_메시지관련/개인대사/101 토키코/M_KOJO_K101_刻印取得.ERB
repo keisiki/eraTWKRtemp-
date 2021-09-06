@@ -1,0 +1,85 @@
+﻿;-------------------------------------------
+;刻印取得
+;-------------------------------------------
+@M_KOJO_MESSAGE_MARKCNG_K101
+;このままだと地の文が表示されません
+;地の文を表示したい方は、下記のコメントアウトを削除して下さい
+CALL MARK_MESSAGE
+;苦痛刻印
+IF TFLAG:22 == 1
+	PRINTFORMW 「아, 아파……우으……」
+ELSEIF TFLAG:22 == 2
+	PRINTFORMW 「으윽……그만…」
+ELSEIF TFLAG:22 == 3
+	PRINTFORMW 「더, 더는 그만……그만해 주세요……아픈 건 싫어요……」
+ENDIF
+
+;時姦刻印
+IF TFLAG:시간각인취득 == 1
+	PRINTFORMW 토키코의 반응에 %마스터는% 씨익 웃었다
+ELSEIF TFLAG:시간각인취득 == 2
+	PRINTFORMW 토키코는 언제 무엇이 일어날지 몰라 안절부절하고 있다
+ELSEIF TFLAG:시간각인취득 == 3
+	PRINTFORMW 토키코는 이미 시간(時姦)의 포로가 되어, 갑작스레 찾아오는 그것을 애타게 기다리며 두근거리고 있다
+ENDIF
+
+;快楽刻印
+IF TFLAG:23 == 1
+	PRINTFORMW (기, 기분 좋아~~~~~~♥♥♥♥♥♥)
+	PRINTFORMW 토키코는 황홀한 표정으로 쾌락에 빠져 있다
+	PRINTFORMW 「…핫!……아, 아무것도 아냐」
+ELSEIF TFLAG:23 == 2
+	PRINTFORMW (이대로면 돌아오지 못하게 되어 버려♥♥♥♥♥♥ 이성을 유지 해야…!)
+	PRINTFORMW 토키코는 어떻게든 이성을 유지하려고 했지만,
+	PRINTFORMW (무, 무리~~~~♥♥♥♥ 이런 거, 참을 수 없어♥♥♥ 아앙~~~~~~♥♥♥♥♥♥)
+	PRINTFORMW 곧바로 쾌락의 파도에 삼켜진 것 같다
+ELSEIF TFLAG:23 == 3
+	PRINTFORMW (어, 엄청난 게 와! 부, 분명 큰일이 날 거야…!)
+	PRINTFORMW 「응응♥…자, 잠깐 기다려♥♥」
+	PRINTFORMW %마스터는% 토키코의 제지에 귀를 기울이는 기색을 보이지 않았다
+	PRINTFORMW 「거, 거짓말, 듣고 있어? 저, 정말로…앗♥…기다려, 흐읏♥…엄청난 게♥ 와 버려…하앗♥ 아아앙♥…흐읏♥♥」
+	PRINTFORMW 토키코는 차츰차츰 폭발적인 오르가즘이 오고 있다는 것을 알아차렸다
+	PRINTFORMW (어, 어째서 멈추지 않는 거야♥♥ 멈춰 줘♥ 와 버려♥♥♥ 터무니 없는 게 와 버려♥♥♥…앗♥♥♥ 온다―――――――)
+	PRINTFORMW 「…에?」
+	PRINTFORMW 그 오르가즘이 도달하는 일은 없었다, 왜냐하면 %마스터가% 토키코의 절정 직전에 행위를 멈췄기 때문이다
+	PRINTFORMW 당황하는 토키코에게 %마스터는% 능글대며 계속 해 줬으면 하느냐고 물었다
+	PRINTFORMW 토키코의 대답은 처음부터 정해져 있었다
+	PRINTFORMW 「해 줘♥♥♥ 거짓말을 해서 미안해♥♥♥ 사실은 가버리고 싶어♥♥♥ 그러니까, 그러니까아♥♥♥ 심술부리지 말고 끝까지 해 줘♥♥♥♥♥♥」
+	PRINTFORMW 이성을 버리고, 쾌락에 몸을 맡겨, 암컷의 표정으로 모든 것을 드러내며 %CALLNAME:MASTER%에게 간원했다
+	PRINTFORMW 「~~~~~~~~~~~~~~~♥♥♥♥♥♥♥♥♥♥♥♥」
+	PRINTFORMW %마스터가% 재개한 순간, 토키코의 쾌감이 폭발해 말이 되지 못하는 절규를 지르며 행복한 표정으로 절정했다
+	PRINTFORMW 「앗…♥ 하앙♥♥ 체, 체고야…♥♥♥」
+	PRINTFORMW 토키코는 당분간 작게 경련하며 그 쾌감에 황홀해하고 있었다, 이 경험은 토키코의 신체에 확실하게 새겨질 것이다
+ENDIF
+
+;不埒刻印
+;快楽による刻印
+;LV1
+IF TFLAG:24 == 11
+	PRINTFORMW 「%마스터와% 같이 있으면 즐겁네…」
+;LV2
+ELSEIF TFLAG:24 == 12
+	PRINTFORMW 토키코는 뺨을 붉히며 %CALLNAME:MASTER%의 얼굴을 멍하게 바라보고 있다
+;LV3
+ELSEIF TFLAG:24 == 13
+	PRINTFORMW 토키코는 꼼지락대면서 %CALLNAME:MASTER%의 옷의 소매를 당기고 있다
+;屈服、恭順による刻印
+;LV1
+ELSEIF TFLAG:24 == 31
+	PRINTFORMW (최근 %마스터가% 말하는 대로 하고 있는 것 같네……)
+;LV2
+ELSEIF TFLAG:24 == 32
+	PRINTFORMW (어째선지 %마스터가% 말하는 거, 하는 거를 부정할 수 없어……)
+;LV3
+ELSEIF TFLAG:24 == 33
+	PRINTFORMW (이젠 %마스터가% 말하는 대로 따르면 되려나……)
+ENDIF
+
+;反発刻印
+IF TFLAG:21 == 1
+	PRINTFORMW 「뭐냐고! 정말…!!!」
+ELSEIF TFLAG:21 == 2
+	PRINTFORMW 토키코는 %마스터를% 강하게 노려보았다
+ELSEIF TFLAG:21 == 3
+	PRINTFORMW 「이제 나에게 일절 다가오지 마!!!」
+ENDIF

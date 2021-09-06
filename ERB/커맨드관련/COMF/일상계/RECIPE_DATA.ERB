@@ -1,0 +1,711 @@
+﻿;引数はレシピ番号
+;TYPE=0~5が素材、=6が生成量,=7が水の必要性, =8が同じ素材を複数使用
+@RECIPE_DATA(R_ID, TYPE)
+#FUNCTION
+#DIM TYPE
+#DIM ING, 6
+#DIM AMT
+#DIM WATER
+#DIM R_ID
+#DIM LOT
+
+VARSET ING
+AMT = 0
+WATER = 0
+LOT = 0
+
+SELECTCASE R_ID
+	CASE GETNUM(ITEM, "로션") * 10 + 1
+		ING:0 = [[끈적끈적버섯]]
+		AMT = 2
+	CASE GETNUM(ITEM, "로션") * 10 + 2
+		ING:0 = [[끈적끈적버섯]]
+		ING:1 = [[참마]]
+		AMT = 4
+	CASE GETNUM(ITEM, "로션") * 10 + 3
+		ING:0 = [[끈적끈적버섯]]
+		ING:1 = [[활석]]
+		AMT = 6
+	CASE GETNUM(ITEM, "미약") * 10 + 1
+		ING:0 = [[독버섯]]
+		ING:1 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "미약") * 10 + 2
+		ING:0 = [[독초]]
+		ING:1 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "미약") * 10 + 3
+		ING:0 = [[약초]]
+		ING:1 = [[향기로운수지]]
+		AMT = 2
+	CASE GETNUM(ITEM, "미약") * 10 + 4
+		ING:0 = [[악화의유액]]
+		AMT = 3
+	CASE GETNUM(ITEM, "미약") * 10 + 5
+		ING:0 = [[만드라고라]]
+		AMT = 3
+	CASE GETNUM(ITEM, "이뇨제") * 10 + 1
+		ING:0 = [[상약초]]
+		ING:1 = [[석고]]
+		ING:2 = [[활석]]
+		AMT = 1
+	CASE GETNUM(ITEM, "이뇨제") * 10 + 2
+		ING:0 = [[상약초]]
+		ING:1 = [[피안화]]
+		AMT = 1
+	CASE GETNUM(ITEM, "이뇨제") * 10 + 3
+		ING:0 = [[위험한버섯]]
+		ING:1 = [[석고]]
+		AMT = 2
+	CASE GETNUM(ITEM, "이뇨제") * 10 + 4
+		ING:0 = [[위험한버섯]]
+		ING:1 = [[활석]]
+		AMT = 2
+	CASE GETNUM(ITEM, "콘돔") * 10 + 1
+		ING:0 = [[하얀수지]]
+		AMT = 3
+	CASE GETNUM(ITEM, "콘돔") * 10 + 2
+		ING:0 = [[노란수지]]
+		AMT = 10
+	CASE GETNUM(ITEM, "증류주") * 10 + 1
+		ING:0 = 52
+		ING:1 = 52
+		ING:2 = 52
+		ING:3 = 52
+		ING:4 = 52
+		AMT = 1
+		LOT = 5
+	CASE GETNUM(ITEM, "증류주") * 10 + 2
+		ING:0 = 53
+		ING:1 = 53
+		AMT = 1
+		LOT = 2
+	CASE GETNUM(ITEM, "증류주") * 10 + 3
+		ING:0 = 55
+		ING:1 = 55
+		AMT = 1
+		LOT = 2
+	CASE GETNUM(ITEM, "약주") * 10 + 1
+		ING:0 = 58
+		ING:1 = [[약초]]
+		ING:2 = [[상약초]]
+		ING:3 = [[쓴뿌리]]
+		AMT = 1
+	CASE GETNUM(ITEM, "약주") * 10 + 2
+		ING:0 = 58
+		ING:1 = [[특약초]]
+		ING:2 = [[쓴뿌리]]
+		AMT = 1
+	CASE GETNUM(ITEM, "약의재료(쌍)") * 10 + 1
+		ING:0 = [[끈적끈적버섯]]
+		ING:1 = [[위험한버섯]]
+		ING:2 = [[하얀수지]]
+		ING:3 = [[뼛조각]]
+		AMT = 1
+	CASE GETNUM(ITEM, "약의재료(쌍)") * 10 + 2
+		ING:0 = [[마법의버섯]]
+		ING:1 = [[만드라고라]]
+		ING:2 = [[하얀수지]]
+		ING:3 = [[뼛조각]]
+		AMT = 1
+	CASE GETNUM(ITEM, "약의재료(소)") * 10 + 1
+		ING:0 = [[죽순]]
+		ING:1 = [[죽순]]
+		ING:2 = [[죽순]]
+		ING:3 = [[죽순]]
+		ING:4 = [[죽순]]
+		AMT = 1
+		LOT = 5
+	CASE GETNUM(ITEM, "약의재료(소)") * 10 + 2
+		ING:0 = 639
+		AMT = 1
+	CASE GETNUM(ITEM, "붉은캔디") * 10 + 1
+		ING:0 = [[벌꿀]]
+		ING:1 = [[진사]]
+		ING:2 = 637
+		ING:3 = 640
+		AMT = 1
+	CASE GETNUM(ITEM, "붉은캔디") * 10 + 2
+		ING:0 = [[벌꿀]]
+		ING:1 = [[뼛조각]]
+		ING:2 = [[진사]]
+		ING:3 = 637
+		ING:4 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "갈색의캔디") * 10 + 1
+		ING:0 = [[벌꿀]]
+		ING:1 = [[용골]]
+		ING:2 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "갈색의캔디") * 10 + 2
+		ING:0 = [[용의손톱]]
+		ING:1 = [[벌꿀]]
+		ING:2 = [[뼛조각]]
+		ING:3 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "물색의캔디") * 10 + 1
+		ING:0 = [[얼음의비늘]]
+		ING:1 = [[벌꿀]]
+		ING:2 = 639
+		AMT = 1
+	CASE GETNUM(ITEM, "배란유발제") * 10 + 1
+		ING:0 = [[상약초]]
+		ING:1 = [[하얀수지]]
+		ING:2 = [[악화의유액]]
+		AMT = 1
+	CASE GETNUM(ITEM, "배란유발제") * 10 + 2
+		ING:0 = [[특약초]]
+		ING:1 = [[우콘]]
+		ING:2 = [[쓴뿌리]]
+		ING:3 = [[으름덩굴]]
+		AMT = 1
+	CASE GETNUM(ITEM, "거름") * 10 + 1
+		ING:0 = [[뼛조각]]
+		ING:1 = 636
+		AMT = 1
+	CASE GETNUM(ITEM, "거름") * 10 + 2
+		ING:0 = [[뼛조각]]
+		ING:1 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "아이스크림") * 10 + 1
+		ING:0 = [[얼음의비늘]]
+		AMT = 20
+	CASE GETNUM(ITEM, "홍차") * 10 + 1
+		ING:0 = [[산나물]]
+		ING:1 = [[산나물]]
+		ING:2 = [[산나물]]
+		ING:3 = [[산나물]]
+		ING:4 = [[산나물]]
+		AMT = 1
+		LOT = 5
+	CASE GETNUM(ITEM, "홍차") * 10 + 2
+		ING:0 = [[약초]]
+		ING:1 = [[약초]]
+		ING:2 = [[약초]]
+		AMT = 1
+		LOT = 3
+	CASE GETNUM(ITEM, "엿") * 10 + 1
+		ING:0 = [[벌꿀]]
+		ING:1 = [[벌꿀]]
+		AMT = 1
+		LOT = 2
+	CASE GETNUM(ITEM, "춘약") * 10 + 1
+		ING:0 = [[위험한버섯]]
+		ING:1 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "춘약") * 10 + 2
+		ING:0 = [[위험한버섯]]
+		ING:1 = [[향기로운수지]]
+		AMT = 1
+	CASE GETNUM(ITEM, "춘약") * 10 + 3
+		ING:0 = [[상약초]]
+		ING:1 = [[악화의유액]]
+		AMT = 2
+	CASE GETNUM(ITEM, "춘약") * 10 + 4
+		ING:0 = [[상약초]]
+		ING:1 = [[만드라고라]]
+		AMT = 2
+	CASE GETNUM(ITEM, "수면제") * 10 + 1
+		ING:0 = [[독버섯]]
+		ING:1 = [[약초]]
+		ING:2 = [[독초]]
+		ING:3 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "수면제") * 10 + 2
+		ING:0 = [[독초]]
+		ING:1 = [[쓴뿌리]]
+		AMT = 1
+	CASE GETNUM(ITEM, "수면제") * 10 + 3
+		ING:0 = [[약초]]
+		ING:1 = [[악화의유액]]
+		AMT = 3
+	CASE GETNUM(ITEM, "수면제") * 10 + 4
+		ING:0 = [[약초]]
+		ING:1 = [[만드라고라]]
+		AMT = 3
+	CASE GETNUM(ITEM, "녹즙") * 10 + 1
+		ING:0 = [[산나물]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "녹즙") * 10 + 2
+		ING:0 = [[약초]]
+		AMT = 2
+		WATER = 1
+	CASE GETNUM(ITEM, "영양드링크") * 10 + 1
+		ING:0 = [[고려인삼]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "영양드링크") * 10 + 2
+		ING:0 = [[동충하초]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "영양드링크") * 10 + 3
+		ING:0 = [[약초]]
+		ING:1 = [[상약초]]
+		ING:2 = [[참마]]
+		ING:3 = [[벌꿀]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "정력제") * 10 + 1
+		ING:0 = [[동충하초]]
+		ING:1 = [[상약초]]
+		ING:2 = [[참마]]
+		ING:3 = [[고려인삼]]
+		ING:4 = [[노란수지]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "정력제") * 10 + 2
+		ING:0 = [[동충하초]]
+		ING:1 = [[상약초]]
+		ING:2 = [[쓴뿌리]]
+		ING:3 = [[노란수지]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "정력제") * 10 + 3
+		ING:0 = [[위험한버섯]]
+		ING:1 = [[참마]]
+		ING:2 = [[고려인삼]]
+		ING:3 = [[노란수지]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "불끈불끈Z") * 10 + 1
+		ING:0 = [[동충하초]]
+		ING:1 = [[상약초]]
+		ING:2 = [[고려인삼]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "불끈불끈Z") * 10 + 2
+		ING:0 = [[약초]]
+		ING:1 = [[상약초]]
+		ING:2 = [[특약초]]
+		ING:3 = [[참마]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "불끈불끈Z") * 10 + 3
+		ING:0 = [[상약초]]
+		ING:1 = [[쓴뿌리]]
+		ING:2 = [[노란수지]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "반짝반짝Ｘ") * 10 + 1
+		ING:0 = [[동충하초]]
+		ING:1 = [[특약초]]
+		ING:2 = [[참마]]
+		ING:3 = [[고려인삼]]
+		ING:4 = [[쓴뿌리]]
+		ING:5 = [[벌꿀]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "반짝반짝Ｘ") * 10 + 2
+		ING:0 = [[위험한버섯]]
+		ING:1 = [[특약초]]
+		ING:2 = [[눈의영초]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "반짝반짝Ｘ") * 10 + 3
+		ING:0 = [[특약초]]
+		ING:1 = [[눈의영초]]
+		ING:2 = [[쓴뿌리]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "정력제『천원凸파』") * 10 + 1
+		ING:0 = [[동충하초]]
+		ING:1 = [[특약초]]
+		ING:2 = [[쓴뿌리]]
+		ING:3 = [[노란수지]]
+		ING:4 = [[용골]]
+		AMT = 1
+	CASE GETNUM(ITEM, "정력제『천원凸파』") * 10 + 2
+		ING:0 = [[위험한버섯]]
+		ING:1 = [[특약초]]
+		ING:2 = [[참마]]
+		ING:3 = [[용혈]]
+		AMT = 1
+	CASE GETNUM(ITEM, "정력제『천원凸파』") * 10 + 3
+		ING:0 = [[동충하초]]
+		ING:1 = [[특약초]]
+		ING:2 = [[고려인삼]]
+		ING:3 = [[용혈]]
+		AMT = 1
+	CASE GETNUM(ITEM, "정력제『천원凸파』") * 10 + 4
+		ING:0 = [[특약초]]
+		ING:1 = [[참마]]
+		ING:2 = [[용혈]]
+		ING:3 = [[용골]]
+		AMT = 1
+	CASE GETNUM(ITEM, "포션") * 10 + 1
+		ING:0 = [[약초]]
+		ING:1 = [[뼛조각]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "포션") * 10 + 2
+		ING:0 = [[산나물]]
+		ING:1 = [[석고]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "포션") * 10 + 3
+		ING:0 = [[보통버섯]]
+		ING:1 = [[약초]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "포션") * 10 + 4
+		ING:0 = [[보통버섯]]
+		ING:1 = [[석고]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "매직포션") * 10 + 1
+		ING:0 = [[마법의버섯]]
+		ING:1 = [[활석]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "매직포션") * 10 + 2
+		ING:0 = [[마법의버섯]]
+		ING:1 = [[상약초]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "매직포션") * 10 + 3
+		ING:0 = [[상약초]]
+		ING:1 = [[뼛조각]]
+		ING:2 = 638
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "매직포션") * 10 + 4
+		ING:0 = [[얼음의비늘]]
+		AMT = 2
+		WATER = 1
+	CASE GETNUM(ITEM, "잠깨기포션") * 10 + 1
+		ING:0 = [[약초]]
+		ING:1 = [[상약초]]
+		ING:2 = [[특약초]]
+		ING:3 = [[뼛조각]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "잠깨기포션") * 10 + 2
+		ING:0 = 215
+		ING:1 = 215
+		ING:2 = 215
+		ING:3 = 215
+		ING:4 = 215
+		AMT = 1
+		WATER = 1
+		LOT = 5
+	CASE GETNUM(ITEM, "잠깨기포션") * 10 + 3
+		ING:0 = [[독초]]
+		ING:1 = [[쓴뿌리]]
+		ING:2 = [[뼛조각]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "우콘드링크") * 10 + 1
+		ING:0 = [[우콘]]
+		AMT = 2
+		WATER = 1
+	CASE GETNUM(ITEM, "엘릭서") * 10 + 1
+		ING:0 = 59
+		ING:1 = [[마법의버섯]]
+		ING:2 = [[독초]]
+		ING:3 = [[눈의영초]]
+		ING:4 = [[만드라고라]]
+		ING:5 = [[용혈]]
+		AMT = 1
+	CASE GETNUM(ITEM, "선단") * 10 + 1
+		ING:0 = [[용의손톱]]
+		ING:1 = [[얼음의비늘]]
+		ING:2 = [[진사]]
+		ING:3 = 637
+		ING:4 = 639
+		ING:5 = 640
+		AMT = 1
+	CASE GETNUM(ITEM, "하룻밤의쿠시나다") * 10 + 1
+		ING:0 = 55
+		ING:1 = [[독버섯]]
+		ING:2 = [[나무딸기]]
+		ING:3 = [[특약초]]
+		AMT = 1
+	CASE GETNUM(ITEM, "하룻밤의쿠시나다") * 10 + 2
+		ING:0 = 55
+		ING:1 = [[독버섯]]
+		ING:2 = [[으름덩굴]]
+		ING:3 = [[눈의영초]]
+		AMT = 1
+	CASE GETNUM(ITEM, "하룻밤의쿠시나다") * 10 + 3
+		ING:0 = 53
+		ING:1 = [[독버섯]]
+		ING:2 = [[나무딸기]]
+		ING:3 = [[특약초]]
+		AMT = 1
+	CASE GETNUM(ITEM, "하룻밤의쿠시나다") * 10 + 4
+		ING:0 = 53
+		ING:1 = [[독버섯]]
+		ING:2 = [[으름덩굴]]
+		ING:3 = [[눈의영초]]
+		AMT = 1
+	CASE GETNUM(ITEM, "선향옥토") * 10 + 1
+		ING:0 = [[마법의버섯]]
+		ING:1 = [[만드라고라]]
+		ING:2 = [[향기로운수지]]
+		ING:3 = [[악화의유액]]
+		ING:4 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "선향옥토") * 10 + 2
+		ING:0 = [[향기로운수지]]
+		ING:1 = [[악화의유액]]
+		ING:2 = 643
+		AMT = 1
+	CASE GETNUM(ITEM, "선향옥토") * 10 + 3
+		ING:0 = [[마법의버섯]]
+		ING:1 = [[악화의유액]]
+		ING:2 = 646
+		AMT = 1
+	CASE GETNUM(ITEM, "국사무쌍약") * 10 + 1
+		ING:0 = [[동충하초]]
+		ING:1 = [[위험한버섯]]
+		ING:2 = [[용의손톱]]
+		ING:3 = [[특약초]]
+		ING:4 = [[고려인삼]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "국사무쌍약") * 10 + 2
+		ING:0 = [[동충하초]]
+		ING:1 = [[위험한버섯]]
+		ING:2 = [[용의손톱]]
+		ING:3 = [[눈의영초]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "가싱가든") * 10 + 1
+		ING:0 = [[독버섯]]
+		ING:1 = [[마법의버섯]]
+		ING:2 = [[독초]]
+		ING:3 = [[만드라고라]]
+		AMT = 1
+	CASE GETNUM(ITEM, "가싱가든") * 10 + 2
+		ING:0 = [[독버섯]]
+		ING:1 = [[마법의버섯]]
+		ING:2 = [[독초]]
+		ING:3 = [[피안화]]
+		ING:4 = 638
+		ING:5 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "가싱가든") * 10 + 3
+		ING:0 = [[마법의버섯]]
+		ING:1 = [[독초]]
+		ING:2 = 646
+		AMT = 1
+	CASE GETNUM(ITEM, "포이즌바디") * 10 + 1
+		ING:0 = 59
+		ING:1 = [[독버섯]]
+		ING:2 = [[용의손톱]]
+		ING:3 = [[독초]]
+		ING:4 = [[만드라고라]]
+		ING:5 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "포이즌바디") * 10 + 2
+		ING:0 = 59
+		ING:1 = [[독버섯]]
+		ING:2 = [[용의손톱]]
+		ING:3 = [[피안화]]
+		ING:4 = [[진사]]
+		ING:5 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "포이즌바디") * 10 + 3
+		ING:0 = 59
+		ING:1 = [[마법의버섯]]
+		ING:2 = [[용의손톱]]
+		ING:3 = [[만드라고라]]
+		ING:4 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "포이즌바디") * 10 + 4
+		ING:0 = 59
+		ING:1 = [[마법의버섯]]
+		ING:2 = [[용의손톱]]
+		ING:3 = [[진사]]
+		ING:4 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "영양강화제") * 10 + 1
+		ING:0 = 382
+		ING:1 = 500
+		ING:2 = [[동충하초]]
+		ING:3 = [[참마]]
+		ING:4 = [[뼛조각]]
+		ING:5 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "영양강화제") * 10 + 2
+		ING:0 = 382
+		ING:1 = 500
+		ING:2 = [[위험한버섯]]
+		ING:3 = [[참마]]
+		ING:4 = [[뼛조각]]
+		ING:5 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "영양강화제") * 10 + 1
+		ING:0 = 382
+		ING:1 = 500
+		ING:2 = [[마법의버섯]]
+		ING:3 = [[참마]]
+		ING:4 = [[뼛조각]]
+		ING:5 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "두꺼비기름") * 10 + 1
+		ING:0 = 706
+		ING:1 = 706
+		ING:2 = 706
+		ING:3 = 706
+		ING:4 = 706
+		AMT = 1
+		LOT = 5
+	CASE GETNUM(ITEM, "어박") * 10 + 1
+		ING:0 = 707
+		AMT = 1
+		LOT = 2
+	CASE GETNUM(ITEM, "어박") * 10 + 2
+		ING:0 = 708
+		AMT = 1
+	CASE GETNUM(ITEM, "폭발성시약") * 10 + 1
+		ING:0 = 58
+		ING:1 = [[약초]]
+		ING:2 = [[뼛조각]]
+		ING:3 = 637
+		AMT = 1
+	CASE GETNUM(ITEM, "폭발성시약") * 10 + 2
+		ING:0 = 58
+		ING:1 = [[약초]]
+		ING:2 = [[하얀수지]]
+		ING:3 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "폭발성시약") * 10 + 3
+		ING:0 = 58
+		ING:1 = [[마법의버섯]]
+		AMT = 2
+	CASE GETNUM(ITEM, "아이시클봄") * 10 + 1
+		ING:0 = 213
+		ING:1 = 508
+		AMT = 1
+	CASE GETNUM(ITEM, "아이시클봄") * 10 + 2
+		ING:0 = [[얼음의비늘]]
+		AMT = 2
+	CASE GETNUM(ITEM, "태을의불씨") * 10 + 1
+		ING:0 = [[노란수지]]
+		ING:1 = 637
+		ING:2 = 638
+		ING:3 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "태을의불씨") * 10 + 2
+		ING:0 = [[마법의버섯]]
+		ING:1 = 637
+		ING:2 = 638
+		ING:3 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "태을의불씨") * 10 + 3
+		ING:0 = [[피안화]]
+		ING:1 = 637
+		ING:2 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "태을의불씨") * 10 + 4
+		ING:0 = 638
+		ING:1 = 640
+		AMT = 2
+	CASE GETNUM(ITEM, "매혹의미끼") * 10 + 1
+		ING:0 = [[보통버섯]]
+		ING:1 = [[악화의유액]]
+		ING:2 = [[나무딸기]]
+		ING:3 = [[벌꿀]]
+		ING:4 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "매혹의미끼") * 10 + 2
+		ING:0 = [[산나물]]
+		ING:1 = [[악화의유액]]
+		ING:2 = [[나무딸기]]
+		ING:3 = [[벌꿀]]
+		ING:4 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "매혹의미끼") * 10 + 3
+		ING:0 = [[쓴뿌리]]
+		ING:1 = [[악화의유액]]
+		ING:2 = [[벌꿀]]
+		ING:3 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "매혹의미끼") * 10 + 4
+		ING:0 = [[향기로운수지]]
+		ING:1 = [[악화의유액]]
+		ING:2 = [[벌꿀]]
+		ING:3 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "매혹의미끼") * 10 + 5
+		ING:0 = [[벌꿀]]
+		ING:1 = 639
+		AMT = 2
+
+	CASE GETNUM(ITEM, "현자의돌") * 10 + 1
+		ING:0 = [[용의손톱]]
+		ING:1 = [[얼음의비늘]]
+		ING:2 = [[선도]]
+		ING:3 = [[진사]]
+		ING:4 = 639
+		ING:5 = 640
+		AMT = 1
+	CASE GETNUM(ITEM, "바렛골렘") * 10 + 1
+		ING:0 = [[뼛조각]]
+		ING:1 = [[석고]]
+		ING:2 = [[활석]]
+		ING:3 = 637
+		ING:4 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "바렛골렘") * 10 + 2
+		ING:0 = [[뼛조각]]
+		ING:1 = [[석고]]
+		ING:2 = [[활석]]
+		ING:3 = 636
+		ING:4 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "에피타프") * 10 + 1
+		ING:0 = 521
+		ING:1 = 706
+		AMT = 1
+	CASE GETNUM(ITEM, "킹크림존") * 10 + 1
+		ING:0 = 870
+		ING:1 = 521
+		ING:2 = 706
+		AMT = 1
+	CASEELSE
+		RETURNF -1
+ENDSELECT
+
+SELECTCASE TYPE
+	CASE 0 TO 5
+		RETURNF ING:TYPE
+	CASE 6
+		RETURNF AMT
+	CASE 7
+		RETURNF WATER
+	CASE 8
+		RETURNF LOT
+ENDSELECT
+
+;使い切りの체질 변화薬
+@PHARMA_VOLATILE(ARG)
+#FUNCTION
+SIF GROUPMATCH(ARG, 71, 72, 74, 77, 78)
+	RETURNF 1
+RETURNF 0
+
+
+;-----------------------------------------------------------
+;アイテム番号ARG:0の調合難易度を返す関数
+;（兼、調合可能アイテムであることの照合にも利用）
+;RETURNF	0 調合不可	1～5 調合の難易度
+;COMMENT	アイテムを追加した場合は、CASEに追記
+;-----------------------------------------------------------
+@PHARMACY_RANK(ARG:0)
+#FUNCTION
+SELECTCASE ITEMNAME:(ARG:0)
+	CASE "로션", "콘돔", "증류주", "아이스크림", "엿", "녹즙", "포션", "우콘드링크", "두꺼비기름", "어박"
+		RETURNF 1
+	CASE "이뇨제", "약주", "거름", "홍차", "영양드링크", "정력제", "잠깨기포션", "영양강화제", "폭발성시약", "아이시클봄", "에피타프"
+		RETURNF 2
+	CASE "미약", "춘약", "수면제", "불끈불끈Z", "정력제『천원凸파』", "매직포션", "하룻밤의쿠시나다", "킹크림존"
+		RETURNF 3
+	CASE "약의재료(쌍)", "약의재료(소)", "배란유발제", "반짝반짝Ｘ", "엘릭서", "국사무쌍약", "가싱가든", "태을의불씨", "매혹의미끼", "바렛골렘"
+		RETURNF 4
+	CASE "붉은캔디", "갈색의캔디", "물색의캔디", "선단", "선향옥토", "포이즌바디", "현자의돌"
+		RETURNF 5
+ENDSELECT
+RETURNF 0

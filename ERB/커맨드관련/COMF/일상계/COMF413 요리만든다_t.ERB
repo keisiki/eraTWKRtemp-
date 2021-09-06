@@ -1,0 +1,1011 @@
+﻿;-------------------------------------------------
+;요리를만든다
+;일상계 커맨드, 레벨 1
+;DISH_TYPE_NUM     요리종별, 1=간식, 2=주식, 3=디저트, 4=연습, LOCAL저장해두기;-------------------------------------------------
+;-------------------------------------------------
+@COM413
+#DIM DISH_TYPE_NUM
+#DIM MAXMENU
+#DIM MENUCOUNT
+#DIM SELECT_MENU
+#DIM SELECT_ING
+#DIM SELECT_DRG
+#DIM SELECT_DRG_2
+#DIM 연습불가
+#DIM LCOUNT
+#DIM 요리結果
+#DIM 순종係数
+#DIM 호감도係数
+LCOUNT = 0
+VARSET RESULTS
+;조수설정
+IF SHIRAHU(TARGET) == 1
+	DISH_ASSI = TARGET
+ELSE
+	DISH_ASSI = 0
+ENDIF
+;연습판정
+IF (!DISH_ASSI || CFLAG:DISH_ASSI:고유요리 >= 100)
+	연습불가 = 1
+ELSE
+	연습불가 = 0
+ENDIF
+;종별수정
+IF !DISH_TYPE_NUM
+	DISH_TYPE_NUM = 1
+ELSEIF DISH_TYPE_NUM == 4 && 연습불가
+	DISH_TYPE_NUM = 1
+ENDIF
+;재료수정, 0번은 로터이므로
+IF SELECT_ING == 0
+	SIF !INRANGE(SELECT_MENU, 351, 360)
+		SELECT_ING = -1
+ENDIF
+;투입 수정
+SIF DISH_ASSI
+	SELECT_DRG = 0
+;DISH_TYPE 및 메뉴 범위 설정
+SELECTCASE DISH_TYPE_NUM
+CASE 1
+	DISH_TYPE = 경식
+	MAXMENU = 100
+CASE 2
+	DISH_TYPE = 주식
+	MAXMENU = 100
+CASE 3
+	DISH_TYPE = 디저트
+	MAXMENU = 50
+CASE 4
+	DISH_TYPE = 연습
+	MAXMENU = 2
+ENDSELECT
+
+;메뉴 표시
+DRAWLINEFORM =
+IF DISH_TYPE == "연습"
+	;연습用メニュー
+	PRINTFORML ＜연습＞　★스승：%CALLNAME:DISH_ASSI%
+	PRINTFORML 고유요리를 배울 수 있습니다　※현재 미실장
+ELSE
+	;通常メニュー
+	MENUCOUNT = 0
+	PRINTFORM ＜메뉴＞　
+	IF DISH_ASSI
+		PRINTFORM ●조수：%CALLNAME:DISH_ASSI%
+		SPLIT GET_STR(, "캐릭터데이터", DISH_ASSI, "요리：조수 효과"), "*", RESULTS
+		SIF RESULTS:1 != ""
+			PRINTFORM (특기요리：%RESULTS:1%）
+		PRINTL 
+	ELSE
+		PRINTFORML ○조수：없음
+	ENDIF
+	FOR LOCAL, 1 + DISH_TYPE_NUM * 100, MAXMENU + DISH_TYPE_NUM * 100
+		CALL SHOW_DISH_MENU(LOCAL, DISH_TYPE, SELECT_MENU, MENUCOUNT)
+		SIF RESULT == 2
+			LCOUNT ++
+		SIF RESULT >= 1
+			MENUCOUNT ++
+	NEXT
+	;로터 메뉴
+	FOR LOCAL, 351, 360
+		CALL SHOW_DISH_MENU(LOCAL, DISH_TYPE, SELECT_MENU, MENUCOUNT)
+		SIF RESULT == 2
+			LCOUNT ++
+		SIF RESULT >= 1
+			MENUCOUNT ++
+	NEXT
+	;스페셜 메뉴
+	FOR LOCAL, 401, 400 + CHARANUM
+		CALL SHOW_DISH_MENU(LOCAL, DISH_TYPE, SELECT_MENU, MENUCOUNT)
+		SIF RESULT == 2
+			LCOUNT ++
+		SIF RESULT >= 1
+			MENUCOUNT ++
+	NEXT
+ENDIF
+PRINTL 
+;선택중인 요리정보 수집
+IF SELECT_MENU
+	CALL DISHDATA(SELECT_MENU, DISH_TYPE)
+	요리結果 = RESULT
+	;재료선택 중이라면 DISH_TASTE에 추가, 0번은 로터
+	SIF SELECT_ING >= 0
+		CALL DISH_TASTE_ADD(SELECT_ING)
+ENDIF
+
+;DISH_TYPE 선택
+DRAWLINEFORM =
+PRINTPLAIN 만드는 것:
+FONTSTYLE 1
+FOR LOCAL, 1, 5
+	SELECTCASE LOCAL
+	CASE 1
+		LOCALS = 경식
+	CASE 2
+		LOCALS = 주식
+	CASE 3
+		LOCALS = 디저트
+	CASE 4
+		LOCALS = 연습
+	ENDSELECT
+	IF LOCAL == 4 && 연습불가
+		SETCOLOR C_GRAY
+	ELSEIF DISH_TYPE_NUM == LOCAL
+		SETCOLOR C_AQUA
+	ENDIF
+	PRINTFORM [{LOCAL, 2}]%LOCALS, 16, LEFT%
+	RESETCOLOR
+NEXT
+FONTREGULAR
+PRINTL 
+;재료선택, 오마카세때는 공백
+IF SELECT_MENU
+	PRINTPLAIN 사용할 재료：　
+	IF 요리結果
+		FOR LOCAL, 1, 11
+			IF LOCAL == 6
+				PRINTL 
+				PRINTPLAIN 　　　　　　
+			ENDIF
+			SIF DISH_ING:LOCAL < 0
+				CONTINUE
+			IF SELECT_ING == DISH_ING:LOCAL
+				SETCOLOR C_AQUA
+			ELSEIF ITEM:(DISH_ING:LOCAL) <= 0
+				SETCOLOR C_GRAY
+			ENDIF
+			LOCALS = [{LOCAL + 10}]%ITEMNAME:(DISH_ING:LOCAL)%({ITEM:(DISH_ING:LOCAL), 2})
+			PRINTFORM %LOCALS, 22, LEFT%
+			RESETCOLOR
+		NEXT
+	ELSE
+		PRINTL 
+	ENDIF
+ELSE
+	PRINTL 
+ENDIF
+PRINTL 
+;투입
+IF !DISH_ASSI
+	PRINTPLAIN 　투입：　
+	FOR LOCAL, 21, 26
+		SELECTCASE LOCAL
+		CASE 21
+			LOCALS = 없음
+		CASE 22
+			LOCALS = 미약
+		CASE 23
+			LOCALS = 이뇨제
+		CASE 24
+			LOCALS = 춘약
+		CASE 25
+			LOCALS = 수면제
+		ENDSELECT
+		IF LOCAL == 21
+			SIF !SELECT_DRG
+				SETCOLOR C_AQUA
+			PRINTFORM [{LOCAL, 2}]%LOCALS, 18, LEFT%
+		ELSE
+			IF ITEMNAME:SELECT_DRG == LOCALS
+				SETCOLOR C_AQUA
+			ELSEIF ITEM:GETNUM(ITEM, LOCALS) <= 0
+				SETCOLOR C_GRAY
+			ENDIF
+			LOCALS = [{LOCAL, 2}]%LOCALS%({ITEM:GETNUM(ITEM, LOCALS), 2})
+			PRINTFORM %LOCALS, 22, LEFT%
+		ENDIF
+		RESETCOLOR
+	NEXT
+	PRINTL 
+	LCOUNT ++
+ENDIF
+;첨가물2
+PRINTPLAIN 　첨가물：　
+FOR LOCAL, 31, 33
+	SELECTCASE LOCAL
+	CASE 31
+		LOCALS = 없음
+	CASE 32
+		LOCALS = 영양강화제
+	ENDSELECT
+	IF LOCAL == 31
+		SIF !SELECT_DRG_2
+			SETCOLOR C_AQUA
+		PRINTFORM [{LOCAL, 2}]%LOCALS, 18, LEFT%
+	ELSE
+		IF ITEMNAME:SELECT_DRG_2 == LOCALS
+			SETCOLOR C_AQUA
+		ELSEIF ITEM:GETNUM(ITEM, LOCALS) <= 0
+			SETCOLOR C_GRAY
+		ENDIF
+		LOCALS = [{LOCAL, 2}]%LOCALS%({ITEM:GETNUM(ITEM, LOCALS), 2})
+		PRINTFORM %LOCALS, 22, LEFT%
+	ENDIF
+	RESETCOLOR
+NEXT
+PRINTL 
+LCOUNT ++
+
+
+DRAWLINEFORM -
+;요리 정보
+IF SELECT_MENU
+	IF 요리結果
+		PRINTFORML 【%DISH_NAME%】%DISH_COMMENT%
+		PRINT 　
+		CALL SHOW_TASTE(DISH_TASTE, "DISH_DATA")
+	ELSE
+		PRINTL 
+		PRINTL 
+	ENDIF
+ELSE
+	PRINTL 
+	PRINTL 
+ENDIF
+;코멘트
+DRAWLINE
+IF SELECT_MENU
+	IF !요리結果
+		PRINTL 
+	ELSEIF 요리結果 < 10
+		IF 요리結果 == 1
+			CALL COLORMESSAGE(@"　　재료가 모자라다…", C_ORANGE, 1)
+		ELSEIF 요리結果 == 2
+			CALL COLORMESSAGE(@"　　필요레벨 {RESULT:1}(현재 {ABL:MASTER:요리기능}）", C_ORANGE, 1)
+		ELSE
+			CALL COLORMESSAGE(@"　　어쩐지 만들 수 없다…", C_ORANGE, 1)
+		ENDIF
+	ELSE
+		PRINTFORML [ 9]【%DISH_NAME%】%조사만처리(DISH_NAME, "을")% 만든다
+	ENDIF
+ELSE
+	PRINTL 
+ENDIF
+PRINTFORML [ 7]추천 %조사처리(DISH_TYPE,"을")% 만든다
+PRINTFORML [ 0]그만둔다
+INPUT
+
+;그만둔다
+IF !RESULT
+	CALL RESET_DISH
+	RETURN -1
+;DISH_TYPE 선택
+ELSEIF INRANGE(RESULT, 1, 3)
+	DISH_TYPE_NUM = RESULT
+;연습
+ELSEIF RESULT == 4 && !연습불가
+	DISH_TYPE_NUM = RESULT
+;요리선택
+ELSEIF INRANGE(RESULT, 101, 400 + CHARANUM)
+	SELECT_MENU = RESULT
+	CALL DISHDATA(RESULT, DISH_TYPE)
+	;표시 밖이라면 선택 리셋
+	IF !RESULT
+		SELECT_MENU = 0
+		SELECT_ING = -1
+	;만들 수 없다면 재료만 리셋해 표시한다
+	ELSEIF RESULT < 10
+		SELECT_ING = -1
+	;만들 수 있다면 재료를 설정
+	ELSEIF RESULT == 10
+		RESULT = 0
+		;선택중인 재료가 있다면 선택을 유지한다
+		FOR LOCAL, 1, 11
+			IF DISH_ING:LOCAL == SELECT_ING && SELECT_ING >= 0
+				RESULT = 1
+				BREAK
+			ENDIF
+		NEXT
+		;선택중인 재료가 없다면 재료를 재설정
+		IF !RESULT
+			FOR LOCAL, 1, 11
+				IF ITEM:(DISH_ING:LOCAL)
+					SELECT_ING = DISH_ING:LOCAL
+					BREAK
+				ENDIF
+			NEXT
+		ENDIF
+	ENDIF
+;재료선택
+ELSEIF INRANGE(RESULT, 11, 20) && ITEM:(DISH_ING:(RESULT - 10))
+	SELECT_ING = DISH_ING:(RESULT - 10)
+;투입선택
+ELSEIF INRANGE(RESULT, 21, 30) && !DISH_ASSI
+	IF RESULT == 21
+		SELECT_DRG = 0
+	ELSEIF RESULT == 22 && ITEM:GETNUM(ITEM, "미약") > 0
+		SELECT_DRG = GETNUM(ITEM, "미약")
+	ELSEIF RESULT == 23 && ITEM:GETNUM(ITEM, "이뇨제") > 0
+		SELECT_DRG = GETNUM(ITEM, "이뇨제")
+	ELSEIF RESULT == 24 && ITEM:GETNUM(ITEM, "춘약") > 0
+		SELECT_DRG = GETNUM(ITEM, "춘약")
+	ELSEIF RESULT == 25 && ITEM:GETNUM(ITEM, "수면제") > 0
+		SELECT_DRG = GETNUM(ITEM, "수면제")
+	ENDIF
+;추가첨가 선택
+ELSEIF INRANGE(RESULT, 31, 40)
+	IF RESULT == 31
+		SELECT_DRG_2 = 0
+	ELSEIF RESULT == 32 && ITEM:GETNUM(ITEM, "영양강화제") > 0
+		SELECT_DRG_2 = GETNUM(ITEM, "영양강화제")
+	ENDIF
+;추천 요리
+ELSEIF RESULT == 7
+	SELECT_MENU = 0
+	CALL FISHER_YATES_SHAFFLE(499)
+	FOR LOCAL, 1, 500
+		CALL DISHDATA(SHAFFLE_ARRAY:LOCAL + 100, DISH_TYPE)
+		IF RESULT == 10
+			SELECT_MENU = LOCAL
+			FOR LOCAL:1, 1, 11
+				IF DISH_ING:(LOCAL:1) >= 0
+					IF ITEM:(DISH_ING:(LOCAL:1))
+						SELECT_ING = DISH_ING:(LOCAL:1)
+						BREAK
+					ENDIF
+				ENDIF
+			NEXT
+			BREAK
+		ENDIF
+	NEXT
+	IF SELECT_MENU
+		CALL DISH_TASTE_ADD(SELECT_ING)
+		GOTO COOK
+	ELSE
+		PRINTFORMW 만들 수 있는 %조사처리(DISH_TYPE,"가")% 없었다…
+		LCOUNT ++
+	ENDIF
+;요리를 만든다
+ELSEIF RESULT == 9 && SELECT_MENU && 요리結果 == 10
+	$COOK
+	DISH_DRG = SELECT_DRG
+	DISH_DRG_2 = SELECT_DRG_2
+	DISH_RANK = 식재레밸(SELECT_ING)
+	;DISHNAMEは구上でのみ使用してください
+	DISHNAME = %DISH_NAME%
+	FLAG:요리 = SELECT_MENU
+	PRINTFORML 사용 식재료：%ITEMNAME:SELECT_ING%
+	CALL DISH_COOKING
+	ITEM:SELECT_ING --
+	SIF SELECT_DRG
+		ITEM:SELECT_DRG --
+	SIF SELECT_DRG_2
+		ITEM:SELECT_DRG_2 --
+	SELECTCASE DISH_TYPE
+	CASE "경식"
+		DOWNBASE:MASTER:체력 = 50
+		DOWNBASE:MASTER:기력 = 50
+	CASE "주식"
+		DOWNBASE:MASTER:체력 = 100
+		DOWNBASE:MASTER:기력 = 100
+	CASE "디저트"
+		DOWNBASE:MASTER:체력 = 100
+		DOWNBASE:MASTER:기력 = 100
+	ENDSELECT
+	EXP:MASTER:요리경험 ++
+	SIF ITEM:조리지도서 && !RAND:2
+		EXP:MASTER:요리경험 ++
+	STAIN:MASTER:구 = 0
+	STAIN:MASTER:손 = 0
+	CFLAG:MASTER:구내정액 = 0
+	CFLAG:MASTER:안면정액 = 0
+	CFLAG:MASTER:손에정액 = 0
+	TIME += DISH_TIME
+	SIF CFLAG:MASTER:동행
+		CFLAG:MASTER:동행 += DISH_TIME
+	;조수에게 주는 효과
+	IF DISH_ASSI
+		;획득 소스
+		IF ABL:DISH_ASSI:순종 <= 1
+			순종係数 = 0
+		ELSEIF ABL:DISH_ASSI:순종 <= 3
+			순종係数 = 1
+		ELSEIF ABL:DISH_ASSI:순종 <= 5
+			순종係数 = 2
+		ELSEIF ABL:DISH_ASSI:순종 <= 8
+			순종係数 = 3
+		ELSEIF ABL:DISH_ASSI:순종 <= 11
+			순종係数 = 4
+		ELSEIF ABL:DISH_ASSI:순종 <= 14
+			순종係数 = 5
+		ELSE
+			순종係数 = 6
+		ENDIF
+		IF CFLAG:DISH_ASSI:호감도 <= 100
+			호감도係数 = 0
+		ELSEIF CFLAG:DISH_ASSI:호감도 < 500
+			호감도係数 = 1
+		ELSEIF CFLAG:DISH_ASSI:호감도 < 1000
+			호감도係数 = 2
+		ELSEIF CFLAG:DISH_ASSI:호감도 < 5000
+			호감도係数 = 4
+		ELSEIF CFLAG:DISH_ASSI:호감도 < 10000
+			호감도係数 = 6
+		ELSEIF CFLAG:DISH_ASSI:호감도 < 30000
+			호감도係数 = 8
+		ELSE
+			호감도係数 = 10
+		ENDIF
+		;환락뿐이기에 비교적 고효율, 원래 친밀감이 필요하기 때문에
+		SOURCE:DISH_ASSI:환락 = 300 + 30 * (순종係数 + 호감도係数) * DISH_TIME
+		;신뢰
+		TFLAG:98 = 2 + (ABL:DISH_ASSI:요리기능 / 2)
+		SELECTCASE DISH_TYPE
+		CASE "경식"
+			DOWNBASE:DISH_ASSI:체력 = 50
+			DOWNBASE:DISH_ASSI:기력 = 50
+		CASE "주식"
+			DOWNBASE:DISH_ASSI:체력 = 100
+			DOWNBASE:DISH_ASSI:기력 = 100
+		CASE "디저트"
+			DOWNBASE:DISH_ASSI:체력 = 100
+			DOWNBASE:DISH_ASSI:기력 = 100
+		ENDSELECT
+		;조금 복잡하지만 필요하면 이렇게→ 1 + RAND : (기본점 / 4) + 습득 속도
+		EXP:DISH_ASSI:요리경험 ++
+		SIF ITEM:조리지도서 && !RAND:2
+			EXP:DISH_ASSI:요리경험 ++
+		SIF CFLAG:DISH_ASSI:동행
+			CFLAG:DISH_ASSI:동행 += DISH_TIME
+		STAIN:DISH_ASSI:구 = 0
+		STAIN:DISH_ASSI:손 = 0
+		CFLAG:DISH_ASSI:구내정액 = 0
+		CFLAG:DISH_ASSI:안면정액 = 0
+		CFLAG:DISH_ASSI:손에정액 = 0
+	ENDIF
+	RETURN 1
+ENDIF
+CLEARLINE 15 + LCOUNT
+RESTART
+
+;-------------------------------------------------
+;요리를 만드는 함수라고 해도 대부분의 정보는 이미 설정된 상태이다
+;여기서는 조리부분을 처리
+;-------------------------------------------------
+@DISH_COOKING
+#DIM 도구력
+#DIM 보너스점수
+#DIM 감점
+;혹시 모르니 최종 체크
+SIF DISH_NAME == ""
+	THROW
+SIF DISH_TYPE == ""
+	THROW
+SIF !DISH_TIME
+	THROW
+
+PRINTFORMW \@ DISH_ASSI ? %조사처리(CALLNAME:DISH_ASSI,"와")% # \@【%DISH_NAME%】%조사만처리(DISH_NAME,"을")% 만듭니다
+PRINTFORML ・
+PRINTFORML ・・・
+SIF DISH_TIME > 10
+	PRINTFORML ・・・・・・
+SIF DISH_TIME > 30
+	PRINTFORML ・・・・・・・・・・・・
+;꼬임
+IF DISH_TYPE == "경식"
+	CALL COOKING_TAKARI([[유유코]], 5)
+	CALL COOKING_TAKARI([[시온]], 5)
+ELSEIF DISH_TYPE == "주식"
+	CALL COOKING_TAKARI([[유유코]], 10)
+	CALL COOKING_TAKARI([[시온]], 10)
+ENDIF
+
+;TASTE 설정
+SIF FLAG:역극
+	CALL DISH_TASTE_FROM_CHARA(FLAG:역극)
+SIF DISH_ASSI
+	CALL DISH_TASTE_FROM_CHARA(DISH_ASSI)
+DISH_TASTE += "갓만든/"
+DISH_TASTE += DISH_NAME + "/"
+DISH_TASTE += DISH_TYPE + "/"
+;[연습]은 계절에 맞지 않는 것을 지움
+SIF STRCOUNT(DISH_TASTE, "연습/")
+	DISH_TASTE '= REPLACE(DISH_TASTE, "철지난\/", "")
+;[중립온도]는 여름에만 차갑다(소바, 우동 등）
+IF STRCOUNT(DISH_TASTE, "중립온도/")
+	IF GET_MONTH() == "여름의 달"
+		DISH_TASTE '= REPLACE(DISH_TASTE, "중립온도\/", "차가운/")
+	ELSE
+		DISH_TASTE '= REPLACE(DISH_TASTE, "중립온도\/", "따뜻한/")
+	ENDIF
+ENDIF
+;신선도 설정, 조리 시간을 추가해 둔다.
+DISH_LIMIT = DISH_MAXLIMIT + DISH_TIME
+
+;표시용 요리명 설정
+EX_DISH_NAME = 
+SIF DISH_ASSI
+	EX_DISH_NAME += CALLNAME:DISH_ASSI + @"%조사만처리(CALLNAME:DISH_ASSI,"와")% 만든 "
+IF STRCOUNT(DISH_TASTE, "메이드류/")
+	EX_DISH_NAME += "메이드류 "
+ELSEIF STRCOUNT(DISH_TASTE, "텐구류/")
+	EX_DISH_NAME += "텐구류 "
+ELSEIF STRCOUNT(DISH_TASTE, "명계풍/")
+	EX_DISH_NAME += "명계풍 "
+ELSEIF STRCOUNT(DISH_TASTE, "천계풍/")
+	EX_DISH_NAME += "천계풍 "
+ELSEIF STRCOUNT(DISH_TASTE, "지저풍/")
+	EX_DISH_NAME += "지저풍 "
+ELSEIF STRCOUNT(DISH_TASTE, "지옥풍/")
+	EX_DISH_NAME += "지옥풍 "
+ELSEIF STRCOUNT(DISH_TASTE, "축생류/")
+	EX_DISH_NAME += "축생류 "
+ELSEIF STRCOUNT(DISH_TASTE, "달도시풍/")
+	EX_DISH_NAME += "달도시풍 "
+ELSEIF STRCOUNT(DISH_TASTE, "옥토끼풍/")
+	EX_DISH_NAME += "옥토끼풍 "
+ELSEIF STRCOUNT(DISH_TASTE, "마계풍/")
+	EX_DISH_NAME += "마계풍 "
+ELSEIF STRCOUNT(DISH_TASTE, "몽환풍/")
+	EX_DISH_NAME += "몽환풍 "
+ELSEIF STRCOUNT(DISH_TASTE, "외계풍/")
+	EX_DISH_NAME += "외계풍 "
+ELSEIF STRCOUNT(DISH_TASTE, "화학적/")
+	EX_DISH_NAME += "화학적 "
+ELSEIF STRCOUNT(DISH_TASTE, "소인족 비전의 맛/")
+	EX_DISH_NAME += "소인족 비전의 "
+ELSEIF STRCOUNT(DISH_TASTE, "히에다가 비전의 맛/")
+	EX_DISH_NAME += "히에다가 비전의 "
+ELSEIF STRCOUNT(DISH_TASTE, "순화된 맛/")
+	EX_DISH_NAME += "순화된 "
+ELSEIF STRCOUNT(DISH_TASTE, "역전/")
+	EX_DISH_NAME += "역전된 "
+ELSEIF STRCOUNT(DISH_TASTE, "대화력/")
+	EX_DISH_NAME += "대화력 "
+ELSEIF STRCOUNT(DISH_TASTE, "빙결/")
+	EX_DISH_NAME += "빙결 "
+ELSEIF STRCOUNT(DISH_TASTE, "몰카맛/")
+	EX_DISH_NAME += "몰카 "
+ELSEIF STRCOUNT(DISH_TASTE, "미지의맛/")
+	EX_DISH_NAME += "불가사의한 "
+ELSEIF STRCOUNT(DISH_TASTE, "반짝임/")
+	EX_DISH_NAME += "반짝이는 "
+ELSEIF STRCOUNT(DISH_TASTE, "생명력/")
+	EX_DISH_NAME += "요정의 "
+ELSEIF STRCOUNT(DISH_TASTE, "선술/")
+	EX_DISH_NAME += "선인의 "
+ELSEIF STRCOUNT(DISH_TASTE, "오니의마력/")
+	EX_DISH_NAME += "오니의 "
+ELSEIF STRCOUNT(DISH_TASTE, "피의마력/")
+	EX_DISH_NAME += "흡혈귀의 "
+ELSEIF STRCOUNT(DISH_TASTE, "마력/")
+	EX_DISH_NAME += "마법의 "
+ELSEIF STRCOUNT(DISH_TASTE, "요력/")
+	EX_DISH_NAME += "요사로운 "
+ELSEIF STRCOUNT(DISH_TASTE, "영장/")
+	EX_DISH_NAME += "영적 "
+ELSEIF STRCOUNT(DISH_TASTE, "비술/")
+	EX_DISH_NAME += "미스틱한 "
+ENDIF
+IF STRCOUNT(DISH_TASTE, "야채 빼기/")
+	IF DISH_NAME == "야채볶음"
+		EX_DISH_NAME += "야채를 뺀 야채볶음"
+	ELSEIF DISH_NAME == "나물"
+		EX_DISH_NAME += "나물없음"
+	ELSEIF DISH_NAME == "채소절임 곱빼기밥"
+		EX_DISH_NAME += "곱빼기밥"
+	ELSEIF DISH_NAME == "모짜렐라 치즈와 토마토의 샐러드"
+		EX_DISH_NAME += "모짜렐라 치즈만의 샐러드"
+	ELSE
+		EX_DISH_NAME += "야채 빼기 "
+		EX_DISH_NAME += DISH_NAME
+	ENDIF
+ELSE
+	EX_DISH_NAME += DISH_NAME
+ENDIF
+PRINTFORML ＜%EX_DISH_NAME%＞
+CALL SHOW_TASTE(DISH_TASTE, "DISH_DATA")
+
+;기본 점수 계산
+도구력 = ITEM:은행나무도마
+보너스점수 = 0
+감점 = 0
+SIF STRCOUNT(DISH_TASTE, "도구의공명/")
+	TIMES 도구력, 2.0
+
+SIF STRCOUNT(DISH_TASTE, "제철/")
+	보너스점수 += 2
+SIF STRCOUNT(DISH_TASTE, "옥토끼풍/") && STRCOUNT(DISH_TASTE, "당근/")
+	보너스점수 += 2
+SIF STRCOUNT(DISH_TASTE, "프로의 맛/")
+	보너스점수 += 2
+SIF STRCOUNT(DISH_TASTE, "반짝임/")
+	보너스점수 += 1
+;자신있는 요리나 날카로움은 해당되지 않을 경우 소거되어 있으므로 이것으로 OK, 자신있는 요리는 "/"를 제외합니다.
+SIF STRCOUNT(DISH_TASTE, "특기요리")
+	보너스점수 += 2
+SIF STRCOUNT(DISH_TASTE, "섬세한맛/")
+	보너스점수 += 1
+SIF STRCOUNT(DISH_TASTE, "맛있는물/")
+	보너스점수 += 1
+;질투,숨겨진 맛의 효과는 먹을 때
+
+SIF DISH_DRG
+	감점 += 1
+SIF DISH_DRG_2
+	감점 += 1
+
+;DISH_ASSI가 0이면 MASTER니까 분기 필요없지만 일단
+IF DISH_ASSI
+	DISH_BASEPOINT = ABL:MASTER:요리기능 + ABL:DISH_ASSI:요리기능 + DISH_RANK + 도구력 + 보너스점수 - 감점
+	DISH_BASEPOINT = MIN(300 + (DISH_BASEPOINT * 20), 700)
+	PRINTFORM 솜씨：
+	CALL 만듦새(DISH_BASEPOINT)
+	PRINTFORML 　／%CALLNAME:MASTER%의 능력({ABL:MASTER:요리기능}) + %CALLNAME:DISH_ASSI%의 능력({ABL:DISH_ASSI:요리기능}) + 식재료의 품질({DISH_RANK}) \@ 도구력 ? + 도구의 품질({도구력}) # \@ \@ 보너스점수 ? + 보너스점수({보너스점수}) # \@ \@ 감점 ? - 첨가물({감점}) # \@
+ELSE
+	DISH_BASEPOINT = ABL:MASTER:요리기능 + ABL:MASTER:요리기능 + DISH_RANK + 도구력 + 보너스점수 - 감점
+	DISH_BASEPOINT = MIN(300 + (DISH_BASEPOINT * 20), 700)
+	PRINTFORM 솜씨：
+	CALL 만듦새(DISH_BASEPOINT)
+	PRINTFORML 　／%CALLNAME:MASTER%의 능력 x 2({ABL:MASTER:요리기능 * 2}) + 식재료의 품질({DISH_RANK}) \@ 도구력 ? + 도구의 품질({도구력}) # \@ \@ 보너스점수 ? + 보너스점수({보너스점수}) # \@ \@ 감점 ? - 첨가물({감점}) # \@
+ENDIF
+PRINTL 
+
+IF STRCOUNT(DISH_TASTE, "로터/")
+	TFLAG:194 = 100
+ELSEIF DISH_TYPE == "디저트"
+	TFLAG:194 = 3
+ELSEIF DISH_TYPE == "주식"
+	TFLAG:194 = 2
+ELSE
+	TFLAG:194 = 1
+ENDIF
+
+;WAIT
+
+;-------------------------------------------------
+;실행 판정
+;-------------------------------------------------
+@COM_ABLE413
+;정지 중에는 불가
+SIF FLAG:70 == 1
+	RETURN 0
+;청소 실행 판정
+SIF !TFLAG:100
+	RETURN 0
+;일괄관리
+SIF GLOBAL_COMABLE(413)
+	RETURN RESULT
+
+;주방인가
+SIF !KITCHEN(CFLAG:MASTER:현재위치) && ITEM:911==0 ;KR판 고유기능 간편 요리 도구
+	RETURN 0
+;기력 0
+SIF BASE:MASTER:기력 <= 0
+	RETURN 0
+SIF CFLAG:우후후
+	RETURN 0
+;동침중
+SIF CFLAG:동침중
+	RETURN 0
+;장난중
+SIF CFLAG:MASTER:장난
+	RETURN 0
+;이미 요리를 만들고 있다
+SIF DISH_NAME != ""
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;メニュー表示用の関数
+;ARGS     DISH_TYPE
+;RESULT   2=改行した,1=表示した,0=表示しない
+;-------------------------------------------------
+@SHOW_DISH_MENU(DISH_NUM, ARGS, SELECT_MENU, MENUCOUNT)
+#DIM DISH_NUM
+#DIM SELECT_MENU
+#DIM MENUCOUNT
+;요리データを呼ぶ
+CALL DISHDATA(DISH_NUM, ARGS)
+;作れなくてもグレーで表示する,選択中なら赤
+IF RESULT
+	IF RESULT < 10 && SELECT_MENU == DISH_NUM
+		SETCOLOR C_RED
+	ELSEIF RESULT < 10
+		SETCOLOR C_GRAY
+	ELSEIF SELECT_MENU == DISH_NUM
+		SETCOLOR C_AQUA
+	ELSEIF STRCOUNT(DISH_TASTE, "제철/") || STRCOUNT(DISH_TASTE, "길한물건/") || STRCOUNT(DISH_TASTE, "태풍고로케/")
+		SETCOLOR C_CREAM
+	ENDIF
+	PRINTFORM [{DISH_NUM, 3}]%DISH_NAME,35, LEFT%
+	RESETCOLOR
+	;改行したらRESULT = 2,表示したらRESULT = 1
+	IF (MENUCOUNT + 1) % 3 == 0
+		PRINTL 
+		RETURN 2
+	ELSE
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 0
+
+-------------------------------------------------
+;맛의 표시용 함수
+;맛에 한하지 않고 사용해 돌릴 수 있는 그렇게?
+;가로폭의 한계에 주의
+;-------------------------------------------------
+@SHOW_TASTE(TASTE_STR, PRINT_TYPE, INVISIBLE)
+#DIMS TASTE_STR               ;표시 대상의 맛데이터
+#DIMS DYNAMIC TASTE_LIST, 100 ;미 리스트
+#DIM  DYNAMIC TASTE_CNT,  100 ;미 리스트 각 요소의 중복 개수
+#DIM  DYNAMIC TASTE_NUM       ;미의 종류의 총수
+#DIM  DYNAMIC SHOW_NUM        ;표시한 맛의 수
+#DIM  TASTE_ID                ;루프용
+#DIMS PRINT_TYPE				;好き嫌いで高Lvを赤くしたり青くしたり
+#DIM INVISIBLE					;これが真だと？？？？表示にする　친밀が足りない時非表示など
+
+VARSET RESULTS
+SPLIT TASTE_STR, "＊", RESULTS
+IF RESULTS:1 != "" && PRINT_TYPE != "DISH_DATA"
+	LOCALS = [특기요리：%RESULTS:1%]
+	SETCOLOR C_CREAM
+	PRINTFORM 　%LOCALS, 20%
+	RESETCOLOR
+	SHOW_NUM ++
+ENDIF
+;맛리스트의 취득
+CALLF CNT_SPLIT(TASTE_STR, TASTE_LIST, TASTE_CNT, TASTE_NUM)
+;맛리스트의 표시
+FOR TASTE_ID, 0, TASTE_NUM
+	SIF !STRLENS(TASTE_LIST:TASTE_ID)
+		CONTINUE
+	;요리の情報を見る時用
+	IF PRINT_TYPE == "DISH_DATA"
+		SIF TASTE_CNT:TASTE_ID >= 2
+			SETCOLOR C_L_GREEN
+		SIF TASTE_CNT:TASTE_ID >= 3
+			SETCOLOR 0xffff96
+		SIF TASTE_CNT:TASTE_ID >= 5
+			SETCOLOR 0xffc8c8
+		IF GROUPMATCH(TASTE_LIST:TASTE_ID, "보너스", "제철", "길한물건", "태풍고로케")
+			SETCOLOR C_YELLOW
+			PRINTFORM [★%TASTE_LIST:TASTE_ID%]
+		ELSEIF GROUPMATCH(TASTE_LIST:TASTE_ID, "철지난")
+			SETCOLOR C_RED
+			PRINTFORM [%TASTE_LIST:TASTE_ID%]
+		ELSEIF GROUPMATCH(TASTE_LIST:TASTE_ID, "정력", "약효", "오니의마력", "피의마력", "인챈트", "가호", "기적", "행운", "풍요")
+			SETCOLOR C_GREEN
+			PRINTFORM [%TASTE_LIST:TASTE_ID%]
+		;表示しないもの
+		ELSEIF STRCOUNT(TASTE_LIST:TASTE_ID, DISH_NAME)
+		ELSEIF STRCOUNT(TASTE_LIST:TASTE_ID, DISH_TYPE) && DISH_TYPE != "디저트"
+		ELSEIF STRCOUNT(TASTE_LIST:TASTE_ID, "특기요리")
+		ELSEIF STRCOUNT(TASTE_LIST:TASTE_ID, "중립")
+		;伏せる
+		ELSEIF (STRCOUNT(TASTE_STR, "몰카맛") || STRCOUNT(TASTE_STR, "미지의맛")) && GROUPMATCH(TASTE_LIST:TASTE_ID, "단", "매운", "짠", "시큼한")
+			SETCOLOR C_P_PURPLE
+			PRINTFORM [？？？]
+		;通常
+		ELSE
+			PRINTFORM [%TASTE_LIST:TASTE_ID%]
+		ENDIF
+		RESETCOLOR
+		SHOW_NUM ++
+		;改行はしない
+	;助손効果を見る時用
+	ELSEIF PRINT_TYPE == "ASSIDATA"
+		IF GROUPMATCH(TASTE_LIST:TASTE_ID, "정력", "약효", "오니의마력", "피의마력", "인챈트", "가호", "기적", "행운", "풍요")
+			SETCOLOR C_YELLOW
+			LOCALS = [%TASTE_LIST:TASTE_ID%]　　
+		;表示しないもの
+		ELSEIF STRCOUNT(TASTE_LIST:TASTE_ID, "특기요리")
+			CONTINUE
+		ELSE
+			LOCALS = [%TASTE_LIST:TASTE_ID%]　　
+		ENDIF
+		PRINTFORM 　%LOCALS, 20%
+		RESETCOLOR
+		SHOW_NUM ++
+		SIF SHOW_NUM % 5
+			CONTINUE
+		PRINTFORML 
+	;キャラの好みを見る時用
+	ELSE
+		IF TASTE_CNT:TASTE_ID >= 2
+			IF PRINT_TYPE == "POSITIVE"
+				SETCOLOR C_GREEN
+			ELSEIF PRINT_TYPE == "NEGATIVE"
+				SETCOLOR C_ORANGE
+			ENDIF
+		ENDIF
+		IF TASTE_CNT:TASTE_ID >= 5
+			IF PRINT_TYPE == "POSITIVE"
+				SETCOLOR C_AQUA
+			ELSEIF PRINT_TYPE == "NEGATIVE"
+				SETCOLOR C_RED
+			ENDIF
+		ENDIF
+		LOCALS = [%TASTE_LIST:TASTE_ID%]Lv{TASTE_CNT:TASTE_ID, 2}
+		SIF INVISIBLE
+			LOCALS = [？？？？]Lv{TASTE_CNT:TASTE_ID, 2}
+		;시스템측에서 6 문자, 맛명칭에 14 문자분을 깨어 앞
+		PRINTFORM 　%LOCALS, 20%
+		RESETCOLOR
+		SHOW_NUM ++
+		SIF SHOW_NUM % 5
+			CONTINUE
+		PRINTFORML 
+	ENDIF
+NEXT
+IF PRINT_TYPE == "DISH_DATA"
+	PRINTL 
+ELSE
+	SIF SHOW_NUM % 5
+		PRINTFORML 
+ENDIF
+
+;-------------------------------------------------
+;요리の만듦새を表示する関数
+;-------------------------------------------------
+@만듦새(ARG)
+CHKFONT "ＭＳ P明朝"
+SIF RESULT
+	SETFONT "ＭＳ P明朝"
+FONTBOLD
+SELECTCASE ARG
+CASE IS < 400
+	SETCOLOR C_RED
+	PRINT 【악】
+CASE IS < 500
+	SETCOLOR C_ORANGE
+	PRINT 【빈】
+CASE IS < 600
+	SETCOLOR C_YELLOW
+	PRINT 【양】
+CASEELSE
+	SETCOLOR C_PINK
+	PRINT 【미】
+ENDSELECT
+SETFONT 
+FONTREGULAR
+RESETCOLOR
+
+;-------------------------------------------------
+;요리情報をリ세트する関数
+;-------------------------------------------------
+@RESET_DISH
+DISH_NAME = 
+DISH_TASTE = 
+DISH_TYPE = 
+DISH_COMMENT = 
+VARSET DISH_ING, -1
+DISH_TIME = 0
+DISH_DRG = 0
+DISH_DRG_2 = 0
+DISH_ASSI = 0
+EX_DISH_NAME = 
+DISH_BASEPOINT = 0
+DISH_LIMIT = 0
+FLAG:요리 = 0
+DISHNAME = 
+;-------------------------------------------------
+;요리中にたかりに来る関数
+;-------------------------------------------------
+@COOKING_TAKARI(ARG, 확률)
+#DIM 확률
+
+;タカらない
+IF !CAN_TAKARI(ARG)
+	확률 = 0
+;내방중이라면 100%
+ELSEIF AT_HOME(ARG) && !CFLAG:ARG:신사거주
+	확률 = 100
+;같은 거점이라면 2분의 1
+ELSEIF AT_HOME(ARG) && CFLAG:ARG:신사거주
+	확률 = 확률 * 1 / 2
+ENDIF
+
+;확률
+SIF 확률 < RAND:100
+	RETURN
+
+CFLAG:ARG:거점내방 = 1
+CFLAG:ARG:현재위치 = CFLAG:MASTER:현재위치
+TCVAR:ARG:가능한한움직이지않는다 = 1
+PRINTFORM 요리하는 낌새를 알아채고 %ARG가% 왔다……
+PRINTL 
+
+;-------------------------------------------------
+;たかれるかの判定関数
+;-------------------------------------------------
+@CAN_TAKARI(ARG)
+#FUNCTION
+;活動時間-1h外
+SIF !BETWEENTIME(CFLAG:ARG:내방시간, CFLAG:ARG:귀가시간 - 60)
+	RETURNF 0
+;MASTERが外
+SIF !AT_HOME(MASTER)
+	RETURNF 0
+;초대방
+SIF CFLAG:MASTER:현재위치 == OMANEKIBEYA()
+	RETURNF 0
+;MASTERと同じ場所
+SIF CFLAG:ARG:현재위치 == CFLAG:MASTER:현재위치
+	RETURNF 0
+;寝てる
+SIF CFLAG:ARG:수면
+	RETURNF 0
+;仕事中
+SIF CFLAG:ARG:행동 == 5
+	RETURNF 0
+RETURNF 1
+
+;-------------------------------------------------
+;구상等で即席요리를 만든다関数
+;食材は消費せず、DISH_ING:1を使用する
+;CHARA１人のみの効果を得る
+;道具の効果は得られない
+;ARGS 연습用
+;-------------------------------------------------
+@요리생성(요리명, CHARA, ARGS)
+#DIMS 요리명
+#DIM CHARA
+#DIM DISH_NUM
+#DIM 보너스점수
+CALL RESET_DISH
+CALL 요리번호출력(요리명, "요리생성")
+DISH_NUM = RESULT
+DISH_TYPE = %RESULTS:1%
+DISH_RANK = 식재레밸(DISH_ING:1)
+;DISHNAMEは구上でのみ使用してください
+DISHNAME = %DISH_NAME%
+FLAG:요리 = DISH_NUM
+
+CALL DISH_TASTE_ADD(DISH_ING:1)
+IF !CHARA && FLAG:역극
+	CALL DISH_TASTE_FROM_CHARA(FLAG:역극)
+ELSE
+	CALL DISH_TASTE_FROM_CHARA(CHARA)
+ENDIF
+SIF ARGS == "연습"
+	DISH_TASTE += "연습/"
+DISH_TASTE += "갓만든/"
+DISH_TASTE += DISH_NAME + "/"
+SIF STRCOUNT(DISH_TASTE, "연습/")
+	DISH_TASTE '= REPLACE(DISH_TASTE, "철지난\/", "")
+DISH_LIMIT = DISH_MAXLIMIT
+EX_DISH_NAME = %DISH_NAME%
+보너스점수 = 0
+SIF STRCOUNT(DISH_TASTE, "제철/")
+	보너스점수 += 2
+SIF STRCOUNT(DISH_TASTE, "길한물건/")
+	보너스점수 += 2
+SIF STRCOUNT(DISH_TASTE, "태풍고로케/")
+	보너스점수 += 2
+SIF STRCOUNT(DISH_TASTE, "옥토끼풍/") && STRCOUNT(DISH_TASTE, "당근/")
+	보너스점수 += 2
+SIF STRCOUNT(DISH_TASTE, "프로의 맛/")
+	보너스점수 += 2
+SIF STRCOUNT(DISH_TASTE, "특기요리")
+	보너스점수 += 2
+SIF STRCOUNT(DISH_TASTE, "반짝임/")
+	보너스점수 += 1
+SIF STRCOUNT(DISH_TASTE, "섬세한맛/")
+	보너스점수 += 1
+SIF STRCOUNT(DISH_TASTE, "맛있는물/")
+	보너스점수 += 1
+DISH_BASEPOINT = ABL:CHARA:요리기능 * 2 + DISH_RANK + 보너스점수
+DISH_BASEPOINT = MIN(300 + (DISH_BASEPOINT * 20), 700)
+
+;-------------------------------------------------
+;요리명から요리番号を逆算する関数
+;요리생성しないならリ세트する
+;気軽に使えません。要注意。
+;-------------------------------------------------
+@요리번호출력(요리명, 生成)
+#DIMS 요리명
+#DIMS 生成
+#DIM 結果保存
+結果保存 = 0
+FOR LOCAL, 101, 600
+	CALL DISHDATA(LOCAL)
+	IF DISH_NAME == 요리명
+		結果保存 = LOCAL
+		BREAK
+	ENDIF
+NEXT
+SIF 生成 != "요리생성" || !結果保存
+	CALL RESET_DISH
+VARSET RESULT
+RETURN 結果保存

@@ -1,0 +1,1496 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;セクハラ系커맨드
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;構文構成ほぼナズ구상からお借りしました
+;==================================================
+;310,尻を撫でる
+;TFLAG:193(1=不快(TALENT:臆病なら涙目) 2&&3=恥ずかしがる(TALENT:男嫌い兼MASTERが男なら、身をすくめる) 4=されるがまま)
+;CFLAG:우후후==2&&TCVAR:20(パンツ無し顔面騎乗(70=クンニ強制 71=フェラチオ強制 72=アナル奉仕) 35=スカート内見せつけ 52=素股)
+;CFLAG:우후후==2&&TEQUIP:식스나인(パンツありTCVAR:20(70～72)はこちら)
+;PREVCOM(305=膝枕
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;==================================================
+@M_KOJO_SUCCESS_COM_K30_310
+;成否判定
+;TFLAG:192(-2=커맨드終了、-1＝強制失敗、0=COM依存、1=強制成功or大成功
+TFLAG:192 = 0
+
+@M_KOJO_MESSAGE_COM_K30_310
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_310_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_310_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:70
+	ELSEIF TCVAR:만취
+	ELSEIF CFLAG:수면
+	ELSEIF CFLAG:우후후 == 2
+	ELSEIF CFLAG:318 == 1
+		PRINTFORMW 「뭐하는 겁니까!!」
+		PRINTFORMDW 에이키는 회오의 봉으로 %CALLNAME:MASTER%의 손을 때렸다
+	ELSE
+		SELECTCASE TFLAG:193
+			CASE 1
+				PRINTFORMDL 「……기분 나빠. 지금 당장 손을 집어넣어」
+				CALL K30_LECTURE_CHECK(27 + RAND:10, 1)
+			CASE 2, 3
+				IF TALENT:연모
+					PRINTFORM 「꺄앗! ……정말, 
+					IF K30_BE_SEEN()
+						PRINTFORMW %조사처리(K30_C_NAME(K30_FIND_AROUND(),1),"가")% 이쪽을 보고 있어요…」
+					ELSE
+						PRINTFORMW 장난만 치고…」
+					ENDIF
+					PRINTFORMW 「정말 어쩔 수 없는 사람이네요……」
+				ELSE
+					PRINTFORMW 「ㅇ, 이상한 장난치지 말아 주세요!」
+				ENDIF
+			CASE 4
+				IF TALENT:연모
+					IF K30_BE_SEEN()
+						PRINTDATAW
+							DATAFORM 「다음은 장소를 바꾸고…… 계속해요♥」
+							DATAFORM 「안 돼……이런… 사람들 앞에서는……」
+							DATAFORM 「ㅈ, 잠깐…, %K30_C_NAME(K30_FIND_AROUND(),2)%도 있으니까…」
+						ENDDATA
+					ELSE
+						PRINTDATAW
+							DATAFORM 「…더 만져도 돼요……♥」
+							DATAFORM 「쓰다듬는 것만으로, 만족하는 건가요…?」
+							DATAFORM 「아앙앗♥　……정말, 어쩔 수 없는 사람…♥」
+						ENDDATA
+					ENDIF
+				ELSE
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 「…안 돼요…%K30_C_NAME(MASTER)%……」
+						CASE 1
+							PRINTFORMW 「안……돼요, 이런 짓은……」
+							SIF K30_BE_SEEN() 
+								PRINTFORMW 「%조사처리(K30_C_NAME(K30_FIND_AROUND(),1),"가")% 보고 있어요… 부끄러워…」
+						CASE 2
+							PRINTFORMW 「어딜 만지는거야……정말…」
+					ENDSELECT
+				ENDIF
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;311,껴안는다
+;TFLAG:193(1=大成功 0=成功 -1=失敗)
+;CFLAG:우후후==2&&TCVAR:20(32=前から抱きつく 60=ディープキス 73=ぱふぱふ 74=乳合わせ 77=乳を吸わせる VA성교(85=V挿入する 87=A挿入する 88=腰振りV 89=腰振りA) 86=だいしゅきホールド)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;==================================================
+@M_KOJO_SUCCESS_COM_K30_311
+;成否判定
+;TFLAG:192(-2=커맨드終了、-1＝強制失敗、0=COM依存、1=強制成功or大成功
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K30_311
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_311_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_311_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:70
+	ELSEIF TCVAR:만취
+		PRINTFORMW 「\@ DAY:2 == 4 ? 으～응, 머야아～ # 더～워～어～ \@……」
+	ELSEIF CFLAG:수면
+	ELSEIF CFLAG:우후후 == 2
+	ELSEIF CFLAG:318 == 1
+		PRINTFORMDL 껴안으려 하자, 에이키의 회오의 봉이 목에 찔렸다
+		PRINTFORMW 「…떨어지세요」
+;	ELSEIF TFLAG:193 == -1
+;		PRINTFORMDL 껴안으려 하자, 에이키는 슬쩍 피했다
+;		PRINTFORMW 「…발정기의 개입니까? 당신은」
+	ELSEIF CFLAG:동침중
+		SELECTCASE RAND:3
+			CASE 0
+				SELECTCASE DAY:2
+					CASE 1, 3
+						IF	RAND:2 == 1
+							PRINTFORMW 「응……따끈따끈…… 기분 좋아……」
+						ELSE
+							PRINTFORMW 「후훗……이불도……이거라면 필요 없을지도」
+						ENDIF
+					CASE 2
+						IF	RAND:2 == 1
+							PRINTFORML 「으응…, 역시……더워…」
+							PRINTFORMW 「미안해…… 싫은 건 아니지만…」
+						ELSE
+							PRINTFORMW 「땀……흘리고 있으니까……곤란한데……」
+						ENDIF
+					CASE 4
+						IF	RAND:2 == 1
+							PRINTFORML 「응ー……조금만…더 붙어줘……」
+							PRINTFORMW 「……따듯해…」
+						ELSE
+							PRINTFORMW 「으응……, 이걸로……춥지 않겠네…」
+						ENDIF
+				ENDSELECT
+			CASE 1
+				PRINTFORMW 「응ー……헤헤♪　…옳지…옳지……」
+				PRINTFORMDW 에이키가 머리를 쓰다듬어 주었다…
+			CASE 2
+				PRINTFORML 「으읏……%K30_C_NAME(MASTER)%……」
+				PRINTFORMDW 에이키는 뺨을 %CALLNAME:MASTER%의 뺨에 바싹 다가왔다
+		ENDSELECT
+	ELSEIF TALENT:연인
+		SELECTCASE RAND:3
+			CASE 0
+				PRINTFORMW 「후훗, 연인 사이니까요」
+				PRINTFORMW 「시끄러운 염마님도 지금은… 휴식이에요…♥」
+			CASE 1
+				PRINTFORMW 「안…돼요…이런 짓 하면…」
+				PRINTFORMW 「제가 참을 수 없게 되버려요……♥」
+			CASE 2
+				PRINTFORMW 「…………좀 더, 꼬ㅡ옥…해주세요」
+				PRINTFORMDW 에이키는 전신을 %CALLNAME:MASTER%에게 바싹 다가왔다
+		ENDSELECT
+	ELSEIF TALENT:연모
+	;「嬉しそうに抱き返してきた…」
+		SELECTCASE RAND:3
+			CASE 0
+				PRINTFORMDW 에이키는 아무 말도 하지 않고 눈을 감고 있다
+				PRINTFORMW 「잠시만…이대로……」
+			CASE 1
+				PRINTFORML 「…사람의 온기란 건 이렇게나……」
+				PRINTFORMW 「왠지… 마음이 편해져요…」
+			CASE 2
+				PRINTFORMW 「응석 부리는 건……싫어하지 않아요……」
+				PRINTFORMW 「나도……이렇게 하고 싶었어……」
+		ENDSELECT
+	ELSEIF TALENT:사모
+	;「쑥스러움くさそうにしながらも、満更でもないようだ…」
+		PRINTDATAL
+			DATAFORM 「응석 부려도 곤란합니다만……」
+			DATAFORM 「정말… 손이 많이 가는 어린애 같아……」
+			DATAFORM 「갑자기 뭐 하시는 거예요……」
+		ENDDATA
+		PRINTFORMDW 그렇게 말하면서도 에이키의 입가에 미소가 맺혀 있다
+		IF FIRSTTIME("껴안는다")
+			PRINTFORML 
+			PRINTFORML （……정말, 어째서 싫지 않은걸까?）
+			PRINTFORMW （……이 기분은, 대체）
+			CALL K30_WRITE_DIARY(21)
+		ENDIF
+	ELSEIF ABL:친밀 > 5
+	;じたばたと身体を揺らして
+		IF RAND:2 == 0
+			PRINTFORMW 「………무슨 생각입니까?」
+		ELSE
+			PRINTFORMW 「…주위같은 건, 신경쓰지 않나요?」
+		ENDIF
+	ELSE
+	;突き飛ばし
+		PRINTFORML 「꺄앗!!」
+		PRINTFORMDW 에이키의 비명과 함께 %마스터는% 뒤로 나자빠졌다
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;312,キスする＠에이키님ベロちゅー連発阻止
+;TFLAG:193(99=拒絶(キス不可) 1=大成功 0=成功 -1=失敗)
+;CFLAG:우후후==2&&TCVAR:20(32=前から抱きつく 50=手淫 60=キス 성교(85=V挿入する 87=A挿入する 88=腰振りV 89=腰振りA) 86=だいしゅきホールド)
+;PREVCOM(305=膝枕
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;CFLAG:1602 キス制御플래그( 1=통상成功 2=分岐表示 3=ファーストキス処理 4=キスイベント処理)
+;==================================================
+@M_KOJO_SUCCESS_COM_K30_312
+;成否判定
+;TFLAG:192(-2=커맨드終了、-1＝強制失敗、0=COM依存、1=強制成功or大成功
+;에이키님은 ガード上げてる時はキスを判定で防御した振りをする
+;SOURCE,경험はいじらない単なる分岐
+TFLAG:192 = 0
+@M_KOJO_MESSAGE_COM_K30_312
+IF CFLAG:1801 == 0 || CFLAG:우후후 == 2 || FLAG:70 || CFLAG:수면 || CFLAG:동침중 || TFLAG:193 == 99
+	CALL TRAIN_MESSAGE
+ELSE
+	CALL K30_TRAIN_MESSAGE_KISS
+ENDIF
+CALL M_KOJO_MESSAGE_COM_K30_312_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_312_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:70
+	ELSEIF CFLAG:우후후 == 2
+		IF TALENT:연모
+			SELECTCASE TCVAR:20
+				;キス
+				CASE 20
+					IF RAND:2 == 1
+						PRINTFORMW 「%K30_C_NAME(MASTER)%도 하고싶어졌어…? ……쪽♥」
+						PRINTFORMW 「좋아, 몇 번이라도 해 줄게…♥　츄웃…츄르……」
+					ELSE
+						PRINTFORML 「정말, 그렇게 초조해하지 마… 내가, 해주고 싶으니까」
+						PRINTFORMW 「이제 당신은 눈을 감아줘……츄……으읏♥」
+					ENDIF
+				;前から抱きつく
+				CASE 32
+					IF RAND:2 == 1
+						PRINTFORMW 「%K30_C_NAME(MASTER)%, 좀 더… 세게, 꽉 안아줘……♥」
+						PRINTFORMW 「츗…으읏, 츄웃……츄븟, 츄르……」
+					ELSE
+						PRINTFORMW 「츄웃……츄웃♥　……츄……으읏」
+						PRINTFORMW 「더 이상 못 참겠나요? ……저도 그래요♥」
+					ENDIF
+				;手淫
+				CASE 50
+					IF RAND:2 == 1
+						PRINTFORMW 「츄웃♥　……츄우……으읏」
+						PRINTFORMW 「정말, 손이 비어버리잖아요」
+					ELSE
+						PRINTFORML 「츄픗…츄우, 응…응츄우… 푸핫, 아아」
+						PRINTFORMW 「후훗, 키스하고 있어도 알 수 있어요」
+						PRINTFORMW 「내 손에서 움찔움찔대는 거…♥」
+					ENDIF
+				;ディープキス
+				CASE 60
+					IF RAND:2 == 1
+						PRINTFORMW 「저기…%K30_C_NAME(MASTER)%, 좀 더…혀를 내밀어……아으읍♥」
+						PRINTFORMW 「응푸읏…응읏, 츄웃……쥬르, 츄르……」
+					ELSE
+						PRINTFORMW 「츄웃……쥬르, 츄르♥　……쥬릇!」
+						PRINTFORMW 「푸하앗……지금 건 굉장했어…♥　이어져서, 녹아가는 것 같아…♥」
+						PRINTFORMW 「한 번 더 해요… 좀 더, 좀 더해요…♥　아므읍…응츄우、쥬르릇…♥」
+					ENDIF
+				;85=V挿入する 88=腰振りV
+				CASE 85, 88
+					IF RAND:2 == 1
+						PRINTFORMW 「응프읏…하압, 츄우우…으응……아앙♥」
+						PRINTFORMW 「어서, 혀도…나에게 넣어줘♥　아읍…츄르」
+					ELSE
+						PRINTFORMW 「으읏♥　츄웃……낼름♥　응프읏…아읍♥」
+					ENDIF
+				;87=A挿入する 89=腰振りA
+				CASE 87, 89
+					IF RAND:2 == 1
+						CALL HPH_PRINT("「으응…응읏HPH　츄우…츄르, 으읏……으응～읏HPH　푸하앗」", "L")
+						CALL HPH_PRINT("「엉덩이랑… 입도 너무 좋아아…HPH」", "L")
+						CALL HPH_PRINT("「어느쪽도 좀 더HPH　좀 더HPH　해줘어HPH」", "W")
+					ELSE
+						CALL HPH_PRINT("「츄루HPH　츄웃……낼름, 쥬르릇HPH　……으응～HPH　응읏HPHHPH」", "W")
+					ENDIF
+				;だいしゅきホールド
+				CASE 86
+					SELECTCASE BASE:PLAYER:2
+						CASE 0 TO 2999
+							PRINTFORMW 「츄우우…응읏…츄웃♥……낼름, 쥬르……」
+							PRINTFORMW 「으읏♥ 느긋하게 즐겨주세요……♥」
+						CASE 3000 TO 9999
+							PRINTFORML 「츄웃……츄우, 낼름, 으으～～읍♥……츄웃」
+							PRINTFORMW 「안 돼, 당신은 참고 있어…♥」
+							PRINTFORMW 「나를, 기분 좋게 만드는 거야♥」
+						CASEELSE
+							PRINTFORML 「츄르, 쥬르…쥬르…쥬프읏, 츄우우♥」
+							PRINTFORMW 「좋아, 와 줘…♥　나에게 전부…싸줘♥」
+					ENDSELECT
+				;何が割り振られるか良く分からんので適当に使いまわしのチュパ音
+				CASEELSE
+					PRINTDATAW
+						DATAFORM 「츄우, 츄우……츄웃……츄팟……츄르」
+						DATAFORM 「으읏… 쥬웃………츄웃……낼름, 츄우우」
+						DATAFORM 「츄우, 츄우……응읏…………츄팟……츄루」
+					ENDDATA
+			ENDSELECT
+		ENDIF
+	ELSEIF CFLAG:수면 || TCVAR:만취 == 1
+	ELSEIF CFLAG:동침중
+		SELECTCASE RAND:3
+			CASE 0
+				PRINTFORMW 「응ー, …으…………후훗♪」
+			CASE 1
+				PRINTFORMW 「응… 고마워……」
+				PRINTFORMW 「행복한……꿈……꿀 수 있을 것 같아」
+			CASE 2
+				PRINTFORMW 「으읏………♥」
+				PRINTFORMW 「안 돼, 눈이…감길 것 같아……」 
+		ENDSELECT
+	ELSEIF CFLAG:318 == 1 
+		PRINTFORMW 「!!」
+		PRINTFORMDW 에이키는 회오의 봉으로 %CALLNAME:MASTER%의 안면을 두들겨 팼다
+		PRINTFORMDW 완전 아파!!
+	ELSEIF TFLAG:193 == 99
+		IF	RAND:2 == 0
+			PRINTFORMW 「…그런 걸 용서할거라 생각했습니까?」
+		ELSE
+			PRINTFORMW 「발정기의 개입니까? 당신은」
+		ENDIF
+	ELSE
+		SELECTCASE CFLAG:1602
+			CASE 0, 1
+				IF TALENT:연모 && ABL:욕망 >= 5
+				;「%타겟은% MASTER의 입술을 비집고 혀를 얽어갔다…」
+					;大成功
+					IF TFLAG:193 == 1
+						PRINTFORMDL %CALLNAME:MASTER%도 탐하듯이 에이키와 서로 혀를 휘감았다
+						PRINTFORML 「츄우、츄웃♥　……응긋……으읍……읍읍♥」
+						PRINTFORMDW 에이키의 쪽에서 입술을 떼고 놓아 주지 않는다…
+					ELSE
+						SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 「츄우, 츄우……츄웃……츄팟……푸하앗」
+								PRINTFORML 「후훗, 좀 더 어떠신가요♥……츄웃…츄웃」
+								PRINTFORMDW 이번에는 에이키가 눈꺼풀이나 코앞까지 키스를 서비스해 주었다…
+								
+							CASE 1
+								PRINTFORML 「으읏…쥬웃………츄웃……푸핫」
+								PRINTFORMDW 겨우 에이키가 입술을 떼자, 타액의 실이 두 사람 사이를 타고 흘러내렸다…
+							CASE 2
+								PRINTFORML 「그츄웃, 읏흐, 응므읏……으읏…♥」
+								PRINTFORMDW %CALLNAME:MASTER%도 이에 질세라 에이키의 이의 뒷면까지 혀로 덧그렸다.
+						ENDSELECT
+					ENDIF
+				ELSEIF ABL:욕망 >= 5
+				;「%타겟은% MASTER의 입술을 받아들였다…」
+					;大成功
+					IF TFLAG:193 == 1
+						PRINTFORML 「츄웃…………으……으으
+						PRINTFORML 「…………응…………푸핫………하아…하아…」
+						PRINTFORMDW 키스가 끝난 후에도 에이키는 상기된 얼굴로 멍하니 있다…
+					ELSE
+						SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 「츄우, ……으읏………츄우……하아」
+								PRINTFORMW 「…………보답이야, 츄웃」
+								PRINTFORMDW 에이키는 %CALLNAME:MASTER%에게 키스를 돌려받았다
+							CASE 1
+								PRINTFORML 「츄우, 츄우……응읏…………츄팟……」
+								PRINTFORMW 「……키스란건 이렇게…멋지구나…」
+							CASE 2
+								PRINTFORML 「응므읏, ……믑…………으읏…」
+								PRINTFORMDW 에이키가 적극적으로 입술을 밀어붙여 왔다…
+						ENDSELECT
+					ENDIF
+				ELSEIF ABL:친밀 >= 5
+				;「%타겟은% 뺨을 붉게 물들이고 있다…」
+					;大成功
+					IF TFLAG:193 == 1
+						PRINTFORML 「하읍, 응……츄우……」
+						PRINTFORML 「………………………♥」
+						PRINTFORMDW 키스가 끝난 후에도 에이키는 잠시 넋을 잃고 있다…
+					ELSE
+						SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 「……츄웃……」
+							CASE 1
+								PRINTFORML 「응읏, …츄우……」
+							CASE 2
+								PRINTFORMW 「으응……………」
+						ENDSELECT
+					ENDIF
+				ELSE
+				;「%타겟은% 갑작스런 일에 당황하고 있는 것 같다…」
+					PRINTFORML 「으으읍!? ……」
+				ENDIF
+			CASE 2
+				CFLAG:1602 = 1
+				IF TALENT:연모
+					IF K30_BE_SEEN()
+						SELECTCASE RAND:3
+							CASE 0
+								PRINTFORMW 「……이 다음은 장소를 바꿔서 하지 않으시겠어요?」
+							CASE 1
+								PRINTFORML 「저도 사실은 하고 싶다구요?」
+								PRINTFORMW 「%K30_C_NAME(K30_FIND_AROUND(),2)%도 앞에 있으니까…」
+							CASE 2
+								PRINTFORML 「안 돼, %K30_C_NAME(K30_FIND_AROUND(),2)%의 앞에서…」
+								PRINTFORMW 「내가… 참지 못하게 되버려…」
+						ENDSELECT
+					ELSE
+						IF RAND:2 == 1
+							PRINTFORMW 「있잖아, 가끔은 참아보는 것도 좋지 않을까」
+						ELSE
+							PRINTFORML 「안 된다는건 아니에요」
+							PRINTFORMW 「당신에게 참으라고 하면 어떤 얼굴을 할지 궁금해져서…」
+						ENDIF
+					ENDIF
+				ELSEIF ABL:욕망 >= 5
+					SIF K30_BE_SEEN()
+						PRINTFORML 「안 돼…%K30_C_NAME(K30_FIND_AROUND(),2)%도 보고 있으니까, 나중에」
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 「……지금은 이걸로 참아줘」
+						CASE 1
+							PRINTFORMW 「…여기에는 괜찮아요」
+							PRINTFORMDW 에이키는 쑥스러움을 숨기기 위해 웃고 있다
+						CASE 2
+							PRINTFORML 「여기에 하는 건… 이따가…」
+							PRINTFORMDW 에이키는 자신의 입술을 손가락으로 가리켰다
+					ENDSELECT
+				ELSEIF ABL:친밀 >= 5
+					SIF K30_BE_SEEN()
+						PRINTFORML 「보여지고 있어요……그러니까」
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 「친애의 표시라면 여기로 부탁드려요」
+						CASE 1
+							PRINTFORMW 「여기라면, 용서해줄게요」
+						CASE 2
+							PRINTFORML 「이쪽에, 부디」
+							PRINTFORMW 「……이것도 꽤나 부끄러워요」
+					ENDSELECT
+				ELSE
+					SIF K30_BE_SEEN()
+						PRINTFORML 「%조사처리(K30_C_NAME(K30_FIND_AROUND(),1),"가")% 보고 있으면 곤란해요……」
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 「네, 여기에는 괜찮아요」
+						CASE 1
+							PRINTFORMW 「이쪽에 부탁드려요」
+							PRINTFORMW 「……이것도 꽤 두근두근거린다구요?」
+						CASE 2
+							PRINTFORMW 「이쪽에 부탁드려요」
+							PRINTFORMW 「……이제, 만족하셨나요?」
+					ENDSELECT
+				ENDIF
+			CASE 3
+				CFLAG:1602 = 1
+				PRINTFORML 「네? …네엣!? 갑자기 무슨……」
+				PRINTFORMDW 겨우 움직이기 시작한 에이키에게 %마스터는% 설교당할 것이라 생각했지만 뭔가 상황이 다르다…
+				PRINTFORML 「입맞춤 당해서 두근거리긴 하지만…싫지는 않아요……」
+				PRINTFORMW 「뭘까요……이 기분은……」
+				PRINTFORMDL 또 굳어지기 시작한 에이키였지만, 퍼뜩 알아차린 듯이 얼굴을 들었다
+				PRINTFORMW 「ㄱ, 그래, 여자에게 갑자기 입을 맞추다니 비상식적이에요!」
+				PRINTFORML 「허락도 없이 해도 될 일이 아닙니다!」
+				PRINTFORMW 「거기다……보여지면… 부끄럽지 않습니까…」
+				PRINTFORMDL ……아무래도 허가가 있으면 해도 되나보다
+				PRINTFORMDW 남의 이목이 신경 쓰이는 것 같으니, 그 점은 주의해 보기로 하자
+			CASE 4
+				CFLAG:1602 = 1
+				PRINTFORMW 「ㅇ, 이건…그게……」
+				PRINTFORMDL 에이키는 말을 더듬고 있지만,
+				PRINTFORMW 「별안간 입을 맞추다니 몰상식합니다!」
+				PRINTFORMW 「ㅈ, 제가 하는 건 언제라도 상관 없지만, 당신이 하는 건 안 돼요!」
+				PRINTFORMDW 아마도 키스는 계속 보류인 것 같다
+				PRINTFORMW 「……절대로 안되는 건 아니에요? 단지, 그… 부끄러우니까…」
+				PRINTFORMW 「때와 경우에 따라서는… 그… 하셔도 상관 없어요」
+				PRINTFORMDL ……상당한 억지스럽지만 허가는 받았다
+				PRINTFORMDW 남의 이목이 신경 쓰이는 것 같으니, 그 점은 주의해 보기로 하자
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+;-------------------------------------------------
+;キス分岐地の文
+@K30_TRAIN_MESSAGE_KISS
+DRAWLINE
+RESULT = 1
+IF PREVCOM == 305
+	PRINTFORMD %조교자는% 슬하에서 몸을 일으켜 %CALLNAME:TARGET%의 입술에 살며시 입맞춤을 
+ELSE
+	PRINTFORMD %조교자는% %CALLNAME:TARGET%의 입을 자신의 입으로 
+ENDIF
+;ファーストキスは素通し
+IF CFLAG:1602 == 0
+	IF PREVCOM == 305
+		PRINTFORMDL 했다…
+	ELSE
+		PRINTFORMDL 막았다…
+	ENDIF
+	PRINTFORMDL %타겟은% 갑작스런 일에 놀라서 완전히 굳어 있다…
+	CFLAG:1602 = 3
+;キスイベント後初
+ELSEIF CFLAG:1602 == 4
+	IF PREVCOM == 305
+		PRINTFORMDL 했다…
+	ELSE
+		PRINTFORMDL 막았다…
+	ENDIF
+	PRINTFORMDL %타겟은% 놀라서, 멀뚱멀뚱 서있다…
+;成功
+ELSEIF K30_TRY_HARASS() && TFLAG:193 > -1
+	IF PREVCOM == 305
+		PRINTFORMDL 했다…
+	ELSE
+		PRINTFORMDL 막았다…
+	ENDIF
+	;せっかくだから分岐ふやそう
+	IF TALENT:연모 && ABL:욕망 >= 5
+		PRINTFORMDL %타겟은% %CALLNAME:PLAYER%의 입술을 비집고 혀를 얽어갔다…
+	ELSEIF ABL:욕망 >= 5
+		PRINTFORMDL %타겟은% %CALLNAME:PLAYER%의 입술을 받아들였다…
+	ELSEIF ABL:친밀 >= 5
+		PRINTFORMDL %타겟은% 뺨을 붉게 물들이고 있다…
+	ELSE
+		PRINTFORMDL %타겟은% 갑작스런 일에 당황하고 있는 것 같다…
+	ENDIF
+	CFLAG:1602 = 1
+;失敗orCOM依存の失敗
+;文はこんなだけどM경험とかは普通に入る
+ELSE
+	IF PREVCOM == 305
+		PRINTFORMDL 하려 하였으나 막혀버렸다…
+	ELSE
+		PRINTFORMDL 막기 전에 손으로 막혀버렸다…
+	ENDIF
+	PRINTL
+	IF TALENT:연모 
+		PRINTFORMDL %타겟은% \@ K30_BE_SEEN() ? 힐끗 주위를 둘러보고 # 장난스럽게 웃고 \@ 자기 뺨을 가리키고 있다…
+		PRINTFORMDL %조교자는% 원하는 대로 %CALLNAME:TARGET%의 볼에 키스를 했다…
+	ELSEIF ABL:욕망 >= 5
+		PRINTFORMDL %타겟은% 자기 뺨을 가리키고 있다…
+		PRINTFORMDL %조교자는% 포기하고 %CALLNAME:TARGET%의 볼에 가벼운 키스를 했다…
+	ELSEIF ABL:친밀 >= 5
+		PRINTFORMDL %타겟은% 미소를 지으며 앞머리를 쓸어 올리고 있다…
+		PRINTFORMDL 어쩔 수 없어 %조교자는% %CALLNAME:TARGET%의 이마에 가볍게 키스했다…
+	ELSE
+		PRINTFORMDL %타겟은% 손을 %CALLNAME:PLAYER%에게 가져갔다…
+		PRINTFORMDL 포기하고 %조교자는% %CALLNAME:TARGET%의 손등에 입을 맞추었다…
+	ENDIF
+	CFLAG:1602 = 2
+ENDIF
+TFLAG:400 = RAND:2
+SIF TFLAG:400 && (DATE_HITOGOMI() || WITH_MOB() == 9)
+	CALL DATE_HITOGOMI_MESSAGE(CFLAG:PLAYER:현재위치)
+CALL K30_COMPENSATE_MESSAGE
+PRINTFORMW 
+RETURN
+;==================================================
+;313,胸愛撫
+;CFLAG:우후후==2&&TCVAR:20(27=谷間を見せる 33=胸を揉ませる 53=パイズリ(小分岐は地の文EVENT_MESSAGE_COM_セクハラ.ERB参照) 73=ぱふぱふ 77=乳を吸わせる 성교(85=V挿入する 87=A挿入する 88=腰振りV 89=腰振りA) 86=だいしゅきホールド)
+;ABL:B감각(2未満=性的には感じてない 5未満=多少感じてる 5以上=カイカン)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;乳のサイズでも変わる場合があるので、地の文EVENT_MESSAGE_COM_セクハラ.ERB参照
+;==================================================
+@M_KOJO_SUCCESS_COM_K30_313
+;成否判定
+;TFLAG:192(-1＝強制失敗
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K30_313
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_313_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_313_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:70
+	ELSEIF CFLAG:수면 || TCVAR:만취 == 1
+	ELSEIF CFLAG:우후후 == 2
+		IF ABL:B감각 <= 1
+		;「%타겟은% 간지러워하고 있다…」
+			IF RAND:2 == 0
+				PRINTFORMW 「응…… 상냥하게, 히윽……으읏」
+			ELSE
+				PRINTFORMW 「간지러어… 아앙」
+			ENDIF
+		ELSEIF ABL:B감각 <= 3
+		;「%타겟은% 愛撫に熱い한숨を漏らし始めている…」
+			IF RAND:3 == 0
+				PRINTFORMW 「응아･･･크으･･…아아…앗」
+			ELSEIF RAND:2 == 0
+				PRINTFORMW 「으아……아앙…아아아…」
+			ELSE
+				PRINTFORMW 「으으읏! 응…아아앗」
+			ENDIF
+		ELSE
+		;「%타겟은% トロンとした표정になってされるがままになっている…」
+			IF RAND:3 == 0 
+				PRINTFORMW 「하아…… ㄱ, 거기에요……거기… 끝쪽에♥」
+			ELSEIF RAND:2 == 0
+				PRINTFORMW 「아앙……네…… 좀 더 당신의 손으로♥」
+			ELSE
+				PRINTFORMW 「하윽 ㅇ, 왠지 짜릿해, 시러엇♥」
+			ENDIF
+		ENDIF
+	ELSEIF TALENT:사모
+			IF K30_BE_SEEN()
+				PRINTFORMW 「ㅁ, 무슨 짓을 하는 겁니까! 당신은!」
+				CALL K30_LECTURE_CHECK(21 + RAND:20, 1)
+			ELSE
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORMW 「싫어, 싫어…」
+					CASE 1
+						PRINTFORMW 「히익…그만해 주세요…」
+					CASE 2
+						PRINTFORMW 「으으읏… 이상한 짓 하지 마…」
+				ENDSELECT
+			ENDIF
+	ELSEIF TALENT:연모
+		IF ABL:B감각 < 1
+			IF K30_BE_SEEN()
+				PRINTFORMW 「ㅇ, 이런 곳에서 안 돼요, 저기에 %조사처리(K30_C_NAME(K30_FIND_AROUND(),1),"가")%……」
+			ELSE
+				PRINTFORMW 「싫엇… 어딜 만지는 건가요!」
+			ENDIF
+		ELSEIF ABL:B감각 <= 3
+			IF K30_BE_SEEN()
+				PRINTFORMW 「ㅂ…부끄러워……%조사처리(K30_C_NAME(K30_FIND_AROUND(),1),"가")% ……혹시 보면……」
+			ELSE
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORMW 「햐앙…ㄴ, 놀래키지… 말아 주세요……」
+					CASE 1
+						PRINTFORMW 「아, 으응읏! 갑자기 그런……」
+					CASE 2
+						PRINTFORMW 「후으으, 하아앗, ㄴ, 너무 세게 만지지 마…」
+				ENDSELECT
+			ENDIF
+		ELSE
+			IF K30_BE_SEEN()
+				PRINTFORMW 「%조사처리(K30_C_NAME(K30_FIND_AROUND(),2),"가")%…보고 있어… ㅇ, 안 돼……용서해줘……♥」
+					SIF PALAM:욕정 > PALAMLV:5
+				PRINTFORMDW 하지만 에이키의 눈시울이 뜨겁게 글썽이며 계속 해달라고 호소하고 있다
+			ELSE
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORMW 「후으으, 하아아……하아앗……아으♥」
+					CASE 1
+						PRINTFORMW 「젖꼭지에 닿아서……히익♥」
+					CASE 2
+						PRINTFORMW 「하아……하아♥……작아도… 가슴은 좋으신가요?」
+				ENDSELECT
+			ENDIF
+		ENDIF
+	ELSE
+		IF K30_TRY_HARASS()
+			PRINTFORMW 「%TEXTR("안댓/시럿/시러어/이제/안 돼/안대애")%……」
+		ELSE
+			PRINTFORMDW 에이키에게 따가운 비난의 눈초리가 쏟아진다…
+			CALL K30_LECTURE_CHECK(40 + RAND:10, 1)
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;314,アナル愛撫
+;CFLAG:우후후==2&&TCVAR:20(72=アナル奉仕
+;CFLAG:우후후==2&&TEQUIP:식스나인(パンツありTCVAR:20(70～72)はこちら)
+;ABL:A감각(2未満=受け入れられない 4未満=異物感に翻弄 4以上=カイカン)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;TCVAR:374 スカートめくりコンボ플래그
+;==================================================
+@M_KOJO_SUCCESS_COM_K30_314
+;成否判定
+;TFLAG:192(-1＝強制失敗
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K30_314
+IF PREVCOM == 330 && TCVAR:30:374 == 1
+	CALL K30_LIFT_UP_SKIRT_COMBO
+ELSE
+	TCVAR:30:374 = 0
+ENDIF
+SIF TCVAR:30:374 == 0
+	CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_314_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_314_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:70
+	ELSEIF CFLAG:TARGET:수면 || TCVAR:만취 == 1
+	ELSEIF CFLAG:318 == 1
+	ELSEIF CFLAG:우후후 == 2
+		;顔面騎乗アナル・식스나인体勢
+		;書き分けできんし舌使うのでまとめる
+		IF TCVAR:20 == 72 || TEQUIP:식스나인
+			IF ABL:A감각 <= 3
+				PRINTFORMW 「으……응, 오싹오싹하지만…」
+				PRINTFORMW 「그만 두지마… 계속해줘…♥」
+			ELSE
+				IF TEQUIP:0 > 1
+					PRINTFORMW 「안…돼… 그렇게 하면, 속옷이 엉망이 되버려어…♥」
+				ELSE
+					CALL HPH_PRINT("「으으응HPH　……아앗…아앙HPH」", "W")
+					CALL HPH_PRINT("「엉덩이 좋아아아HPH　좀 더 혀로 쑤셔줘HPH」", "W")
+				ENDIF
+			ENDIF
+		;Vセックス中でA開発済
+		ELSEIF MASTER_POSE(6, 1) == 30 && ABL:A감각 > 3
+			PRINTFORMD 분위기에 탄 %마스터는% 
+			SIF TEQUIP:0 > 1
+				PRINTFORMD %SHOW_BOTTOM(TARGET)%를 옆으로 들추고 
+			PRINTDATADL
+				DATAFORM 손가락을 세 개로 늘려 오므라를 넓히듯이 넣고 꺼내기 시작한다
+				DATAFORM 비틀린 손가락을 갈고리처럼 구부려 빙글빙글 창자 벽을 자극하기 시작한다
+				DATAFORM 깊게 박은 손가락과 페니스로 질 벽을 사이에 두고 강하게 애무를 하기 시작한다
+			ENDDATA
+			PRINTFORMDL 순간 에이키의 교성이 점점 더 커지고 동시에 %조사처리(SLIT(),"가")% 강렬하게 죄어 왔다…
+			PRINTFORMW 
+			CALL HPH_PRINT, @"「앗HPH　히앗HPH　엉덩잇 %TEXTR("그런거엇/엉덩이이/넓히면/")%HPH　안대애HPHHPH」", "L"
+			SELECTCASE  RAND:3
+				CASE 0
+					CALL HPH_PRINT, @"「기분 좋아서어HPH　이상해져, 이상해져HPH　버려어어어HPH」", "L"
+				CASE 1
+					CALL HPH_PRINT, @"「무서워엇HPH　기분 좋아서어HPH　무서워엇HPH　이거 무서워엇HPHHPH」", "L"
+				CASE 2
+					CALL HPH_PRINT, @"「이런 거 필요없어엇HPH　이렇게, 기분 좋은거HPH　필요업써어어HPHHPH」", "L"
+			ENDSELECT
+			PRINTDATADW
+				DATAFORM 앞뒤 구멍에서 솟아나는 강렬한 쾌락에 에이키는 침을 흘리면서 헐떡이고 있다
+				DATAFORM 양구멍을 괴롭힘당하는 폭력적인 쾌감에 에이키는 흐느껴 울면서 허리를 뒤틀고 있다
+				DATAFORM %CALLNAME:MASTER%의 가차없는 뒷구멍 괴롭힘은 에이키에게 추잡한 소리를 내는 것 이외를 허용치 않는다
+			ENDDATA
+		ELSE
+			;パンツ越し愛撫
+			IF TEQUIP:0 > 1
+			;「%조교자는% %CALLNAME:TARGET%のアナルを옷の上から
+				IF ABL:A감각 <= 1
+				;指の腹で撫でるように愛撫した…　%타겟은% まだ感触を受け入れられないようだ…」
+					SELECTCASE  RAND:4
+						CASE 0
+							PRINTFORMW 「!? 어딜 만지는…」
+						CASE 1
+							PRINTFORMW 「거기…안대앳…!」
+						CASE 2
+							PRINTFORMW 「!! 그런 곳, 괴롭히면 안돼…」
+						CASE 3
+							PRINTFORMW 「ㅎ, 혹시…, 당신도 거기에 흥미가 있는거야…?」
+					ENDSELECT
+				ELSEIF ABL:A감각 <= 3
+				;解きほぐすように愛撫した…　%타겟은% 異物感に背筋を震わせている…」
+					SELECTCASE  RAND:3
+						CASE 0
+							PRINTFORMW 「후아, 엉덩이 구멍…, 들어오고 있어…」
+						CASE 1
+							PRINTFORMW 「응그읏…하아, 으읏…, 으응읏…」
+						CASE 2
+							PRINTFORMW 「안댓, 속옷이… 더러워져…아앙」
+					ENDSELECT
+				ELSE
+				;指をねじ込むようにして愛撫した…　%타겟은% 恍惚とした표정になってされるがままになっている…」
+					SELECTCASE  RAND:3
+						CASE 0
+							CALL HPH_PRINT("「하으…! 그렇게 펼치면HPH　크, 응HPH」", "W")
+						CASE 1
+							CALL HPH_PRINT("「엉덩이……HPH　좀 더어HPH」", "W")
+						CASE 2
+							CALL HPH_PRINT("「으읏HPH　아……아앗HPH」", "W")
+					ENDSELECT
+				ENDIF
+			;直接愛撫
+			ELSE
+			;「%조교자는% %CALLNAME:TARGET%의 애널을 
+				IF ABL:A감각 <= 1
+				;指の腹で撫でるように愛撫した…　%타겟은% まだ感触を受け入れられないようだ…」
+					SELECTCASE  RAND:3
+						CASE 0
+							PRINTFORMW 「읏!? 거깃!? …으읏」
+						CASE 1
+							PRINTFORMW 「하으!? …지금 건…뭐야…」
+						CASE 2
+							PRINTFORMW 「ㅇ, 어딜 만지는, 크읏…」
+					ENDSELECT
+				ELSEIF ABL:A감각 <= 3
+				;解きほぐすように愛撫した…　%타겟은% 異物感に背筋を震わせている…」
+					SELECTCASE  RAND:3
+						CASE 0
+							PRINTFORMW 「ㅇ, 엉덩이 구멍이라니… 그런 건 이상한데……」
+						CASE 1
+							PRINTFORMW 「안…대앳…… 기분 좋아지면…안 돼…」
+						CASE 2
+							PRINTFORMW 「아앗…거기 만지면……」
+					ENDSELECT
+				ELSE
+				;指をねじ込むようにして愛撫した…　%타겟은% 恍惚とした표정になってされるがままになっている…」
+					SELECTCASE RAND:3
+						CASE 0
+							CALL HPH_PRINT("「읏아…아HPH　휘젓는거……좀…더엇…HPH」", "W")
+						CASE 1
+							CALL HPH_PRINT("「엉덩이이…HPH　찌걱찌거…하고, 내 엉덩이에…HPH」", "W")
+						CASE 2
+							CALL HPH_PRINT("「아앗HPH　엉덩이가아…이제 안 돼애……HPH」", "W")
+					ENDSELECT
+				ENDIF
+			ENDIF
+		ENDIF
+	;우후후以外
+	ELSEIF TALENT:사모
+		IF K30_BE_SEEN()
+			PRINTFORMW 「엣…ㅈ, 장난치지 마세요!!」
+			SIF RAND:2 == 0
+				CALL K30_LECTURE_CHECK(40 + RAND:15, 2)
+		ELSE
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORMW 「ㅅ, 싫어…」
+				CASE 1
+					PRINTFORMW 「히익…그만해 주세요…」
+				CASE 2
+					PRINTFORMW 「으읏…이상한 짓 하지마…」
+			ENDSELECT
+		ENDIF
+	;スカートめくりコンボ＠後回し
+	ELSEIF TCVAR:30:374 == 1
+		TCVAR:30:374 = 0
+;		IF RAND:2 == 1
+			PRINTFORMW 「아아…나 보여지고 있어…♥」
+			SIF TEQUIP:0 <= 1
+				PRINTFORML 「속옷도 차고있지 않는데, 보여지고 있어…」
+			PRINTFORMW 「엉덩이 구멍을 만져져서… 기뻐하고 있어, 보여지고 있어…♥」
+;		ELSE
+;		ENDIF
+	ELSEIF TALENT:연모
+	;「%조교자는% %CALLNAME:TARGET%のアナルを옷の上から
+		IF ABL:A감각 <= 1
+		;指の腹で撫でるように愛撫した…　%타겟은% まだ感触を受け入れられないようだ…」
+			IF K30_BE_SEEN()
+				PRINTFORMW 「안돼!! 이런거…누군가에게…보여지면……」
+			ELSE
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORMW 「ㅇ, 어딜 만지는 건가요!」
+					CASE 1
+						PRINTFORMW 「그만해……그런 곳은…」
+					CASE 2
+						PRINTFORMW 「꺄앗!? ……ㅇ, 안 돼요!」
+				ENDSELECT
+			ENDIF
+		ELSEIF ABL:A감각 <= 3
+		;解きほぐすように愛撫した…　%타겟은% 異物感に背筋を震わせている…」
+			IF K30_BE_SEEN()
+				PRINTFORML 「으크윽♥　……여기선! 여기선 안 돼요! ……%조사처리(K30_C_NAME(K30_FIND_AROUND(),1),"가")% …보고 있는데……그만해……」
+			ELSE
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORMW 「후왓 아앗…… 거기는♥……」
+					CASE 1
+						PRINTFORMW 「……아아앗, 아앗♥……」
+					CASE 2
+						PRINTFORMW 「아……앗, 아아♥……앗」
+				ENDSELECT
+			ENDIF
+		ELSE
+		;指をねじ込むようにして愛撫した…　%타겟은% 恍惚とした표정になってされるがままになっている…」
+			IF K30_BE_SEEN()
+				CALL HPH_PRINT, @"「안대……앳HPH　……%K30_C_NAME(K30_FIND_AROUND(),2)%…가…HPH　보고…있는데…HPH」", "L"
+				PRINTFORMDW 에이키는 입을 꾹 다물고 소리가 나오지 않도록 필사적으로 참고 있다
+					SIF PALAM:욕정 > PALAMLV:5
+					PRINTFORMDW 하지만 몸은 솔직히 %CALLNAME:MASTER%에게 조금씩 애무를 원해오고 있는 모양이다…
+			ELSE
+				SELECTCASE RAND:3
+					CASE 0
+						CALL HPH_PRINT("「손가락이……정말……좋아, 목소리가 나와버려…으읏………앗HPH」", "W")
+					CASE 1
+						CALL HPH_PRINT("「엉덩이………질척질척해……좀 더 해줘……HPH」", "W")
+					CASE 2
+						CALL HPH_PRINT("「아앗, 엉덩……이가아……안대애앳HPH」", "W")
+				ENDSELECT
+			ENDIF
+		ENDIF
+	ELSE
+		IF K30_TRY_HARASS()
+			PRINTFORMW 「%TEXTR("시러엇/싫어어/이제앳/안돼/아아앙/안대애")%……」
+		ELSE
+			PRINTFORMDW 에이키에게 따가운 비난의 눈초리가 쏟아진다…
+			CALL K30_LECTURE_CHECK(40 + RAND:15, 2)
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;315,クリ愛撫
+;CFLAG:우후후==2&&TCVAR:20(35=スカートの中を見せる 70=クンニ強制 85=V挿入する 86=だいしゅきホールド 87=A挿入する 88=腰振りV 89=腰振り
+;ABL:C감각(4未満=くすぐったい 6未満=ちょっといいかも 6以上=カイカン)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;TCVAR:374 スカートめくりコンボ플래그
+;==================================================
+@M_KOJO_SUCCESS_COM_K30_315
+;成否判定
+;TFLAG:192(-1＝強制失敗
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K30_315
+IF PREVCOM == 330 && TCVAR:30:374 == 1
+	CALL K30_LIFT_UP_SKIRT_COMBO
+ELSE
+	TCVAR:30:374 = 0
+ENDIF
+SIF TCVAR:30:374 == 0
+	CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_315_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_315_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:70|| CFLAG:수면 || TCVAR:만취 == 1
+	RETURN 1
+	ENDIF
+	IF TALENT:사모 && CFLAG:우후후 == 0
+		IF K30_BE_SEEN()
+			PRINTFORMW 「ㅁ, 무슨 짓을 하는 겁니까! 사람들 앞에서!」
+			CALL K30_LECTURE_CHECK(21 + RAND:20, 1)
+		ELSE
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORMW 「히익, 싫어…」
+				CASE 1
+					PRINTFORMW 「히익…그만해 주세요…」
+				CASE 2
+					PRINTFORMW 「으읏…이상한 짓은 하지마…」
+			ENDSELECT
+		ENDIF
+	;スカートめくりコンボ
+	ELSEIF TCVAR:30:374 == 1
+		TCVAR:30:374 = 0
+		IF TEQUIP:0 > 1
+			PRINTFORMW 「안돼…안돼앳, 이런 짓 하면 안되는데……♥」
+			PRINTFORMW 「아아아…%K30_C_NAME(K30_FIND_AROUND(),2)%도, 혹시 이쪽을 보고있어…?」
+		ELSE
+			IF RAND:2 == 1
+				PRINTFORML 「후앗♥　…부탁이야, 이제…그만해 주세요…부끄러워요…」
+				PRINTFORMW 「머리가 어떻게 되버릴 것 같아…」
+			ELSE
+				PRINTFORML 「햐, 아앗♥　당장, 그만해 주세요…」
+				PRINTFORMW 「다리가 떨려서…서 있을 수가 없어…」
+			ENDIF
+		ENDIF
+		PRINTFORMW 「%TEXTR("시러…/히이익/으으읏")%♥　%TEXTR("꼬집지/튕기지/문지르지")%마아… %K30_C_NAME(K30_FIND_AROUND(),2)%의 앞인데…」
+	ELSEIF TALENT:연모
+		IF ABL:C감각 < 4
+			IF K30_BE_SEEN() && CFLAG:우후후 == 0
+				PRINTFORMW 「ㅇ, 이런 데서는 안 돼요」
+			ELSE
+				PRINTFORMW 「엣, 기다려……으읏…」
+			ENDIF
+		ELSEIF ABL:C감각 < 6
+			IF K30_BE_SEEN() && CFLAG:우후후 == 0
+				PRINTFORMW 「안돼…안돼앳! 목소리가 나와버려…」
+			ELSE
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORMW 「후앗……、크으응…」
+					CASE 1
+						PRINTFORMW 「후아………히으윽……」
+					CASE 2
+						PRINTFORMW 「하아………, 하아…후우…」
+				ENDSELECT
+			ENDIF
+		ELSE
+			IF K30_BE_SEEN() && CFLAG:우후후 == 0
+				PRINTFORML 「………♥　……♥♥」
+				PRINTFORMW （아아♥　…분명히 %K30_C_NAME(K30_FIND_AROUND(),2)%도 보고 있는데…♥」
+				PRINTFORMDW 에이키는 입을 꾹 다물고 소리가 나오지 않도록 필사적으로 참고 있다
+				SIF PALAM:욕정 > PALAMLV:5
+					PRINTFORMDW 하지만 눈은 뜨겁게 글썽거려 %CALLNAME:MASTER%의 손을 스스로 받아들이고 있다…
+			ELSE
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORMW 「후앗, 응…거기잇! 하으으～…♥」
+					CASE 1
+						PRINTFORMW 「으ㅡ응……거기……좋아……좀 더♥」
+					CASE 2
+						PRINTFORMW 「괜찮아……조금만……세게 ……앗♥」
+				ENDSELECT
+			ENDIF
+		ENDIF
+	ELSE
+		IF K30_TRY_HARASS()
+			PRINTFORMW 「%TEXTR("안댓/시러엇/싫어어/이제앳/안 돼/안대애")%……」
+		ELSE
+			PRINTFORMDW 에이키에게 따가운 비난의 눈초리가 쏟아진다…
+			CALL K30_LECTURE_CHECK(40 + RAND:10, 1)
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;316,손가락 삽입
+;CFLAG:우후후==2&&TCVAR:20(35=スカートの中を見せる 70=クンニ強制 87=A挿入する 89=腰振りA
+;TALENT:처녀(指挿入れ連続時喪失注意、基本拒否ぎみ)
+;ABL:V감각(1未満=違和感に戸惑う 5未満=ちょっと気持ちいい 5以上＝カイカン)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;TCVAR:374 スカートめくりコンボ플래그
+;==================================================
+@M_KOJO_SUCCESS_COM_K30_316
+;成否判定
+;TFLAG:192(-1＝強制失敗
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K30_316
+IF PREVCOM == 330 && TCVAR:30:374 == 1
+	CALL K30_LIFT_UP_SKIRT_COMBO
+ELSE
+	TCVAR:30:374 = 0
+ENDIF
+SIF TCVAR:30:374 == 0
+	CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_316_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_316_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:70 || CFLAG:수면 || TCVAR:만취 == 1
+	RETURN 1
+	ELSEIF CFLAG:우후후 == 2
+		IF TALENT:연모
+			SELECTCASE TCVAR:20
+				;スカートの中を見せる
+				CASE 35
+					IF RAND:2 == 0
+						PRINTFORML 「저기… 이 안에 만지고 싶지… 어서♥
+					ELSE
+						PRINTFORML 「나의 이런 모습을 보여주는 건 당신 뿐이야…♥」
+					ENDIF
+					GOTO COUNTERV
+				;クンニ強制
+				CASE 70
+					IF RAND:2 == 0
+						PRINTFORMW 「아아…손가락, 손가락이 들어갔어…♥」
+					ELSE
+						PRINTFORML 「천천히 해줘……♥」
+						PRINTFORMW 「그래 거기…♥　상냥하게…좋앗! 좋아앗…♥」
+					ENDIF
+				;87=A挿入する 89=腰振りA
+				CASE 87, 89
+					IF RAND:2 == 0
+						CALL HPH_PRINT("「안쪽…HPH　안쪽에서 스치고 있어……HPH」", "W")
+					ELSE
+						CALL HPH_PRINT("「좋앗! 좋아아HPH　어느 쪽도…좋아아HPH」", "W")
+					ENDIF
+				;他
+				CASEELSE
+					$COUNTERV
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 「앗… 손가락 구부러진 곳에……거기! …아아으♥」
+						CASE 1
+							PRINTFORMW 「응… 천천히 움직여줘… 앗……아아앗♥」
+						CASE 2
+							PRINTFORMW 「아앙……굉장해♥　좋아……… 안쪽♥」
+					ENDSELECT
+			ENDSELECT
+		ENDIF
+	ELSEIF TALENT:사모
+		IF K30_BE_SEEN()
+			PRINTFORMW 「ㅁ, 무슨 짓을 하는 거예요!!」
+			CALL K30_LECTURE_CHECK(45 + RAND:5, 2)
+		ELSEIF TALENT:처녀 == 1 || TALENT:처녀 == -1
+			PRINTFORMW 「아, 당신이란 사람은 대체 무슨 짓을!!」
+			CALL K30_LECTURE_CHECK(40 + RAND:5, 2)
+		ELSE
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORMW 「시러, 싫어…」
+				CASE 1
+					PRINTFORMW 「히익… 그만해 주세요…」
+				CASE 2
+					PRINTFORMW 「으읏…이상한 짓은 하지마…」
+			ENDSELECT
+		ENDIF
+	;スカートめくりコンボ
+	ELSEIF TCVAR:30:374 == 1
+		TCVAR:30:374 = 0
+		;처녀で노출벽6までいくとか無いとは思うけど
+		IF TALENT:처녀 == 1 || TALENT:처녀 == -1
+			PRINTFORMW 「안댓!! 안돼 안돼, 이런 짓은!」
+			PRINTFORMW 「이런 거 무리야!!」
+		ELSEIF TEQUIP:0 > 1
+			IF ABL:V감각 <= 4 && RAND:2 == 1
+				PRINTFORML 「부탁이니까 이제…그만해 주세요 ……」
+				PRINTFORMW 「으읏, ㅂ, 부끄러워서 머리가 이상해질 것 같아…」
+			ELSE
+				PRINTFORML 「히익, 히으응읏♥　…이상해… 이런 게 기분 좋다니」
+				PRINTFORMW 「아앗♥… ㄴ, 나…」
+				PRINTFORMW 「정말…머리가, 머리가 이상해져 버린 것 같아…♥」
+			ENDIF
+		;노팬티スカートたくし上げ公開露出手○ンとか字面からして頭おかしい
+		ELSE
+			IF ABL:V감각 <= 4
+				PRINTFORML 「제발 용서해줘…ㅇ, 이런 짓은」
+				PRINTFORMW 「저기, 저 사람이 분명히 이쪽을 보고 있는데…」
+			ELSEIF RAND:2 == 1
+				PRINTFORML 「안대, 안대애…♥…기분 좋은 거 멈춰 줘…」
+				PRINTFORMW 「시러어어어♥ …누군가, 보고 있는 데…이제 용서해줘♥…」
+			ELSE
+				PRINTFORMW 「아읏, 후우…후우……아아앙♥」
+				PRINTFORMW 「보여져서 기분 좋아…… 참을 수 없어…」
+				PRINTFORMW 「나, 나… 이제…♥」
+			ENDIF
+		ENDIF
+	ELSEIF TALENT:연모
+		IF TALENT:처녀 == 1 || TALENT:처녀 == -1
+			PRINTFORMW 「잠깐! 어딜 만지는 겁니까!!」
+			PRINTFORMW （당신에게는 제대로 전해주고 싶은데…）
+		ELSEIF ABL:V감각 < 1
+			IF K30_BE_SEEN()
+				PRINTFORMW 「ㅇ, 이런 데서는 안 돼요」
+			ELSE
+				PRINTFORMW 「싫어… 어딜 만지는 겁니까」
+			ENDIF
+		ELSEIF ABL:V감각 <= 4
+			IF K30_BE_SEEN()
+				PRINTFORMW 「히익!……안돼앳, %K30_C_NAME(K30_FIND_AROUND(),1)%……보고 있을 지도 몰라요」
+			ELSE
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORMW 「앗……응……안 돼………」
+					CASE 1
+						PRINTFORMW 「그만……!! 갑자기 그러는 건, 안 돼……」
+					CASE 2
+						PRINTFORMW 「꺄읏……, 갑자기 이상한 짓……하지마………」
+				ENDSELECT
+			ENDIF
+		ELSE
+			IF K30_BE_SEEN()
+				PRINTFORMW 「히읏♥　……안 되잖아……%K30_C_NAME(K30_FIND_AROUND(),2)%도 보고 있어……용서해줘……」
+				SIF PALAM:욕정 > PALAMLV:5
+					PRINTFORMDW 하지만 손가락을 꿀꺽 삼키는 보지구멍은 뜨겁게 출렁이며 더한 쾌감을 찾아 달려드는 것 같다…
+			ELSE
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORMW 「시럿… 손가락 구부리면 싫어……아으♥」
+					CASE 1
+						PRINTFORMW 「싫어엇! 움직이지마아………앗♥」
+					CASE 2
+						PRINTFORMW 「아앙………잠깐, 제발 잠깐만………꺄앗♥」
+				ENDSELECT
+			ENDIF
+		ENDIF
+	ELSE
+		IF K30_TRY_HARASS()
+			PRINTFORMW 「%TEXTR("싫엇/시러어/싫어/안돼애")%……」
+		ELSE
+			PRINTFORMDW 에이키에게 따가운 비난의 눈초리가 쏟아진다…
+			CALL K30_LECTURE_CHECK(50 + RAND:10, 2)
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;317,腰を動かす
+;ABL:V감각(2未満=まだ気持ち良くない 5未満=ちょっと気持ちいい 5以上=カイカン
+;==================================================
+@M_KOJO_MESSAGE_COM_K30_317
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_317_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_317_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF ABL:V감각 < 2
+		PRINTFORML 「아으…읏, 아직 조금 익숙하지 않아서…」
+		PRINTFORMW 「천천히 움직여줘……」
+	ELSEIF ABL:V감각 < 5
+		PRINTFORML 「아앗, 당신의 것이……굉장해앳, 아앗♥」
+		PRINTFORMW 「아앙♥　괜찮, 으니까 움직여줘… 좀 더…!」
+	ELSE
+		SELECTCASE TFLAG:194
+			;容赦のないピストン
+			CASE 0, 1
+				IF TFLAG:194 == 1 && TEQUIP:TARGET:체위 == 3
+					PRINTFORML 「앗♥　안 돼, 내가♥　해 주고 싶은데」
+					PRINTFORMW 「아아앗♥　굉장해앳, 아앗♥　아앗♥」
+					
+				ELSE
+					PRINTFORML 「앗♥　안쪽, 안쪽에♥　닿고 있어♥」
+					PRINTFORMW 「거기 좀더어! 좋아앗♥　격렬한거 좋아앗♥」
+				ENDIF
+			;長いストローク
+			CASE 2
+				PRINTFORML 「후훗♥　좋아, 천천히 하는 것도 좋아…♥」
+				PRINTFORMW 「내가 기분 좋아지도록… 봉사해줘…♥」
+			;かき回し捏ねまわした
+			CASE 3
+				PRINTFORML 「아아, 아아앙앗♥　굉장한 곳에 닿고 있어…♥」
+				PRINTFORMW 「거기, 위쪽에… 앗♥　거기잇! 좋아앗♥」
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;318,腰を動かす（A）
+;==================================================
+@M_KOJO_MESSAGE_COM_K30_318
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_318_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_318_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF ABL:A감각 < 2
+		PRINTFORML 「으으윽!! 아직… 괴로울 지도…」
+		PRINTFORMW 「상냥하게 해줘……」
+	ELSEIF ABL:A감각 < 5
+		PRINTFORML 「이상해, 엉덩이 이상해… 힘이 빠져버려어…」
+		PRINTFORML 「잠깐만! 뺄 때는 천천히…움직여줘…」
+		CALL HPH_PRINT("「으읏, 응……아앙HPH」", "W")
+	ELSE
+		SELECTCASE TFLAG:194
+			;激しくorがむしゃら
+			CASE 0, 1
+				IF TFLAG:194 == 1 && TEQUIP:TARGET:체위 == 3
+					CALL HPH_PRINT("「앗HPH　아으 아아아 굉장해, 엉덩이! 좋아앗HPH」", "L")
+					CALL HPH_PRINT("「좀 더 밀어 올려줘어HPH　좀 더! 잔뜩HPH」", "W")
+				ELSE
+					CALL HPH_PRINT("「좋아앗HPH　엉덩이, 갱장해애HPH　죠아앗, 죠아앗!」", "W")
+				ENDIF
+			;ねちっこく
+			CASE 2
+				CALL HPH_PRINT("「그래HPH　천천히, 천천히 빼 줘… 히이이익HPHHPH」", "L")
+				CALL HPH_PRINT("「하아…하아… 앗, 거기HPH　또…아아아앙HPH」", "W")
+			;グラインド
+			CASE 3
+				IF TEQUIP:TARGET:체위 == 3
+					CALL HPH_PRINT("「앗HPH　앗, 앗HPHHPH　엉덩이이… 갱장해애HPH」", "L")
+					CALL HPH_PRINT("「엉덩이이 휘저어져어어…HPHHPH」", "W")
+				ELSE
+					CALL HPH_PRINT("「안쪼기잇HPH　엉덩이이 갱장해애HPH」", "L")
+					CALL HPH_PRINT("「기분 죠아앗HPH　기분 죠아아아앙HPH」", "W")
+				ENDIF
+		ENDSELECT
+	ENDIF
+	;절정に応じて一言
+	SIF ABL:A감각 > 2 && (NOWEX:MASTER:11 || (PALAM:욕정 > PALAMLV:4 && NOWEX:A절정))
+		CALL K30_PRE_ORG_MES_A(0)
+ENDIF
+RETURN 1
+
+;====================================================================================================
+;320,相手主導正常位
+;====================================================================================================
+@M_KOJO_MESSAGE_COM_K30_320
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_320_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_320_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+ENDIF
+RETURN 1
+;====================================================================================================
+;322,相手主導後背位
+;====================================================================================================
+@M_KOJO_MESSAGE_COM_K30_322
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_322_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_322_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+ENDIF
+RETURN 1
+;====================================================================================================
+;323,상대주도후배위A＠에이키님用にテンプレ外でも用意
+;====================================================================================================
+@M_KOJO_MESSAGE_COM_K30_323
+CALL K30_D_LINE
+CALL K30_COMPENSATE_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_323_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_323_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMDL %마스터는% 에이키에게 배후에서 덮쳐져, 애널에 귀두를 대고 천천히 허리를 숙여 갔다……
+	PRINTFORMDL 에이키는 달콤한 숨을 내쉬며 삽입감을 곱씹고 있다……
+	PRINTFORMW 
+	PRINTDATA LOCAL
+		DATAFORM 「앗
+		DATAFORM 「아핫
+		DATAFORM 「아하아…
+		DATAFORM 「왔다앗…
+	ENDDATA
+	CALL HPH_PRINT(@"HPH　")
+	SIF !LOCAL
+		CALL HPH_PRINT(@"아앗HPH　")
+	PRINTDATA
+		DATAFORM 드러와써엇
+		DATAFORM 안쪼옥, 좀 더어…안쪽에엣
+		DATAFORM %K30_C_NAME(MASTER)%의 것이…딱딱한 게
+	ENDDATA
+	CALL HPH_PRINT, @"HPHHPH」", "L"
+	IF RAND:2 == 1
+		CALL HPH_PRINT, @"「……엉덩이 기분 좋게 해줘HPH」", "L"
+	ELSE
+		CALL HPH_PRINT, @"「……함께 기분 좋아져요HPH」", "L"
+	ENDIF
+	IF RAND:2 == 1
+		PRINTFORMDW 에이키는 더 이상 참을 수 없다는 듯이, 바로 엉덩이를 앞뒤로 흔들기 시작했다…
+	ELSE
+		PRINTFORMDW 말하자 마자 에이키는 엉덩이를 밀어붙이며 더 깊게 엉덩이에 페니스를 삼키려 하고 있다…
+	ENDIF
+ENDIF
+;절정に応じて一言
+SIF ABL:A감각 > 2 && (NOWEX:MASTER:11 || (PALAM:욕정 > PALAMLV:4 && NOWEX:A절정))
+	CALL K30_PRE_ORG_MES_A(0)
+RETURN 1
+;==================================================
+;330,スカートめくり＠幽香구상構文お借りしました
+;TFLAG:193(-5=拒絶（ビンタ） -3=拒絶（つねり） -1=いやがる 0=いやがる（嬉しげ） 1=受け入れ)
+;TFLAG:193=1&&ABL:노출벽(5以上=人目のある장소で、自らスカートをまくり上げる 4以下=人目のある장소でめくられるさいに弱い抵抗 3以上=人目のない장소で自らスカートをまくり上げる 3未満=弱い抵抗)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;後ろからピラリ、ではなく、前からペラって感じ（そうじゃなかったら、めくり上げようとするのを止めて即座にビンタとか無理、めくり上げられた後にしかならないしその상황ならビンタ食らうより普通に弾幕で一発ＫＯにならないほうがおかしい
+;==================================================
+@M_KOJO_MESSAGE_COM_K30_330
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K30_330_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K30_330_1
+;-------------------------------------------------
+;기입 체크（=0, 비표시、1, 표시）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:70
+	ELSEIF CFLAG:우후후 == 2
+		IF TEQUIP:TARGET:50 == MASTER
+			IF RAND:2 == 1
+				PRINTFORMW 「응읏♥　잘 보이지……?」
+				PRINTFORMW 「나의, 거기가…당신의 물건을 확실히 삼키고 있어…♥」
+			ELSE
+				PRINTFORMW 「하앗, 하아앗…♥　%K30_C_NAME(MASTER)%, 좀 더 봐줘…」
+				PRINTFORMW 「기분 좋은 곳까지♥　들어온 거 봐줘어♥」
+			ENDIF
+		ELSEIF TEQUIP:TARGET:51 == MASTER
+			IF RAND:2 == 1
+				CALL HPH_PRINT, @"「후후훗HPH　이어진 곳, 숨어있는 곳이… 궁금하신가요?」", "L"
+				CALL HPH_PRINT, @"「어때, 내 엉덩이… 당신의 물건을 이렇게 야하게 물고 있어HPH」", "W"
+			ELSE
+				CALL HPH_PRINT, @"「어때, …잘 보여…?HPH」", "L"
+				CALL HPH_PRINT, @"「엉덩이가…이렇게나 넓혀져서…야한 소리까지 내고 있어HPH」", "W"
+			ENDIF
+		ELSEIF !EQUIP:하반신속옷2
+			IF PALAM:윤활 < PALAMLV:7
+				PRINTFORMW 「어때? 흥분했어……?」
+			ELSE
+				PRINTFORMW 「보이지……? 나의 소중한 곳」
+				PRINTFORMW 「이렇게나… 끈적끈적해졌어… 야하게 되어 버렸어…♥」
+			ENDIF
+		ELSE
+			IF RAND:2 == 1
+				PRINTFORMW 「내 %PANTSNAME(EQUIP:하반신속옷2, TARGET)%, 지금은 보기만 할 뿐이야…」
+				PRINTFORMW 「벗기고 싶어졌어?」
+			;関係ないけど、ランダムでたまにとんでもないやつはいてるよね
+			ELSE
+				PRINTFORMW 「이 %PANTSNAME(EQUIP:하반신속옷2, TARGET)%…」
+				PRINTFORMW 「잘 어울리는 것 같으신가요…♥」
+			ENDIF
+		ENDIF
+		RETURN 1
+	ELSE
+		SELECTCASE TFLAG:193
+			;ビンタ
+			CASE -5
+				PRINTFORMW 「……장난치는 겁니까, 당신은」
+				CALL K30_LECTURE_CHECK(30 + RAND:10, 1)
+			;つねられる
+			CASE -3
+				PRINTFORMW 「……어린애인가요, 당신」
+				CALL K30_LECTURE_CHECK(25 + RAND:15, 1)
+			;嫌がる
+			CASE -1
+				SELECTCASE RAND:2
+					CASE 0
+						PRINTFORMW 「쌓아올린 선행도……잃는 것은 한순간입니다」
+					CASEELSE
+						PRINTFORMW 「욕망이 가는대로 사는 것은 반드시 후회하게 될 겁니다」
+				ENDSELECT
+				CALL K30_LECTURE_CHECK(25 + RAND:10, 1)
+			;嫌がる（嬉しげ）
+			CASE 0
+				SELECTCASE RAND:2
+					CASE 0
+						PRINTFORMW 「남이 싫어하는 일을 자진해서 한다는 의미가 틀리지 않았습니까?」
+					CASEELSE
+						PRINTFORMW 「이유도 없이 이런 일을 당하면, 누구라도 싫어한다구요?」
+				ENDSELECT
+			;成功
+			CASE 1
+				IF K30_BE_SEEN() == 0
+					IF ABL:노출벽 > 3
+						SELECTCASE RAND:2
+							CASE 0
+								PRINTFORMW 「부끄럽지만…당신에게 보여진다면……」
+							CASEELSE
+								PRINTFORMW 「보기만 할 뿐……%K30_C_NAME(MASTER)%에게 보여주기만 할 뿐이니까…」
+						ENDSELECT
+						TFLAG:193 += 10
+					ELSE
+						SELECTCASE RAND:2
+							CASE 0
+								PRINTFORMW 「비록 단둘이 있어도……부끄럽습니다…」
+							CASEELSE
+								PRINTFORMW 「아……! 으, 으으, 부끄러워……」
+						ENDSELECT
+					ENDIF
+				ELSE
+					IF ABL:노출벽 > 5
+						TCVAR:30:374 = 1
+						;ぱんつはいてる
+						IF TEQUIP:0 > 1
+							PRINTFORMW 「%K30_C_NAME(MASTER)%의 부탁이니까… 비록 이런 일이라도 당신에게라면…♥」
+						;노팬티でも平気?でたくし上げ
+						ELSE
+							IF RAND:2 == 1
+								PRINTFORMW 「%조사처리(K30_C_NAME(MASTER),"가")% 봐준다면, 나는 어떤 일이라도…♥」
+							ELSE
+								PRINTFORMW 「나 보여지고 있어……이런 모습을 보여지는데… 나……♥」
+							ENDIF
+						ENDIF
+						SIF (ABL:노출벽 > 8 || (TEQUIP:0 > 1 && ABL:노출벽 > 5)) && RAND:2 == 1
+							PRINTFORMW 「……%K30_C_NAME(MASTER)%……다음은 어떻게 할까요…♥」
+						TFLAG:193 += 10
+					ELSE
+						SELECTCASE RAND:2
+							CASE 0
+								PRINTFORMW 「염마의 …위엄에 관계되므로…이 이상은…」
+							CASEELSE
+								PRINTFORMW 「……안, 돼요……%K30_C_NAME(K30_FIND_AROUND(),2)%…보고 있어요…」
+						ENDSELECT
+					ENDIF
+				ENDIF
+		ENDSELECT
+		;일기の플래그
+		SIF DIARY:30:15 == 0
+			CALL K30_WRITE_DIARY(15)
+	ENDIF
+ENDIF
+RETURN 1

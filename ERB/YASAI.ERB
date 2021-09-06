@@ -1,0 +1,46 @@
+﻿@YASAI
+FOR LOCAL,0,5
+	IF PLANT_TYPE:LOCAL
+		SIF FLAG:물주기대행
+			PLANT_DRY:LOCAL = 0
+		PLANT_DAYS:LOCAL ++
+		PLANT_DRY:LOCAL ++
+
+		IF MAIN_MAP == 9
+			PLANT_GROW:LOCAL ++
+			;肥やしを撒いてある場合は追加
+			SIF PLANT_FOOD:LOCAL && PLANT_GROW:LOCAL < 10
+				PLANT_GROW:LOCAL ++
+		ELSE
+			SELECTCASE TIME:5
+			CASE 0,1
+				PLANT_GROW:LOCAL ++
+				;거름을 뿌려 있는 경우는 추가
+				SIF PLANT_FOOD:LOCAL && PLANT_GROW:LOCAL < 10
+					PLANT_GROW:LOCAL ++
+			CASE 2,3
+				PLANT_GROW:LOCAL += RAND:2
+				SIF PLANT_FOOD:LOCAL && PLANT_GROW:LOCAL < 10
+					PLANT_GROW:LOCAL ++
+			CASE 4 TO 7
+				PLANT_DRY:LOCAL = 0
+				;거름을 뿌려 있는 경우는 1/2의 확률로 한층 더 추가
+				SIF PLANT_FOOD:LOCAL && PLANT_GROW:LOCAL < 10
+					PLANT_GROW:LOCAL += RAND:2
+			CASE 8 TO 13
+				PLANT_GROW:LOCAL -= RAND:2
+			ENDSELECT
+		ENDIF
+		;三粒の天滴を所有している場合は水やり済み＆成長に補正
+		IF ITEM:세방울의천수
+			IF FLAG:천적곤신 && PLANT_DRY:LOCAL > 2
+				PRINTFORML 곤신의 은총이 마른 밭을 촉촉하게 했다
+				PLANT_DRY:LOCAL = 0
+				FLAG:천적곤신 = 0
+			ENDIF
+			SIF PLANT_GROW:LOCAL < 10 && !RAND:4
+				PLANT_GROW:LOCAL ++
+		ENDIF
+	ENDIF
+NEXT
+

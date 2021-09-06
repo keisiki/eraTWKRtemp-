@@ -1,0 +1,369 @@
+﻿@EVENTTURNEND
+#DIM 양육비
+
+;연회 당일 하루가 끝나면 연회 플래그 OFF
+;IF DAY >= FLAG:34 && FLAG:연회개최플래그
+IF TIME + 1440 * DAY >= FLAG:개시시간 + 1440 * FLAG:개시일 && FLAG:연회개최플래그
+	;회장이 된 장소는 몹시 황폐해지며, 거점 밖에서도 대상 지점의 더러움 증가시키기 위해서 연회장이 아님
+	SIF YOGORE:(FLAG:32) < 300
+		YOGORE:(FLAG:32) += 1000
+	FLAG:연회개최플래그 = 0
+	FLAG:31 = 0
+	FLAG:32 = 0
+	TFLAG:연회장 = 0
+	FLAG:33 = 0
+	FLAG:34 = 0
+	FLAG:35 = 0
+	FLAG:36 = 0
+	;연회장표시 = 
+	FLAG:연회차입 = 0
+	FOR LOCAL,0,CHARANUM
+		CFLAG:LOCAL:350 = 0
+		MAXBASE:LOCAL:일량 = 0
+		BASE:LOCAL:일량 = 0
+		CFLAG:LOCAL:연회참가 = 0
+		CFLAG:LOCAL:행동 = 0
+	NEXT
+ENDIF
+;령묘 플래그 OFF
+FLAG:17 = 0
+DRAWLINE
+PRINTFORML 
+;SETCOLOR C_PINK
+;FONTBOLD
+FOR LOCAL,0,CHARANUM
+	;이 3가지는 당신도 취득가능
+	IF EXP:LOCAL:키스경험 > 300 && ABL:LOCAL:M감각 > 5 && !TALENT:LOCAL:키스마
+		PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% [키스마]를 얻었다
+		TALENT:LOCAL:키스마 = 1
+	ENDIF
+	IF EXP:LOCAL:조교자위경험 > 200 && EXP:LOCAL:자위경험 > 500 && !TALENT:LOCAL:자위중독
+		PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% [자위중독]을 얻었다
+		TALENT:LOCAL:자위중독 = 1
+	ENDIF
+	IF EXP:LOCAL:자궁구개발경험 > 50 && !TALENT:LOCAL:포르치오성감
+		PRINTFORML 계속해서 자궁구를 공격당한 %조사처리(CALLNAME:LOCAL,"는")%, 고통보다는 쾌락을 느끼게 된 것 같다…
+		PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% [포르치오성감]을 얻었다
+		TALENT:LOCAL:포르치오성감 = 1
+	ENDIF
+	;이하는 아나타는 건너뛰기
+	SIF LOCAL == MASTER
+		CONTINUE
+	;연모 취득
+	IF 연모취득조건(LOCAL)
+		;멘레이키는 특별 취급
+		IF LOCAL == 57
+			PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% %CALLNAME:MASTER%에 대한 마음을 자각함과 동시에, 입꼬리가 느슨해진다
+			PRINTFORMW 자연스러운 미소를 짓는 %조사처리(CALLNAME:LOCAL,"는")%, 표정을 얻은 것 같다
+			PRINTFORMW %CALLNAME:LOCAL%의 \@ TALENT:LOCAL:사모 ? [사모]는 # [애욕]은 \@ [연모]가 되었다
+			FLAG:10 ++
+		;애욕의 유무로 분기
+		ELSEIF TALENT:LOCAL:애욕
+			PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% 몸도 마음도 %마스터로% 채워지는 것에 기쁨을 느끼고 있다…
+			PRINTL 문란한 관계의 끝에 맺어진 연심, 그것 또한 하나의 사랑의 형태…
+			PRINTFORMW %CALLNAME:LOCAL%의 [애욕]은 [연모]가 되었다
+		ELSE
+			PRINTFORML %조사처리(CALLNAME:LOCAL,"는")% %마스터와% 보내는 시간에 행복을 느끼는 것 같다…
+			PRINTFORMW %CALLNAME:LOCAL%의 [사모]는 [연모]가 되었다
+			FLAG:10 ++
+		ENDIF
+		SIF !MARK:LOCAL:시간각인 && !TALENT:LOCAL:애욕 && !CFLAG:LOCAL:수면간 && !CFLAG:LOCAL:만취간
+			CFLAG:LOCAL:깨끗한교제 = 1
+		TALENT:LOCAL:연모 = 1
+		TALENT:LOCAL:사모 = 0
+		TALENT:LOCAL:애욕 = 0
+		TALENT:LOCAL:섹프 = 0
+		CALL KOJO_MESSAGE_SEND("EVENT",21,LOCAL,1,0)
+		
+		;악보 입수 처리
+		PRINTL
+		RESULT = 악보입수_함락(LOCAL)
+		SIF RESULT != -1
+			PRINTL
+	;사모 취득
+	;섹프/정부의 취득으로 분기
+	ELSEIF 사모취득조건(LOCAL)
+		IF TALENT:LOCAL:섹프
+			PRINTFORML %조사처리(CALLNAME:LOCAL,"는")% %CALLNAME:MASTER%의 신체 이외에도 흥미가 있는 것 같다
+			PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% [사모]를 얻었다
+		ELSE
+			PRINTFORML %조사처리(CALLNAME:LOCAL,"는")% %마스터가% 신경쓰이는 것 같다…
+			PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% [사모]를 얻었다
+		ENDIF
+		TALENT:LOCAL:사모 = 1
+		CALL KOJO_MESSAGE_SEND("EVENT",21,LOCAL,2,0)
+	;애욕 취득
+	;봉사쾌락의 분기가 아직 없으므로, 취득조건에 병합
+	ELSEIF 애욕취득조건(LOCAL)
+		;사모하며, 진심으로 신체를 선택한
+		IF TALENT:LOCAL:사모
+			PRINTFORML %조사처리(CALLNAME:LOCAL,"는")% %마스터와% 마음 이상으로 몸의 연결에 만족하고 있는 것 같다…
+			PRINTFORML 눈에 보이지 않는 정보다도 눈에 보이는 증표를 원하며 앞으로도 육체를 겹칠 것이다
+			PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% [애욕]을 얻었다
+		ELSE
+			PRINTFORML %조사처리(CALLNAME:LOCAL,"는")% %마스터와%의 정욕에 빠져있는것 같다…
+			PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% [애욕]을 얻었다
+		ENDIF
+			FLAG:10 ++
+			TALENT:LOCAL:애욕 = 1
+			TALENT:LOCAL:사모 = 0
+			CALL KOJO_MESSAGE_SEND("EVENT",21,LOCAL,3,0)
+			
+			;악보 입수 처리
+			PRINTL
+			RESULT = 악보입수_함락(LOCAL)
+			SIF RESULT != -1
+				PRINTL
+	;섹프/정부 취득
+	;섹프와 정부의 차이는 사모의 유무
+	ELSEIF 섹프취득조건(LOCAL)
+		;사모 취득 완료＋섹프 미취득
+		IF TALENT:LOCAL:사모 && !TALENT:LOCAL:섹프
+			PRINTFORML %조사처리(CALLNAME:LOCAL,"는")% %마스터라%면 쾌락에 빠져도 괜찮다고 생각하기 시작한 것 같다…
+			PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% %CALLNAME:MASTER%의 [정부]가 되었다
+			TALENT:LOCAL:섹프 = 2
+			CALL KOJO_MESSAGE_SEND("EVENT",21,LOCAL,4,0)
+		;사모 취득 완료＋섹프  취득 완료
+		ELSEIF TALENT:LOCAL:사모 && TALENT:LOCAL:섹프 == 1
+			PRINTFORML %조사처리(CALLNAME:LOCAL,"는")% %CALLNAME:MASTER%에게 단순한 육체 관계 이상의 것을 바라고 있는 것 같다…
+			PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% [정부]가 되었다
+			TALENT:LOCAL:섹프 = 2
+			CALL KOJO_MESSAGE_SEND("EVENT",21,LOCAL,4,0)
+		;사모 미취득＋섹프 미취득이라면 우선 섹프 취득
+		ELSEIF !TALENT:LOCAL:섹프
+			PRINTFORML %조사처리(CALLNAME:LOCAL,"는")% %마스터가% 주는 쾌락에 빠져들고 있다…
+			PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% %CALLNAME:MASTER%의 [섹프]가 되어버렸다
+			TALENT:LOCAL:섹프 = 1
+			CALL KOJO_MESSAGE_SEND("EVENT",21,LOCAL,5,0)
+		ENDIF
+	ENDIF
+	IF EXP:LOCAL:연주경험 >= 1000 && ABL:LOCAL:기교 > 3 && !TALENT:LOCAL:음악지식
+		PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% 악기 연주에 조예가 깊어졌다
+		PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% [악기지식]을 얻었다
+		;PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% 음악에 조예가 깊어졌다
+		;PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% [음악지식]을 얻었다
+		TALENT:LOCAL:음악지식 = 1
+	ELSEIF EXP:LOCAL:연주경험 >=5000 && !TALENT:LOCAL:음감
+		PRINTFORMW %CALLNAME:LOCAL%의 음감은 상당히 단련된 것 같다
+		PRINTFORMW %조사처리(CALLNAME:LOCAL,"는")% [상대음감]을 얻었다
+		TALENT:LOCAL:음감 = 1
+	ENDIF
+	IF CFLAG:LOCAL:언짢음
+		CFLAG:LOCAL:언짢음 --
+		IF !CFLAG:LOCAL:언짢음
+			SIF MARK:LOCAL:반발각인
+				CFLAG:LOCAL:언짢음 ++
+		ENDIF
+	ENDIF
+	;EX캐릭터 연모 시에는 멤버 추가 이벤트 플래그를 세운다
+	IF !CFLAG:LOCAL:신사거주
+		SIF TALENT:LOCAL:연모 && EXP:LOCAL:애정경험 >= 200
+			FLAG:1 = 3
+	ENDIF
+NEXT
+
+IF EXP:MASTER:이상청소경험 > (500 + 100 * FLAG:850) && ABL:MASTER:청소기능 > 3 && !TALENT:MASTER:청소중독
+	PRINTFORMW %마스터는% 무서운 것을 깨닫고 말았다
+	PRINTFORMW 자나 깨나, 시간을 멈춘 사이나, 소녀들과 살을 겹치고 있을 때조차도,
+	PRINTFORMW 방이 어질러져 있지는 않은지 신경이 쓰여서 견딜 수 없다
+	PRINTFORMW 벌써 %CALLNAME:MASTER%의 마음이 편안해지는 것은 이렇게 청소를 하는 동안 뿐
+	PRINTFORMW %CALLNAME:MASTER%의 청소에 대한 집착은, 돌이킬 수 없는 경지에 도달해 있었다
+	PRINTFORMW %마스터는% [청소중독]을 얻었다
+	TALENT:MASTER:청소중독 = 1
+ENDIF
+;MASTER을 제외한 전원의 프리셋 처리
+FOR LOCAL,1,CHARANUM
+	;기력의 회복
+	BASE:LOCAL:기력 = MAXBASE:LOCAL:기력
+
+	LOCAL:1 = MAXBASE:LOCAL:체력 / 3
+
+	;회복 빠름, 회복 느림
+	LOCAL:1 = LOCAL:1 * 3 / (3 - TALENT:LOCAL:회복속도)
+	
+	;동침하고 있으면 회복속도 향상
+	SIF CFLAG:LOCAL:동침중
+		LOCAL:1 *= 2
+	SIF CFLAG:LOCAL:철야
+		LOCAL:1 /= 2
+	CFLAG:LOCAL:철야 = 0
+	BASE:LOCAL:체력 = MIN(MAXBASE:LOCAL:체력, BASE:LOCAL:체력 + LOCAL:1)
+
+	;나무삼 카드 발행자가 있으면 발행 플래그 OFF
+	CFLAG:LOCAL:328 = 0
+NEXT
+;전원의 프리셋 처리
+FOR LOCAL,1,CHARANUM
+	BASE:LOCAL:정력 = MIN(MAXBASE:LOCAL:정력, BASE:LOCAL:정력 + MAXBASE:LOCAL:정력 * BASE:LOCAL:체력 / MAXBASE:LOCAL:체력)
+	
+	;은밀 중인 캐릭터가 있으면 플래그 OFF
+	CALL SET_SNEAK(0,LOCAL,1)
+	;CFLAG:LOCAL:은밀중 = 0
+	
+	;장난 중인 캐릭터가 있으면 플래그 OFF
+	CALL SET_PRANK(0,LOCAL,1)
+	;CFLAG:LOCAL:장난 = 0
+	
+NEXT
+
+;연회의 개최 판정
+SIF FLAG:3 && FLAG:연회개최플래그 == 0
+	CALL ENKAI_SETTING
+
+IF CFLAG:MASTER:육아인원수
+	양육비 = CFLAG:MASTER:육아인원수 * 300 / (1 + FLAG:생활능력무) ;원판은 인당 1000원
+	PRINTFORML %마스터는% 자녀 양육비로 \\{양육비} 지불했다.
+	MONEY -= 양육비
+ENDIF
+
+CALL RANK_POINT
+PRINTW  
+
+FLAG:0 = 0
+
+;모브코의 세이브
+IF TALENT:RANDOM_CHARANUM:스침 == 1 && GETBIT(TFLAG:일일일회, 9)
+	PRINTFORML %마스터는% 오늘 만난 %조사처리(CALLNAME:RANDOM_CHARANUM,"를")%……
+	CALL ASK_YN("잊는다","기억해 둔다")
+	IF RESULT
+		VARSET TCVAR:RANDOM_CHARANUM:0, 0
+		VARSET EX:RANDOM_CHARANUM:0, 0
+		VARSET TEQUIP:RANDOM_CHARANUM:0, 0
+		VARSET PALAM:RANDOM_CHARANUM:0, 0
+		CALL InitializeBeforeTrain(RANDOM_CHARANUM)
+		CFLAG:RANDOM_CHARANUM:900 ++
+		CALL SAVE_MOBGIRL
+		SIF RESULT == -1
+			GOTO FORGET_MOB
+		PRINTFORMW %마스터는% %조사처리(CALLNAME:RANDOM_CHARANUM,"를")% 다시 만났으면 좋겠다고 생각했다
+	ELSE
+		$FORGET_MOB
+		PRINTFORMW %마스터는% %조사처리(CALLNAME:RANDOM_CHARANUM,"를")% 깨끗히 잊었다
+	ENDIF
+ENDIF
+IF TALENT:RANDOM_CHARANUM:스침 == 2 && GETBIT(TFLAG:일일일회, 9)
+	CALL MOBGIRL_PROFILE2()
+	VARSET TCVAR:RANDOM_CHARANUM:0, 0
+	VARSET EX:RANDOM_CHARANUM:0, 0
+	VARSET TEQUIP:RANDOM_CHARANUM:0, 0
+	VARSET PALAM:RANDOM_CHARANUM:0, 0
+	CALL InitializeBeforeTrain(RANDOM_CHARANUM)
+	SAVECHARA TOSTR(CFLAG:RANDOM_CHARANUM:모브코세이브슬롯), CSTR:RANDOM_CHARANUM:모브코프로필1, RANDOM_CHARANUM
+	[IF DEBUG]
+		PRINTFORMW %CALLNAME:RANDOM_CHARANUM%의 정보를 갱신했습니다.
+	[ENDIF]
+ENDIF
+
+BEGIN SHOP
+
+@RANK_POINT
+VARSET LOCAL
+;청결도
+LOCAL:2 = EX:MASTER:오늘의청소회수 / 10
+PRINTFORML 오늘 청소한 쓰레기의 양 {EX:MASTER:오늘의청소회수}
+PRINTFORML 청소로 얻은 보너스 \\{LOCAL:2}
+IF DAY:2 == 4 && DAY:3 == 31
+	PRINT (x2)  【대청소 보너스】
+	LOCAL:2 *= 2
+ENDIF
+;거점 주인의 호감도와 신뢰도가 상승
+LOCAL:3 = MIN(10, EX:MASTER:오늘의청소회수 / 2000)
+IF LOCAL:3
+	PRINTFORML 청소를 열심히 한 것으로, %CALLNAME:거점_주인%의 평가가 올라갔다
+	CFLAG:거점_주인:호감도 += LOCAL:3 * 2
+	CFLAG:거점_주인:신뢰도 += LOCAL:3
+	IF LOCAL:3 / 3 > 0
+		PRINTFORML 청소를 열심히 하니、추가로 싸구려식재를 {LOCAL:3 / 3}개 받았다
+		ITEM:싸구려식재 += LOCAL:3 / 3
+	ENDIF
+ENDIF
+PRINTL  
+;심부름 보수
+LOCAL:4 = TCVAR:MASTER:도운양
+
+SIF LOCAL:4 > 0
+	PRINTFORML 업무 도우미로 얻은 보너스 \\{LOCAL:4}
+
+MONEY += LOCAL:2 + LOCAL:4
+
+;호감도 상승
+IF FLAG:12 && MONEY:2 < CM_LIMIT
+	LOCAL:5 = MAX(1,FLAG:12 / 100)
+	LOCAL:5 = MIN(LOCAL:5, CM_LIMIT - MONEY:2)
+	PRINTFORML 호감도 상승 보너스 ＋{LOCAL:5} 카리스마
+	MONEY:2 += LOCAL:5
+	PRINTFORML 현재 카리스마：%세자리구분(MONEY:2)%　카리스마 보유 상한：%세자리구분(CM_LIMIT)%
+ENDIF
+FLAG:12 = 0
+
+PRINTW  
+
+@연모취득조건(ARG)
+#FUNCTION
+SIF TALENT:ARG:연모
+	RETURNF 0
+SIF CFLAG:ARG:호감도 < REQUIRED_FAVOR_연모
+	RETURNF 0
+SIF CFLAG:ARG:신뢰도 < REQUIRED_TRUST_연모
+	RETURNF 0
+SIF ABL:ARG:친밀 < REQUIRED_AFFECTION_연모
+	RETURNF 0
+SIF MARK:ARG:반발각인
+	RETURNF 0
+SIF TALENT:ARG:애욕 && !FLAG:함락노선변화
+	RETURNF 0
+RETURNF 1
+
+@사모취득조건(ARG)
+#FUNCTION
+SIF TALENT:ARG:애욕
+	RETURNF 0
+SIF TALENT:ARG:연모
+	RETURNF 0
+SIF TALENT:ARG:사모
+	RETURNF 0
+SIF CFLAG:ARG:호감도 < REQUIRED_FAVOR_사모
+	RETURNF 0
+SIF CFLAG:ARG:신뢰도 < REQUIRED_TRUST_사모
+	RETURNF 0
+SIF ABL:ARG:친밀 < REQUIRED_AFFECTION_사모
+	RETURNF 0
+SIF TALENT:ARG:섹프 && !FLAG:함락노선변화
+	RETURNF 0
+RETURNF 1
+
+@애욕취득조건(ARG)
+#FUNCTION
+SIF TALENT:ARG:연모
+	RETURNF 0
+SIF TALENT:ARG:애욕
+	RETURNF 0
+SIF !TALENT:ARG:섹프
+	RETURNF 0
+SIF CFLAG:ARG:호감도 < REQUIRED_FAVOR_애욕
+	RETURNF 0
+SIF ABL:ARG:욕망 < REQUIRED_DESIRE_애욕
+	RETURNF 0
+SIF (EXP:ARG:절정경험 - EXP:ARG:무자각절정경험) < REQUIRED_ECSTACY_애욕
+	RETURNF 0
+SIF (ABL:ARG:욕망 - ABL:ARG:친밀) < 1
+	RETURNF 0
+RETURNF 1
+
+@섹프취득조건(ARG)
+#FUNCTION
+SIF TALENT:ARG:연인
+	RETURNF 0
+SIF TALENT:ARG:연모
+	RETURNF 0
+SIF TALENT:ARG:섹프 == 2
+	RETURNF 0
+SIF CFLAG:ARG:호감도 <= REQUIRED_FAVOR_섹프
+	RETURNF 0
+SIF ABL:ARG:욕망 < REQUIRED_DESIRE_섹프
+	RETURNF 0
+SIF (EXP:ARG:절정경험 - EXP:ARG:무자각절정경험) < REQUIRED_ECSTACY_섹프
+	RETURNF 0
+SIF (ABL:ARG:욕망 - ABL:ARG:친밀) < 0
+	RETURNF 0
+RETURNF 1

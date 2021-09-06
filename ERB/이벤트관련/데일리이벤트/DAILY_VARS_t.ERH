@@ -1,0 +1,41 @@
+﻿;DAILY_EV23의 작성해 광역 변수를 갖고 싶어졌다
+;다른 데일리용으로도 부디
+
+;데일리 이벤트 최대 수（40であれば EV0 ～ EV39 まで）
+#DEFINE DAILY_EV_MAX 40
+
+;----------------------------
+;EV23：방문판매
+;----------------------------
+#DIM SAVEDATA FLAG_DAILY_EV23
+;BIT0 이벤트가 한 번이라도 발생했다
+;BIT1 맥 이루어, 이제 두 번 다시 판매원은 오지 않는다
+;BIT2 설명을 끝까지 (들)물었다
+;BIT3 미라다의 돌을 구입했다
+;BIT4 판매원이 섹프가 되었다
+
+#DIM SAVEDATA FLAG_DAILY_EV23_판매원
+
+#DIM CONST DAILY_EV23_미라다_정가 = 980000
+#DIM CONST DAILY_EV23_미라다_저가 = 49800
+#DIM CONST DAILY_EV23_미라다_바닥시세 = 29800
+
+;----------------------------
+;EV28：通い狼
+;----------------------------
+#DIM SAVEDATA FLAG_DAILY_EV28
+;BIT0 イベントが一度でも発生した
+;BIT1 オオカミ狩り
+
+#DIM SAVEDATA DAILY_EV28_벽쿵
+
+;----------------------------
+;EV29：職場見学
+;----------------------------
+#DIM SAVEDATA FLAG_DAILY_EV29
+;BIT0 イベントが一度でも発生した
+;BIT1 ツケ
+#DIM SAVEDATA DAILY_EV29_NIKOMI			;煮込み雑炊
+#DIM SAVEDATA FLAG_DAILY_EV29_PAID		;支払回数
+#DIM SAVEDATA FLAG_DAILY_EV29_DEBT		;借金
+#DIM SAVEDATA FLAG_DAILY_EV29_LASTTIME	;最後に発生した日

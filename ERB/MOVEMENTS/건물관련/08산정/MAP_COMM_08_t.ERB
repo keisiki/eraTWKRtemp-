@@ -1,0 +1,58 @@
+﻿;--------------------------------------------------
+;	맵내 이동 처리 확장 패치 부속
+;	명련사MAP용 함수
+;--------------------------------------------------
+@MAP_PLACENAME_8(ARG)
+#FUNCTIONS
+
+IF GET_MAPID(ARG) == MAIN_MAP
+	SELECTCASE ARG
+		CASE 1 TO (MAXROOM - 1)
+			RETURNF STR:(ARG + 8000)
+		CASE 898
+			RETURNF OMANEKI_PLACE()
+		CASE 899
+			RETURNF "스키마 공간"
+		CASE MAXROOM
+			RETURNF "길의 저 편"
+		CASEELSE
+			RETURNF "불명"
+	ENDSELECT
+ELSE
+	RETURNF "불명"
+ENDIF
+
+@MAP_VIEWING_8(AA)
+#DIMS REF AA, 0
+IF !TFLAG:맵변환
+	SELECTCASE CFLAG:MASTER:현재위치
+		CASE 830, 832, 833
+			TFLAG:맵변환 = 3
+		CASE 811 TO 826
+			TFLAG:맵변환 = 2
+		CASE 831, 834 TO 842
+			TFLAG:맵변환 = 4
+		CASEELSE
+			TFLAG:맵변환 = 1
+	ENDSELECT
+ENDIF
+CALL DRAW_INFORMATIONLINE(@"%MAPNAME:(TFLAG:맵변환)%")
+PRINTFORML 
+TRYCALLFORM MAP_SUMMIT_{TFLAG:맵변환}(AA)
+
+@MAP_CAN_MOVE_8(ARG, ARG:1)
+#FUNCTION
+RETURNF 1
+
+
+@MAP_CANNOT_WORD_8(ARG)
+SELECTCASE TFLAG:이동불능메시지
+ENDSELECT
+
+@MAP소개_8
+;とりあえず5行
+PRINTFORML 모리야 신사를 중심으로 텐구의 주거나 천계까지를 포함한 맵.
+PRINTFORML 전체 맵의 중심에서는 꽤 벗어나 있지만 삭도로 인간 마을까지 갈 수 있어 거기까지 접근성이 나쁘지 않다.
+PRINTFORML 모리야 제비뽑기는 유용한 아이템이나 데이트권이 당첨될 수 있지만, 확률상 상당한 지출을 각오해야 한다.
+PRINTFORML 채집 포인트가 다수 있어, 채집 기능을 연마하고 있으면 계절에 따라서는 유용한 소재를 다종 입수할 수 있다.
+PRINTFORML 낚시나 산의 호숫물에 의한 술을 만드는 것뿐만 아니라 일을 도와줄 곳도 꽤 많고, 하루가 눈 깜짝할 사이에 지나갈 때도.

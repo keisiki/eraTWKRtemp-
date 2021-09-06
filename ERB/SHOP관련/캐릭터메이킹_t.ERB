@@ -1,0 +1,33 @@
+﻿;FileName_SHOP_CUSTOM.ERB -------------------------- Rev1. 00
+;이름의 설정
+;CALL		USER
+;ARG		MASTER 캐릭터 NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@NAME_CUSTOM(ARG)
+PRINTL 캐릭터의 이름(NAME)을 입력해주세요
+IF STRLENS(NAME:ARG)
+	PRINTFORM 현재의 이름：%NAME:ARG%      
+	PRINTBUTTON "[변경하지 않음]",""
+	PRINTL
+ENDIF
+INPUTS
+IF RESULTS == ""
+	NAME:ARG = %NAME:ARG%
+ELSE
+	NAME:ARG = %RESULTS%
+ENDIF
+
+PRINTL 캐릭터의 통칭(CALLNAME)을 입력해 주세요
+IF STRLENS(CALLNAME:ARG)
+	PRINTFORM 현재의 통칭：%CALLNAME:ARG%      
+	PRINTBUTTON "[변경하지 않음]",""
+	PRINTL
+ENDIF
+INPUTS
+IF RESULTS == ""
+	CALLNAME:ARG = %CALLNAME:ARG%
+ELSE
+	CALLNAME:ARG = %RESULTS%
+ENDIF

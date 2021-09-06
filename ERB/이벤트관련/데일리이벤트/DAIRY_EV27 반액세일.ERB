@@ -1,0 +1,19 @@
+﻿@DAILY_CONDITION_EV27
+
+IF !FLAG:기념품점염가대매출 && !RAND:30
+	CALL DAILY_EV27
+	RETURN 1
+ELSE
+	RETURN -1
+ENDIF
+
+@DAILY_EV27
+;この後にフラグリセットが入るので目印として+1100しておく
+FLAG:기념품점염가대매출 = RAND:11 + 1100
+SIF FLAG:기념품점염가대매출 % 100 == MAIN_MAP
+	RESTART
+IF FLAG:신문구독
+	PRINTFORML 붕붕마루 신문에 의하면, %STR:(5000 + (FLAG:기념품점염가대매출 % 100) )% 방면 기념품 가게가 대염가 판매를 시작했다고 한다
+	PRINTFORMW 전품 반액 세일인 것 같다
+ENDIF
+RETURN 1

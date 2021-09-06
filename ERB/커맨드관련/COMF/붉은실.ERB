@@ -1,0 +1,30 @@
+﻿;KR판 오리지날 기능 붉은실
+@붉은실발동(ARGS="")
+#DIM 확률
+#DIM 증가수치 = 100,20,100,20
+;궁합도 생성 구문 넘기려면 -1, 궁합도 증가 구문 넘기려면 0
+SELECTCASE ARGS
+	CASE "302_1" ;스킨십
+		확률 = 50
+		증가수치 = 100,20,-1,0
+	CASE "312_1" ;키스한다
+		확률 = 50
+		증가수치 = -1,0,-1,10
+	CASEELSE
+		확률 = 20
+ENDSELECT
+
+IF TALENT:MASTER:붉은실&&(RAND:확률==0)
+	SETCOLOR C_RED
+	PRINTFORML %CALLNAME:MASTER%의 운명의 붉은 실이 빛나고 있습니다.
+	SETCOLOR C_PINK
+	PRINTFORML %타겟은% %CALLNAME:MASTER%에게서 운명을 느낀 듯하다.
+	RESETCOLOR
+	SIF 증가수치:0 != -1 && !RELATION:TARGET:MASTER
+		RELATION:TARGET:MASTER = 증가수치:0
+	RELATION:TARGET:MASTER += 증가수치:1
+
+	SIF 증가수치:2 != -1 && !RELATION:MASTER:TARGET
+		RELATION:MASTER:TARGET = 증가수치:2
+	RELATION:MASTER:TARGET += 증가수치:3
+ENDIF

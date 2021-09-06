@@ -1,0 +1,1137 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;愛撫系コマンド
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;0,愛撫
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_0
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_0_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_0_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;挿入中
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	;V挿入
+	IF LOCAL:1 && TEQUIP:50 == PLAYER
+		;射精した
+		IF NOWEX:PLAYER:11
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;A挿入
+	ELSEIF LOCAL:1 && TEQUIP:51 == PLAYER
+		;射精した
+		IF NOWEX:PLAYER:11
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;ふたなり
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && (TALENT:2 & 3) == 3
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;1,クンニ
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_1
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_1_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_1_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;膣内射精直後
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		IF TCVAR:102
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;絶頂した
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && NOWEX:C절정
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 얼어붙은 시간의 세계에서 미동조차 없는 토키코의 클리토리스를 혀로 애무했다
+		PRINTFORMW 애액이 균열에서 점점 흘러넘치고 있음에도 상관하지 않고 클리토리스를 계속 자극했다
+		PRINTFORMW 계속 강한 자극을 받은 토키코의 신체는 홍수와도 같이 애액을 흩뿌리고 있다
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 「하앗♥」
+		PRINTFORMW 「능숙하네…%CALLNAME:MASTER%」
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 「앗♥ 하앗♥」
+		PRINTFORMW 「기분 좋았어」
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 「응♥…후으♥」
+		PRINTFORMW 토키코는 음핵을 자극당해 몸부림치고 있다
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;あとは適当な分岐を追加してください
+;==================================================
+;2,フェラする
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_2
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_2_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_2_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;3,指挿入れ
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_3
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_3_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_3_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;4,アナル舐め
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_4
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_4_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_4_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 「잠깐! 더럽다고! 게다가…내가 부끄러워……」
+		PRINTFORMW 토키코는 얼굴이 새빨개진 채로 처음 느끼는 감각을 맛보고 있다
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 모든 것이 멈춘 세계에서 토키코의 애널을 청소하자 토키코의 몸이 살짝 떨린 것 같았다
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 「엉덩이를 핥는다니…%마스터는% 여전히……앗!? 잠깐, 갑자기…」
+		PRINTFORMW 「…흐읏……앗…하앗♥」
+		PRINTFORMW 토키코는 애널이 핥아져서 느끼고 있는 것 같다
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 「엉덩이…핥는 거야? 꽤 적극적이네…」
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 「읏♥ 하앙♥」
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;5,アナル愛撫
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_5
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_5_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_5_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 「엣…어딜 만지는 거야…?」
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 「읏…흐아앙♥♥」
+		PRINTFORMW 「엉덩이…기분 좋아♥」
+		PRINTFORMW (엉덩이로 느끼는 나도 변태네…)
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 「하앗♥ 엉덩이가 욱신거려……♥」
+		PRINTFORMW 「…더…해 줘…♥」
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 「…더러운 곳인데?」
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;6,胸愛撫
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_6
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_6_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_6_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 멈춰버린 시간 속에서 상냥하고 토키코의 가슴을 애무한다
+			PRINTFORMW 애무하는 동안에 토키코의 유두가 발기한 것 같다
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 멈춰버린 시간 속에서 상냥하게 토키코의 가슴을 애무한다
+		PRINTFORMW 애무하는 동안에 토키코의 유두가 발기한 것 같다…
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 「아♥…응♥…」
+		PRINTFORMW 「가슴 약하니까♥…그렇게 만지지 마…하앗♥」
+		PRINTFORMW 아무래도 가슴을 희롱당해 느끼고 있는 것 같다
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 「더 만져 줘♥ 만지작거려 줘♥」
+		PRINTFORMW 「내 가슴, 엉망진창으로 만들어 줘…♥」
+		PRINTFORMW 토키코는 그렇게 말하며 아양을 떠는 듯한 눈으로 바라보고 있다
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 「응♥…나, 가슴 약하니까…흐앙♥…」
+		PRINTFORMW 토키코는 가슴을 상냥하게 애무당해 느끼고 있는 것 같다
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;7,乳首責め
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_7
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_7_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_7_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 멈춰버린 시간 속에서 상냥하고 토키코의 유두를 애무한다
+			PRINTFORMW 애무하는 동안에 토키코의 유두가 발기한 것 같다…
+		ELSE
+			PRINTFORMW 「유두…너무 만지지 마…민감하니까…아읏♥」
+			PRINTFORMW 「정말…심술쟁이라니까」
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 멈춰버린 시간 속에서 상냥하고 토키코의 유두를 애무한다
+		PRINTFORMW 애무하는 동안에 토키코의 유두가 발기한 것 같다…
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 「햐앙♥…그렇게 끈적하게 만지지 마♥」
+		PRINTFORMW 「앗♥ 하앙♥ 이제, 기분 좋게…아흣♥ 되어 버려」
+		PRINTFORMW 아무래도 유두를 희롱당해 느끼고 있는 것 같다
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 「내 유두…좀 더…괴롭혀 줘……♥」
+		PRINTFORMW 토키코는 그렇게 말하며 아양을 떠는 듯한 눈으로 바라보고 있다
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 「하앙♥」
+		PRINTFORMW 「이런 거…이젠…」
+		PRINTFORMW 토키코는 유두를 자극받아 움찔하고 신체를 떨었다
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+
+;==================================================
+;8,秘貝開帳
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_8
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_8_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_8_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 「부, 부끄러워어……」
+		PRINTFORMW 「우으…어때? 보여……?」
+		PRINTFORMW 토키코는 안쪽이 보이도록 음순을 벌리고 있다
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 멈춰버린 시간 속에서 토키코의 균열을 벌렸다
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 「자아, 여기♥……에헤헷, 역시 부끄럽다」
+		PRINTFORMW 토키코는 곧바로 멈추더니 양손으로 얼굴을 가려 버렸다
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 「좀 더…봐 줘♥……안쪽까지…내 전부를♥」
+		PRINTFORMW 토키코는 자신의 음순을 벌리며 흥분하고 있다
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 「이거 엄청 부끄러워…」
+		PRINTFORMW 토키코는 얼굴을 새빨갛게 물들인 채로 음순을 벌리고 있다
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;9,自慰
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_9
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_9_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_9_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 「응? 내가 하는 게 보고 싶어…? 으음…부끄러운데…」
+		PRINTFORMW 토키코는 얼굴을 붉히면서도 치부로 손을 뻗어 갔다
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:연모
+		IF RAND:3 == 0
+			PRINTFORMW 「응♥…하아♥…」
+			PRINTFORMW 「…%CALLNAME:MASTER%…%CALLNAME:MASTER%…!」
+			RETURN 1
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「아♥…%CALLNAME:MASTER%……더 봐 줘…」
+			RETURN 1
+		ELSE
+			PRINTFORMW 「…앗♥」
+			PRINTFORMW 「후으……%CALLNAME:MASTER%…」
+			RETURN 1
+		ENDIF
+	;それ以外
+	ELSE
+		IF RAND:3 == 0
+			PRINTFORMW 「…하으♥」
+			PRINTFORMW 「…응…아♥…하앗…」
+			RETURN 1
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「아앗♥…응♥…」
+			PRINTFORMW 「…후으…역시 부끄러워……」
+			RETURN 1
+		ELSE
+			PRINTFORMW 「…앗♥」
+			PRINTFORMW 「하응♥…」
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+[SKIPSTART]
+;別コマンド化
+;==================================================
+;10,乳首吸い
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_10
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_10_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_10_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+[SKIPEND]
+;==================================================
+;11,乳首吸い
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_11
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_11_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_11_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 멈춰버린 시간 속에서 토키코의 유두를 부드럽게 빨았다
+			PRINTFORMW 맛 좋은 토키코의 유두가 발기한 것 같다…
+		ELSE
+			PRINTFORMW 「우왓!?」
+			PRINTFORMW 「정말…가슴을 빨고 싶다니, 아기가 아닌데…」
+			PRINTFORMW 「……그렇게나 빨고 싶어? 어쩔 수 없네…알았어」
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 멈춰버린 시간 속에서 토키코의 유두를 부드럽게 빨았다
+		PRINTFORMW 맛 좋은 토키코의 유두가 발기한 것 같다…
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 「읏♥ 하앗♥…」
+		PRINTFORMW 「아이 참♥ 너무 빨잖아…정말이지 커다란 아기 같네……」
+		PRINTFORMW 아무래도 유두를 들이마셔지고 느끼고 있는 것 같다
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 「하윽♥…유두, 혀로 굴리지 마♥」
+		PRINTFORMW 「꺄앗♥…좀 더 빨아 줘♥」
+		PRINTFORMW 토키코는 유두를 빨리면서 아양 떠는 듯한 눈으로 바라보고 있다
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 「응…아앙♥」
+		PRINTFORMW 「참…그렇게나 빨아서는…」
+		PRINTFORMW 토키코는 유두를 자극받아 느끼고 있는 것 같다
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;12,胸もみ
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_12
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_12_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_12_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 멈춰버린 시간 속에서 토키코의 사랑스러운 가슴을 부드럽게 주물렀다
+		ELSE
+			PRINTFORMW 「하앗!」
+			PRINTFORMW 「가슴…주무르고 싶어? 괜찮지만…」
+			PRINTFORMW 허가가 떨어졌으니 사양말고 주무르도록 하자
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 멈춰버린 시간 속에서 토키코의 사랑스러운 가슴을 부드럽게 주물렀다
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 「저, 정마알…그렇게 주무르면…아앙♥」
+		PRINTFORMW 「기분 좋아져 버려…」
+		PRINTFORMW 토키코는 가슴을 격렬하게 주물러져서 느끼고 있는 것 같다
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 「앗♥…하으♥…아앙♥」
+		PRINTFORMW 토키코는 가슴이 주물러져서 발정한 상태다
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 「응♥…그렇게 주무르지 마…작으니까 부끄러워……」
+		PRINTFORMW 토키코는 가슴이 주물러져서 느끼고 있는 것 같다
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;13,アナル開帳
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_13
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_13_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_13_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;時姦中
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 「너무…빤히 보지 마…」
+			PRINTFORMW 토키코는 얼굴을 새빨갛게 물들인 채로 고혈을 벌리고 있다
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 「저기…내 엉덩이…엉망진창으로 해 줘♥」
+		PRINTFORMW 토키코는 기대에 찬 시선을 보내며 애널을 벌리고 있다
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 「내 엉덩이 구멍…혼내 줘♥」
+		PRINTFORMW 토키코는 %마스터를% 향해 애널을 벌리며 엉덩이를 흔들어 유혹하고 있다
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 「역시 부끄러워…」
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;15,クリ愛撫
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_15
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_15_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_15_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;ソフト系コマンド
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;19,キスする
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_19
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_19_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_19_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;時姦中
+		IF FLAG:70
+			PRINTFORMW 얼어붙은 시간 속에서 토키코의 입술을 빼앗았다
+			RETURN 1
+		ELSE
+			PRINTFORMW 「…응…」
+			PRINTFORMW 「…%CALLNAME:MASTER%…좀 더……」
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 얼어붙은 시간 속에서 토키코의 입술을 빼앗았다
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		IF RAND:3 == 0
+			PRINTFORMW 「응…」
+			PRINTFORMW 「…츄우……앗, 그만두지 마…」
+			RETURN 1
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「츄웃…응……」
+			PRINTFORMW 「…푸하앗……한 번 더♥」
+			RETURN 1
+		ELSE
+			PRINTFORMW 「…응……으응」
+			PRINTFORMW (%CALLNAME:MASTER%…좋아…)
+			RETURN 1
+		ENDIF
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		IF RAND:3 == 0
+			PRINTFORMW 「응………」
+			PRINTFORMW 「……또 해?」
+			RETURN 1
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「츄…으응……」
+			PRINTFORMW 「…아응…아…」
+			RETURN 1
+		ELSE
+			PRINTFORMW 「…응……푸핫……아」
+			PRINTFORMW 토키코는 어쩐지 모자란다는 표정을 짓고 있다
+			RETURN 1
+		ENDIF
+	;それ以外
+	ELSE
+		IF RAND:3 == 0
+			PRINTFORMW 「응…후으…」
+			RETURN 1
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「츄우…」
+			PRINTFORMW 「…응…이걸로 됐어?」
+			RETURN 1
+		ELSE
+			PRINTFORMW 「…우응…응」
+			PRINTFORMW 「…츄웃…후훗, 꽤 좋네 이거」
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;20,キスする
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_20
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_20_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_20_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;時姦中
+		IF FLAG:70
+			PRINTFORMW 얼어붙은 시간 속에서 토키코의 입술을 빼앗았다
+			RETURN 1
+		ELSE
+			PRINTFORMW 「…응…」
+			PRINTFORMW 「…%CALLNAME:MASTER%…좀 더……」
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 얼어붙은 시간 속에서 토키코의 입술을 빼앗았다
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		IF RAND:3 == 0
+			PRINTFORMW 「응…」
+			PRINTFORMW 「…츄우……앗, 그만두지 마…」
+			RETURN 1
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「츄웃…응……」
+			PRINTFORMW 「…푸하앗……한 번 더♥」
+			RETURN 1
+		ELSE
+			PRINTFORMW 「…응……으응」
+			PRINTFORMW (%CALLNAME:MASTER%…좋아…)
+			RETURN 1
+		ENDIF
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		IF RAND:3 == 0
+			PRINTFORMW 「응………」
+			PRINTFORMW 「……또 해?」
+			RETURN 1
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「츄…으응……」
+			PRINTFORMW 「…아응…아…」
+			RETURN 1
+		ELSE
+			PRINTFORMW 「…응……푸핫……아」
+			PRINTFORMW 토키코는 어쩐지 모자란다는 표정을 짓고 있다
+			RETURN 1
+		ENDIF
+	;それ以外
+	ELSE
+		IF RAND:3 == 0
+			PRINTFORMW 「응…후으…」
+			RETURN 1
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「츄우…」
+			PRINTFORMW 「…응…이걸로 됐어?」
+			RETURN 1
+		ELSE
+			PRINTFORMW 「…우응…응」
+			PRINTFORMW 「…츄웃…후훗, 꽤 좋네 이거」
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+
+
+;==================================================
+;21,何もしない
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_21
+;CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_21_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_21_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 「정말…! 뭐라도 해 줘!…몸이 쑤셔서 어떻게 할 수가 없어♥…」
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 「아이 참…못 참겠어…빨리 만져 줘♥」
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 「…왜 그래? 갑자기 손을 멈춰선」
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;22,誘い受ける
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_22
+;CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_22_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_22_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;23,ピロートーク
+;==================================================
+@M_KOJO_MESSAGE_COM_K101_23
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K101_23_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K101_23_1
+;-------------------------------------------------
+;記入チェック(=0, 非表示、1, 表示)
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;失敗
+	IF TFLAG:193
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;思慕
+	ELSEIF TALENT:사모
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1

@@ -1,0 +1,297 @@
+﻿@MASTERPREG(ARG)
+#DIM 임신필요치
+#DIM 중독보정
+#DIM 임신정액판정
+SELECTCASE ABL:MASTER:질내사정중독
+	CASE 0 TO 2
+		중독보정 = 5
+	CASE 3 TO 5
+		중독보정 = 4
+	CASEELSE
+		중독보정 = 2
+ENDSELECT
+
+EX:MASTER:자궁내정액 += EX:MASTER:질내정액 / 중독보정
+	
+SIF TALENT:MASTER:유치 && !TALENT:MASTER:초경
+	EX:MASTER:자궁내정액 = 0
+	
+IF !TALENT:MASTER:만능잉태
+	IF CHECK_CHARA(ARG, "오니")
+		임신필요치 = 10000 - 3000 * TALENT:MASTER:오니잉태 - 1000 * TALENT:MASTER:요괴잉태
+		SIF CFLAG:ARG:자식보정 >= 5
+			임신필요치 = 임신필요치 * MAX(120 - 4 * CFLAG:ARG:자식보정, 5) / 100
+	ELSEIF CHECK_CHARA(ARG, "텐구")
+		임신필요치 = 5000 - 2000 * TALENT:MASTER:텐구잉태 - 1000 * TALENT:MASTER:요괴잉태
+		SIF CFLAG:ARG:자식보정 >= 5
+			임신필요치 = 임신필요치 * MAX(60 - 4 * CFLAG:ARG:자식보정, 5) / 40
+	ELSEIF CHECK_CHARA(ARG, "요정")
+		임신필요치 = 4000 - 1500 * TALENT:MASTER:요정잉태
+		SIF CFLAG:ARG:자식보정 >= 5
+			임신필요치 = 임신필요치 * MAX(60 - 4 * CFLAG:ARG:자식보정, 5) / 40
+	ELSEIF CHECK_CHARA(ARG, "신령")
+		임신필요치 = 20000 - 15000 * TALENT:MASTER:신령잉태
+		SIF CFLAG:ARG:자식보정 >= 5
+			임신필요치 = 임신필요치 * MAX(100 - 4 * CFLAG:ARG:자식보정, 5) / 100
+	ELSEIF CHECK_CHARA(ARG, "츠쿠모가미")
+	;基本必要値は妖精より高いが道具使用経験によって下がる
+		임신필요치 = MAX(5000 - EXP:MASTER:도구사용경험 * (1 + TALENT:MASTER:츠쿠모가미잉태), 2000)
+		SIF CFLAG:ARG:자식보정 >= 5
+			임신필요치 = 임신필요치 * MAX(60 - 4 * CFLAG:ARG:자식보정, 5) / 40
+	ELSEIF CHECK_CHARA(ARG, "봉래인")
+	;願掛けによる影響が相対的にでかい
+		임신필요치 = 200000
+		SIF TALENT:MASTER:봉래잉태
+			임신필요치 /= 10
+		SIF CFLAG:ARG:자식보정 >= 5
+			임신필요치 = 임신필요치 * MAX(50 - 2 * CFLAG:ARG:자식보정, 1) / 100
+	ELSEIF CHECK_CHARA(ARG, "유령")
+		임신필요치 = 150000
+		SIF TALENT:MASTER:유령잉태
+			임신필요치 /= 10
+		SIF CFLAG:ARG:자식보정 >= 5
+			임신필요치 = 임신필요치 * MAX(60 - 2 * CFLAG:ARG:자식보정, 1) / 100
+	ELSEIF CHECK_CHARA(ARG, "인형")
+		임신필요치 = 150000
+		SIF TALENT:MASTER:인형잉태
+			임신필요치 /= 10
+		SIF CFLAG:ARG:자식보정 >= 5
+			임신필요치 = 임신필요치 * MAX(60 - 2 * CFLAG:ARG:자식보정, 1) / 100
+	ELSEIF CHECK_CHARA(ARG, "요괴")
+		임신필요치 = MAX(3000 - CFLAG:ARG:자식보정 * 10 - 1000 * TALENT:MASTER:요괴잉태, 500)
+	ELSEIF CHECK_CHARA(ARG, "선인") || CHECK_CHARA(ARG, "천인") || CHECK_CHARA(ARG, "월인") || CHECK_CHARA(ARG, "마계인")
+		임신필요치 = MAX(2400 - CFLAG:ARG:자식보정 * 10, 500)
+	;その他人間
+	ELSE
+		임신필요치 = MAX(2000 - CFLAG:ARG:자식보정 * 10, 500)
+	ENDIF
+	SIF CHECK_CHARA(ARG, "요정")
+		임신필요치 = (임신필요치 + MAX(2000 - CFLAG:ARG:자식보정 * 10, 500)) / 2
+ELSE
+	임신필요치 = MAX(2000 - CFLAG:ARG:자식보정 * 12, 100)
+ENDIF
+; 원본에는 없지만 한글판 tw에 있는 부분이라 임의 추가. 오류 등 문제시 주석처리
+SIF FLAG:포부 == 6
+	임신필요치 = 임신필요치 / 2
+SIF FLAG:포부 == 9
+	임신필요치 = 임신필요치 * 9 / 10
+SIF TALENT:MASTER:인간
+	임신필요치 /= 2
+SIF TALENT:MASTER:스침
+	임신필요치 /= 4
+SIF TALENT:ARG:농후정액
+	임신필요치 /= 4
+SIF TALENT:MASTER:임신소망
+	임신필요치 = 임신필요치 * 8 / 10
+;임의 추가 종료
+	;検証用
+	;임신필요치 = 1
+	
+IF 충전율(MASTER,4) > 20
+	SETCOLOR C_CREAM
+	PRINTFORML %CALLNAME:MASTER%의 자궁안은 부어 넣어진 %CALLNAME:ARG%의 정으로 가득 차 있다…
+	IF !FLAG:그림표시
+		SETFONT "MS PGothic"
+		PRINTL 　　　　　　　　　　　}　}　　　　　　　　　　　　 　 　 （
+		PRINTL ヽ.__　　　　　　　　　',　',　_　　　　　　　　　　　　　　）　　　　　　　　　　　　　　 　 　 　 　 　 , --､
+		PRINTL 　(　｀ヽ　　　　　　　 ヽ ﾉ　 ヽ　　　　　　　　　　　　0　　　　　　　　　　　　　　　　　　＿__ ノノ⌒＼
+		PRINTL 　　ー '　　　　　　　　　乂 ＿}　　　　　　　　　　 　 ...........　　　　　　 /⌒´　　/ ￣ ｀ヾ⌒ ´
+		PRINTL 　　　　　　　｀⌒ヽ.. ＿　　　　　 　 ⌒).　　　　　,..::::::::::::::::.:..　　 (__メ　　　　　乂＿__ノ
+		PRINTL 　　　　　　　　　　 乂＿） 　 　　　　　ー(__)　　.j::::'´　 ｀ ::::〔
+		PRINTL 　　　　　⌒ー（⌒）　　　　　　　　　　　　- ､ 　 〕::::.　　 ..:::::{　　　　　　　　　 -― - ､
+		PRINTL 　　　　　　　　　　　---　､ 　 　　　　　乂_ノ　　ﾍ::::.::::::.::::::ﾒ　　　　　　　 （　　　　　　｀￣ ｀ヽ
+		PRINTL 　　　　　　　　　 /　　　 　 ＼ 　　ー ´　-､_○　　｀~~~~~´　, -- ､　　　　　　ー　⌒´￣￣）　}
+		PRINTL 　　＿　　　　　 人　　　　　　 ',　　　　/　　　　　　　　　　　乂__ノ⌒ヽ　　　　　　　　　　 （　（
+		PRINTL ´　　　　 ＼　　{　 }　　　　　　 }　　　　　　　　　　 0　　　　　　　　　　 ー　　 ＿　　　　　　 ー―
+		PRINTL 　　 -- ､　　｀￣ ´ ヽ　　＿ ..ノ　　　　　　　　　　 (　　　　　　　　　　　　　 （　　　｀ヽ
+		PRINTL ／　　　 ＼ _＿　イ｀¨¨´　--､　　　--､　　　　　　′　　　　　　　　　　　　　＼　＿ メ
+		PRINTL 　 　　（⌒）　　　　　　__/ 　　　ー乂__ノ　 _　　　　　　(⌒ ）　　---　､　　　　　　　　　 ＼
+		PRINTL ー'⌒´　　　　　　　　　　　　　　　　　　　（__）　　　　　 ⌒ヽ /　　　　　＼　　　　　　　　　 ー ⌒
+		PRINTL 　　　　　　　　　　　　　　　　＿　　　　　 ノ　　　-､　　　　　.′　　　　　　＼
+		PRINTL 　　　　　　　　　　　　　 ／　　　 ヽ　　.〃　　 （__ノ　　　　　　　　　　　　　　 ､
+		PRINTL 　　　　　　　　　　　　 /　　　　　　}　　{{　　　（　　　　　　　i
+		PRINTL 　　　　　　　　　　　　.{　　　　　　ﾉ　　 j　　　　）　　　--､　{　　　　　　　　　　 ',
+		PRINTL 　　　-――　､　　　ノ 乂 　　 ／　　 /　　　　　　　 {　　 }　',　　　　　　　 　 　 }
+		PRINTL ／　　――　､ ｀￣　 ）-- ⌒´　　　　　　　　　　　　 乂__ !.　ヽ　　　　　　　　　 ,
+		PRINTL 　 ／　　　　　 ｀￣￣　　　　　　　　　　　　　　　　　　　　}}　　 ＼　　　　　　　/
+		PRINTW ／　　　　　　　　　　　　　　　　　　　　　　　　 　 　 　 　 {{　　　　　ー―　､　 {
+	ELSE
+		CALL PRINT_IMAGE_ANIMATION("受精",0,7,FLAG:애니메이션,1)
+		CALL PRINT_IMAGE_ANIMATION("受精",0,3,1,0)
+		CALL PRINT_IMAGE("受精2")
+		WAIT
+	ENDIF
+ENDIF
+SETFONT
+IF MIN(충전율(MASTER,4),100) * REAL_ESTRUS_CYCLE(MASTER) / 100 > RAND:임신필요치
+	CFLAG:MASTER:임신경과일수 = 1
+	SIF FLAG:포부 == 6
+		FLAG:포부 = 9
+	IF FLAG:1007
+		SETCOLOR C_CREAM
+		PRINTFORML %CALLNAME:ARG%의 정자는 자신의 것인양 %CALLNAME:MASTER%의 자궁을 헤엄쳐 돌아, 무방비인 난자로 쇄도해 갔다…
+		IF !FLAG:그림표시
+			SETFONT "MS PGothic"
+			PRINTL 　　　　　　　　　　　　　　　　..__＿....-------....＿..
+			PRINTL 　　　　　　　　　　　　 .._..-‐'"⌒　　　　　　　　 ｀"'''ゝ､_..
+			PRINTL 　　　　　　　　　　_..‐''´　　　　　　　　　　　　　　　　　"ｰ 、..
+			PRINTL 　　　　　　　　 .:ノ'´　　. .　. 　 .　 . . .. .: . .　.　 ..　　　 　 　 `＼:.
+			PRINTL 　　　　　　　.:ノ′ 　 .　 . .: .:.: .:. .: . .: .: .:. . : .: .:.. : . .　. 　 　 　 ﾞゝ:.　　こ二ﾆ==-‐'´￣｀ヽ、_,
+			PRINTL 　　　　　 .:_／ 　 . ..:..:.:.::;:;;';:;';';.:　'"´　　　　'　　;.:.. : .　.　　　　 　 ＼:.
+			PRINTL 　　　　　.:/′ 　 .. ..:.:.:;:;';;';'.''´　　　　　 　 　 　 　 　 ;.:. . .　　 　 　 ヽ、:.
+			PRINTL 　　　　.:丿　.　.　. ..:.::;';':''　　　　　　　　　 　 　 　 　 　 :.:. : .　　　 　 ヽ::
+			PRINTL 　　　 .:丿　　　..　. ..::;'′　　　　　　　 　 　 　 　 　 　 　 ,:.:.. . .　 　 　 '、::
+			PRINTL 　　　 ::「　　　　.. . .:.;'　　　　　　　　　　　　　　　　　 　 　 :.:.　 . 　 　 .　i、::　　　こ二ﾆ==-‐'⌒丶、＿ノ
+			PRINTL 　　　::||　　　　. . ..:.;　　　　　　　　 　 　 　 　 　 　 　 　 　 ;.: . . .　　 ,::　!::
+			PRINTL 　　　::〕 　 　 　 . ..:;　　　　　　　　　　　　　　　　　　　　 　 :.:. . .　:';';にﾆ==-‐'´￣｀ヽ、_,
+			PRINTL 　　　::|!　　　　　..:.:;　　　　　　　　　　　　　　　　　　　　 　 ;.: :.　　 　｀: .!'::　　　　　　　　"
+			PRINTL 　　　::卜　　　　.. .:.:,　　　　　　　　　　　　　　　　　　　　　.:.:. . .. . 　 　 |::′　[][]/7
+			PRINTL 　　　 ::'、　　　 　 . .::,　　　　　　　　　　　　 　 　 　 　 　 ,:.: . .　　　　 │:: 　 　 //lニ◎
+			PRINTL 　　　 ::弋 　 　 　 .. . :.,　　　　　　　　　　　　　　　　 　 ,.:.: : .　　　 　 丿::　　　　　　// ﾟﾟ〃
+			PRINTL 　　　　 ::ヽ　　 　 　 . . .:...　　　 　 　 　 　 　 　 　 　 ,..: .: . ..　 　 　 _j′　　　　　　　　　´　ﾟ　｡
+			PRINTL 　　　　　':ヽ、　　　　　.　.: :': . ..　　 　 　 　 　 　 ,. .:.: . :　.. 　 　 　 /′　　　　　　　　　 　 　 　 °
+			PRINTL 　　　　　　':ヽ、　　 　 　 ..　. : .: ' : . ...,. .,... . : ' :. : .　.　　　 　 　 _／:'
+			PRINTL 　　　　　　　 ':ヾ 、　　　　　　 ..　:　. .: . . : .　:　.　　　　　　　 _／:'　　　　こ二ﾆ==-‐'⌒丶、＿ノ
+			PRINTL 　　　　　　　　　':ﾞゝ､　　　　　　　　　 .　 .　　　　　　　　　_ノ'´:'
+			PRINTL 　　　　　　　　　　　':ﾞﾞ'ゝ､_ 　　　　　　　　　　　　　　_..-‐'´:'
+			PRINTL 　　　　　　　　　　　　　　':ﾞﾞ'''ｰ-....＿＿____＿....-一"´:'
+			PRINTW 　　　　　　　　　　　　　　　　　　　　 ''￣｀''
+			SETFONT
+		ELSE
+			CALL PRINT_IMAGE_ANIMATION("受精",0,12,FLAG:애니메이션,0)
+			CALL PRINT_IMAGE("受精11")
+			WAIT
+		ENDIF
+		IF TALENT:MASTER:연모
+			PRINTFORMW %CALLNAME:MASTER%의 몸은 사랑하는 %CALLNAME:ARG%의 유전자를 기뻐하며 받아들이고 있다…
+		ELSE
+			PRINTFORMW %CALLNAME:MASTER%의 몸은 본인의 의사와는 관계없이 %CALLNAME:ARG%의 유전자를 받아들였다…
+		ENDIF
+	ENDIF
+	IF TCVAR:(MASTER):씨받음자각
+		CFLAG:MASTER:몸으로기억_어머니 = 1
+		;PRINTFORML Succeed2
+	ELSE
+		CFLAG:MASTER:무자각임신 = 1
+	ENDIF
+	IF TCVAR:(ARG):씨뿌림자각
+		CFLAG:ARG:몸으로기억_아버지 = 1
+		;PRINTFORML Succeed2
+	ENDIF
+	CFLAG:MASTER:누구의아이 = ARG
+ENDIF
+RESETCOLOR
+
+@MASTERADDICT(ARG)
+	CFLAG:MASTER:286 = 0
+	CFLAG:MASTER:287 = 0
+	CFLAG:MASTER:288 = 0
+	CFLAG:MASTER:289 = 0
+	CFLAG:MASTER:290 = 0
+	;願掛けによる感度上昇解除
+	;좋아하는체위決定
+	SIF CFLAG:MASTER:좋아하는체위 > 10 
+		CFLAG:MASTER:좋아하는체위 = 0
+	FOR COUNT,1,10
+		SIF EXP:MASTER:(COUNT + 100) > EXP:MASTER:(CFLAG:MASTER:좋아하는체위 + 100) + 50
+			CFLAG:MASTER:좋아하는체위 = COUNT
+	NEXT
+	SELECTCASE ABL:MASTER:정액중독
+		CASE 0
+			MASTER:1 = 5
+		CASE 1 TO 3
+			MASTER:1 = 7
+		CASE 4 TO 7
+			MASTER:1 = 10
+		CASEELSE
+			MASTER:1 = 20
+	ENDSELECT
+	;機嫌
+	TALENT:MASTER:기분 = 0
+	CALL KIGEN_CHANGE(MASTER,10)
+	SIF TALENT:ARG:농후정액
+		MASTER:1 *= 2
+	SETCOLOR 0xEE60EE
+	IF EX:MASTER:질내정액 > 200 || EX:MASTER:애널내정액 > 200
+		PRINTFORM %CALLNAME:ARG%에 충분히 쏟아진 정액으로, %CALLNAME:MASTER%의
+		IF EX:MASTER:질내정액 > 200 && EX:MASTER:애널내정액 > 200
+			PRINTL 질내와 애널이 뜨겁게 쑤시고 있다…
+		ELSEIF EX:MASTER:질내정액 > 200
+			PRINTL 질내가 뜨겁게 쑤시고 있다…
+		ELSE
+			PRINTL 애널이 뜨겁게 쑤시고 있다…
+		ENDIF
+		IF EX:MASTER:질내정액 > 200
+			JUEL:MASTER:굴복 += MASTER:1 * (ABL:MASTER:질내사정중독 + 1) * EX:MASTER:질내정액
+			JUEL:MASTER:욕정 += MASTER:1 * (ABL:MASTER:질내사정중독 + 1) * EX:MASTER:질내정액
+		ENDIF
+		IF EX:MASTER:애널내정액 > 200
+			JUEL:MASTER:굴복 += MASTER:1 * (ABL:MASTER:항내사정중독 + 1) * EX:MASTER:애널내정액
+			JUEL:MASTER:욕정 += MASTER:1 * (ABL:MASTER:항내사정중독 + 1) * EX:MASTER:애널내정액
+		ENDIF
+	ENDIF
+	IF (EX:MASTER:20 + EX:MASTER:21 + EX:MASTER:22 + EX:MASTER:23 + EX:MASTER:24) > 0
+		PRINTFORM %마스터는%
+		SIF EX:MASTER:20
+			PRINT 클리토리스
+		SIF EX:MASTER:20 && (EX:MASTER:21 || EX:MASTER:22 || EX:MASTER:23 || EX:MASTER:24)
+			PRINT 와
+		SIF EX:MASTER:21
+			PRINT 질내
+		SIF EX:MASTER:21 && (EX:MASTER:22 || EX:MASTER:23 || EX:MASTER:24)
+			PRINT 와
+		SIF EX:MASTER:22
+			PRINT 애널
+		SIF EX:MASTER:22 && (EX:MASTER:23 || EX:MASTER:24)
+			PRINT 과
+		SIF EX:MASTER:23
+			PRINT 가슴
+		SIF EX:MASTER:23 && EX:MASTER:24
+			PRINT 과
+		SIF EX:MASTER:24
+			PRINT 입술
+		PRINTFORMW 의 쑤심에 괴로워하고 있다…
+		CFLAG:MASTER:욕구불만도 += (EX:MASTER:20 + EX:MASTER:21 + EX:MASTER:22 + EX:MASTER:23 + EX:MASTER:24) * 100
+	ENDIF
+	{
+	IF (TALENT:MASTER:150 || TALENT:MASTER:151) && !TALENT:MASTER:초경 && EXP:MASTER:V절정경험 > MAX(0, 200 - CFLAG:MASTER:자식보정)
+	 && !RAND:(10 - MIN(9, CFLAG:MASTER:자식보정 / 10 + ABL:MASTER:질내사정중독)) && EX:MASTER:질내정액
+	 }
+		PRINTFORML 어린 몸이 알기에는 너무 빠른 쾌락이 %마스터를%「여자」로 바꾸어 간다……
+		PRINTFORMW %마스터는% 초경을 맞이했다
+		PRINTFORMW %마스터는% 아이를 임신할 수 있는 몸이 되었다
+		TALENT:MASTER:초경 = 1
+	ENDIF
+	IF ABL:MASTER:정액중독 < 3
+		IF CFLAG:MASTER:누계뿌려짐 + CFLAG:MASTER:누계정음 * 3 +CFLAG:MASTER:누계질내정액 + CFLAG:MASTER:누계애널정액 >= 15000 * (10 - 2 * TALENT:MASTER:중독되기쉬움) / 10
+			PRINTFORML 몇 번이나 정액을 쏟아진 %CALLNAME:MASTER%의 몸은 %CALLNAME:ARG%의 정액의 맛을 기억해 버렸다…
+			PRINTL 향후는 무의식적이어도 스스로 갖고 싶어하게 될 것이다
+			PRINTFORMW %CALLNAME:MASTER%의 정액중독이 3이 되었다
+			ABL:MASTER:정액중독 = 3
+		ELSEIF CFLAG:MASTER:누계뿌려짐 + CFLAG:MASTER:누계정음 * 3 +CFLAG:MASTER:누계질내정액 + CFLAG:MASTER:누계애널정액 >= 7500 * (10 - 2 * TALENT:MASTER:중독되기쉬움) / 10 && ABL:MASTER:정액중독 < 2
+			PRINTFORML %CALLNAME:MASTER%의 몸은, 정액에 친숙해 지고 있다…
+			PRINTFORMW %CALLNAME:MASTER%의 정액중독이 2가 되었다
+			ABL:MASTER:정액중독 = 2
+		ELSEIF CFLAG:MASTER:누계뿌려짐 + CFLAG:MASTER:누계정음 * 3 +CFLAG:MASTER:누계질내정액 + CFLAG:MASTER:누계애널정액 >= 3000 * (10 - 2 * TALENT:MASTER:중독되기쉬움) / 10 && !ABL:MASTER:정액중독
+			PRINTFORML %CALLNAME:MASTER%의 몸은, 정액의 맛을 알아 버렸다…
+			PRINTFORMW %CALLNAME:MASTER%의 정액중독이 1이 되었다
+			ABL:MASTER:정액중독 = 1
+		ENDIF
+	ENDIF
+	IF CFLAG:MASTER:누계정음 > 10000 * (10 - 2 * TALENT:MASTER:중독되기쉬움) / 10 && !TALENT:MASTER:정애미각
+		PRINTFORML 정액을 계속 먹은 %CALLNAME:MASTER%의 몸은 정액의 맛 자체에서 즐거움을 느끼게 되고 말았다…
+		PRINTFORMW %마스터는% 【정애미각】을 얻었다
+		TALENT:MASTER:정애미각 = 1
+	ENDIF
+	IF ABL:MASTER:정액중독 >= 3
+		IF CFLAG:MASTER:누계질내정액 > 3000 * ABL:MASTER:질내사정중독 * (10 - 2 * TALENT:MASTER:중독되기쉬움) / 10 &&  EX:MASTER:질내정액 > 200 && ABL:MASTER:질내사정중독 < 3
+			PRINTFORMW %CALLNAME:MASTER%의 핑크색의 점막에 정액이 널리 스며든다…
+			PRINTFORMW %CALLNAME:MASTER%의 질은 \@ ABL:MASTER:질내사정중독 ? 보다 강하게# \@%CALLNAME:ARG%의 정액을 바라게 되었다
+			ABL:MASTER:질내사정중독 ++
+		ELSEIF CFLAG:MASTER:누계애널정액 > 3000 * ABL:MASTER:항내사정중독 * (10 - 2 * TALENT:MASTER:중독되기쉬움) / 10 && EX:MASTER:애널내정액 > 200 && ABL:MASTER:항내사정중독 < 3
+			PRINTFORMW %CALLNAME:MASTER%의 직장에 정액이 널리 스며든다…
+			PRINTFORMW %CALLNAME:MASTER%의 애널은 \@ ABL:MASTER:항내사정중독 ? 보다 강하게# \@%CALLNAME:ARG%의 정액을 바라게 되었다
+			ABL:MASTER:항내사정중독 ++
+		ENDIF
+	ENDIF
+	RESETCOLOR

@@ -1,0 +1,228 @@
+﻿@BIRTH(ARG)
+#DIM CHILDNUM
+
+IF ARG == MASTER
+	LOCAL:2 = MASTER
+	LOCAL:3 = CFLAG:MASTER:누구의아이
+ELSE
+	LOCAL:2 = ARG
+	LOCAL:3 = MASTER
+ENDIF
+DRAWLINE
+;임신 소거, 출산경험, 성별의 결정, 생일 결정
+TALENT:(LOCAL:2):임신 = 0
+EXP:(LOCAL:2):출산경험 += 1
+CHILDNUM = EXP:(LOCAL:2):출산경험 % 10
+SIF !EXP:(LOCAL:2):출산경험 % 10
+	CHILDNUM = 10
+IF FLAG:자식의성별
+	CHILD_SEX:(LOCAL:2):CHILDNUM = FLAG:자식의성별
+ELSE
+	CHILD_SEX:(LOCAL:2):CHILDNUM = RAND:2 + 1
+ENDIF
+CHILD_BIRTHDAY:(LOCAL:2):CHILDNUM = DAY
+CHILD_BIRTHDATE:(LOCAL:2):CHILDNUM = (DAY / 124 + (DAY % 124 ? 1 # 0)) * 1000
+CHILD_BIRTHDATE:(LOCAL:2):CHILDNUM += DAY:2 * 100 + DAY:3
+CHILD_WEATHER:(LOCAL:2):CHILDNUM = %GET_WEATHER()%
+IF CFLAG:(LOCAL:2):무자각임신
+	CALL KOJO_MESSAGE_SEND("EVENT",25,(LOCAL:2),4,CHILDNUM)
+	CHILD_LOVE:(LOCAL:2):CHILDNUM = -100
+ELSEIF TALENT:(LOCAL:2):연모
+	CALL KOJO_MESSAGE_SEND("EVENT",25,(LOCAL:2),1,CHILDNUM)
+	CHILD_LOVE:(LOCAL:2):CHILDNUM = 300
+ELSEIF TALENT:(LOCAL:2):사모
+	CALL KOJO_MESSAGE_SEND("EVENT",25,(LOCAL:2),2,CHILDNUM)
+	CHILD_LOVE:(LOCAL:2):CHILDNUM = 200
+ELSE
+	CALL KOJO_MESSAGE_SEND("EVENT",25,(LOCAL:2),3,CHILDNUM)
+	CHILD_LOVE:(LOCAL:2):CHILDNUM = 100
+ENDIF
+;あらかじめ自立先を決めちゃう（自立するときにもっかい決める）
+CALL 자립처선정((LOCAL:2), CHILDNUM)
+PRINTFORMW %조사처리(CALLNAME:(LOCAL:2),"는")%, %CALLNAME:(LOCAL:3)%의 아이를 무사히 출산했습니다
+PRINTFORMW \@ CHILD_SEX:(LOCAL:2):CHILDNUM == 1 ? %조사처리(CALLNAME:(LOCAL:2),"를")% 닮은 건강한 여자아이 # %조사처리(CALLNAME:(LOCAL:3),"를")% 닮은 건강한 남자아이 \@입니다
+PRINTFORMW %조사처리(CALLNAME:(LOCAL:2),"는")% 막 태어난 갓난아기를 받자, 상냥하게 껴안고 모유를 먹이기 시작했다
+SIF TALENT:(LOCAL:2):모성 == 0
+	PRINTFORMW %조사처리(CALLNAME:(LOCAL:2),"는")% [모성]에 눈을 떴다!
+PRINTL ******************************************************************
+PRINTFORML 제{CHILDNUM}번째 아이 어머니：%CALLNAME:(LOCAL:2)%　아버지：%CALLNAME:(LOCAL:3)%
+PRINTFORML 　성별：\@ CHILD_SEX:(LOCAL:2):CHILDNUM == 1 ? 여 # 남 \@
+PRINTFORM 생일：
+CALL PRINT_DATE(DAY)
+PRINTFORML  %FESTIVAL()% -%GET_WEATHER()%-
+;PRINTFORML 　신장：
+;PRINTFORML 　체중：
+;PRINTFORML 　종족：
+;PRINTFORML 머리카락의 색：
+;PRINTFORML 눈의 색：
+PRINTL ******************************************************************
+
+
+;육아중·모성 추가
+CALL CHILD_NAME((LOCAL:2))
+CFLAG:(LOCAL:2):육아인원수 += 1
+CFLAG:(LOCAL:3):육아인원수 += 1
+CFLAG:(LOCAL:2):출산경과일 = 1
+CFLAG:(LOCAL:2):임신경과일수 = 0
+CFLAG:(LOCAL:2):무자각임신 = 0
+CFLAG:(LOCAL:2):몸으로기억_어머니 = 0
+CFLAG:(LOCAL:2):몸으로기억_아버지 = 0
+CFLAG:(LOCAL:2):임신자각상태 = 0 
+TALENT:(LOCAL:2):모성 = 1
+
+CFLAG:(LOCAL:2):출산휴가중 = 0
+
+EXP:(LOCAL:2):애정경험 += 10
+CFLAG:(LOCAL:2):아이인원수 += 1
+CFLAG:(LOCAL:3):아이인원수 += 1
+IF FLAG:생활능력무
+	PRINTFORML 우리 아이의 탄생에 %조사처리(CALLNAME:(LOCAL:3),"는")%
+	CALL ASK_YN("부모로서의 책임감이 싹트는 것을 느꼈다","앞으로 일어날 수 있는 여러 가지 사태에 대한 불안을 느꼈다")
+	IF !RESULT
+		PRINTFORMW %조사처리(CALLNAME:(LOCAL:3),"는")% 생활능력 없음은 없어졌다
+	ELSE
+		PRINTFORMW 사람의 성격이 그렇게 쉽게 변하고 성장할 수 있다면 아무도 고생하지 않습니다
+		PRINTFORMW %조사처리(CALLNAME:(LOCAL:3),"는")% 전보다 더 의지되지 않는 성격인 채, %조사처리(CALLNAME:(LOCAL:2),"와")% 사이좋게 육아에 임했습니다
+	ENDIF
+	FLAG:생활능력무 = RESULT
+ENDIF
+		
+
+@CHILD_NAME(YOME)
+#DIM YOME
+#DIM CHILDNUM
+#DIMS PROPOSED_NAME, 10
+CHILDNUM = EXP:YOME:출산경험 % 10
+SIF !EXP:YOME:출산경험 % 10
+	CHILDNUM = 10
+IF CHILD_SEX:YOME:CHILDNUM == 1
+	PROPOSED_NAME:0 = %랜덤캐릭터_명명(YOME)%
+ELSE
+	PROPOSED_NAME:0 = %남자아이_명명(YOME, CHILDNUM)%
+ENDIF
+$LOOP0
+PRINTL 아이의 이름을 결정합시다
+PRINTFORML 
+IF YOME == MASTER
+CALL ASK_M("스스로 결정한다",1, "랜덤 후보 보기",1, @"%CALLNAME:(CFLAG:MASTER:누구의아이)%의 제안에 따라 「%PROPOSED_NAME:0%」라 이름짓자",1)
+ELSE
+CALL ASK_M("스스로 결정한다",1, "랜덤 후보 보기",1, @"%CALLNAME:YOME%의 제안에 따라 「%PROPOSED_NAME:0%」라 이름짓자",1)
+;CALL ASK_M("스스로 결정한다",1,"랜덤 후보 보기",1,"「멕시코에 부는 열풍!」이라는 뜻의 「산타나」라 하는 건 어떨까!",1)
+ENDIF
+
+SELECTCASE RESULT
+	CASE 0
+		$LOOP1
+		PRINTL 아이의 이름을 입력해 주세요
+		INPUTS
+		IF RESULTS == ""
+			GOTO LOOP1
+		ELSE
+			PROPOSED_NAME:0 = RESULTS
+			CALL CHK_CHILDNAME_DUPLICATION(PROPOSED_NAME:0)
+			PRINTFORML %조사처리(PROPOSED_NAME:0,"로")% 괜찮겠습니까?
+			CALL ASK_YN
+			IF RESULT
+				GOTO LOOP1
+			ELSE
+				CHILDNAME:YOME:CHILDNUM = %PROPOSED_NAME:0%
+			ENDIF
+		ENDIF
+	CASE 1
+		$LOOP2
+		FOR LOCAL,1,10
+			IF CHILD_SEX:YOME:CHILDNUM == 1
+				PROPOSED_NAME:LOCAL = %랜덤캐릭터_명명(YOME)%
+			ELSE
+				PROPOSED_NAME:LOCAL = %남자아이_명명(YOME, CHILDNUM)%
+			ENDIF
+			PRINTFORML [{LOCAL}] - %PROPOSED_NAME:LOCAL%
+		NEXT
+		DRAWLINE
+		PRINTFORML [99] - 후보 재생성
+		PRINTFORML [100] - 돌아간다
+		$LOOP3
+		INPUT
+		SELECTCASE RESULT
+			CASE 1 TO 9
+				LOCAL = RESULT
+				CALL CHK_CHILDNAME_DUPLICATION(PROPOSED_NAME:LOCAL)
+				PRINTFORML %조사처리(PROPOSED_NAME:LOCAL,"로")% 괜찮겠습니까?
+				CALL ASK_YN
+				IF RESULT
+					GOTO LOOP0
+				ELSE
+					CHILDNAME:YOME:CHILDNUM = %PROPOSED_NAME:LOCAL%
+				ENDIF
+			CASE 99
+				GOTO LOOP2
+			CASE 100
+				GOTO LOOP0
+			CASEELSE
+				GOTO LOOP3
+		ENDSELECT
+	CASE 2
+		;PRINTFORML 화가 난 %조사처리(CALLNAME:YOME,"가")% 이름을 정해버렸다…
+		PRINTFORML %조사처리(CALLNAME:YOME,"는")% 기쁜 듯이 자식을 부르고 있다
+		CHILDNAME:YOME:CHILDNUM = %PROPOSED_NAME:0%
+ENDSELECT
+
+PRINTFORML %조사처리(CHILDNAME:YOME:CHILDNUM,"라")%는 이름이 되었습니다
+TALENT:YOME:육아중 = CHILDNUM
+;----------------------------------------------------
+;그 캐릭터에게 특정의 연령의 아이가 있으면(자) 돌려주는 함수
+;----------------------------------------------------
+@CHK_HAVE_CHILD(ARG,ARG:1,ARG:2)
+#FUNCTION
+#DIM 연령
+SIF !CFLAG:ARG:육아인원수
+	RETURNF 0
+
+FOR LOCAL, 1, 11
+	연령 = DAY - CHILD_BIRTHDAY:ARG:LOCAL
+	SIF INRANGE(연령,ARG:1,ARG:2-1)
+		RETURNF LOCAL
+NEXT
+
+RETURNF 0
+;----------------------------------------------------
+;생일의 아이가 있을까 돌려주는 함수
+;eraTW4. 570 proto_bugfix_m05에서의 사양 변경
+;·REF를 사용해, 배열을 고쳐 쓰는 F함수로 했다(인수를 모두 건네주지 않으면 에러가 된다)
+;·사양상, 배열의 상정 최대 요소수는10*캐릭터수상한이 된다(=RESULT의 요소수를 돌파해 에러가 나왔으므로 사양 변경)
+;·BREAK나 CONTINUE를 사용해 처리를 효율화
+;----------------------------------------------------
+@CHILD_HAPPY_BIRTHDAY(CNT_BIRTHDAY, NAME_CHILD, AGE_CHILD)
+#FUNCTION
+#DIM CHARA
+#DIM CHILDNUM
+#DIM  REF CNT_BIRTHDAY
+#DIMS REF NAME_CHILD
+#DIM  REF AGE_CHILD
+FOR CHARA, 1, CHARANUM
+	SIF !CFLAG:CHARA:아이인원수
+		CONTINUE
+	FOR CHILDNUM, 1, MIN(11, CFLAG:CHARA:아이인원수 + 1)
+		;무명≒미등록이라면 다음캐릭터에게
+		SIF !STRLENS(CHILDNAME:CHARA:CHILDNUM)
+			BREAK
+		;생일 이외는 스킵
+		SIF (DAY - CHILD_BIRTHDAY:CHARA:CHILDNUM) % 124
+			CONTINUE
+		CNT_BIRTHDAY ++
+		NAME_CHILD:CNT_BIRTHDAY = %CHILDNAME:CHARA:CHILDNUM%
+		AGE_CHILD:CNT_BIRTHDAY = (DAY - CHILD_BIRTHDAY:CHARA:CHILDNUM) / 124
+	NEXT
+NEXT
+RETURNF CNT_BIRTHDAY
+
+;子供の名前被りチェック
+@CHK_CHILDNAME_DUPLICATION(ARGS)
+#DIM C_ID
+FOR C_ID,1,CHARANUM
+	;"FOR LOCAL,0,10"에서 수정
+	FOR LOCAL,1,11
+		SIF CHILDNAME:C_ID:LOCAL == ARGS
+			CALL COLORMESSAGE(@"%CALLNAME:C_ID%에게 동명의 아이가 있습니다",C_YELLOW,1)
+	NEXT
+NEXT

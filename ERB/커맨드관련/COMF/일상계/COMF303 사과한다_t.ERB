@@ -1,0 +1,144 @@
+﻿;-------------------------------------------------
+;사과한다
+;일상계 커맨드 레벨 1
+;-------------------------------------------------
+@COM303
+IF CFLAG:패배자 && MARK:반발각인 >= 3
+	PRINTFORMW %마스터가% 한 일은 사과한다고 해서 용서받을 일이 아니다
+	RETURN -1
+ENDIF
+SELECTCASE TFLAG:192
+	;通常
+	CASE 0
+		LOCAL = RAND:100
+		LOCAL:1 = ABL:MASTER:화술기능 * 2 + ABL:친밀
+		;大成功
+		IF LOCAL < LOCAL:1
+			TFLAG:193 = 1
+			;信頼
+			TFLAG:98 = 1
+		;成功
+		ELSEIF LOCAL < LOCAL:1 + 30
+			TFLAG:193 = 0
+		;失敗
+		ELSE
+			TFLAG:193 = -1
+		ENDIF
+	;強制成功or大成功
+	CASE 1
+		;大成功
+		IF RAND:100 < ABL:MASTER:화술기능 * 2 + ABL:친밀
+			TFLAG:193 = 1
+			;信頼
+			TFLAG:98 = 1
+		;成功
+		ELSE
+			TFLAG:193 = 0
+		ENDIF
+	;強制失敗
+	CASE -1
+		TFLAG:193 = -1
+	;コマンド終了
+	CASE -2
+		TFLAG:193 = -1
+		RETURN 0
+ENDSELECT
+
+DOWNBASE:MASTER:체력 += 50
+DOWNBASE:MASTER:기력 += 200
+
+IF TARGET > 0 && CFLAG:빡침 && !CFLAG:수면
+	;고정으로 획득하는 소스
+	SOURCE:정복 = 400
+	;ABL:순종 체크
+	IF ABL:순종 <= 1
+		SOURCE:정복 += 2000 - (ABL:순종 * 30)
+	ELSEIF ABL:순종 <= 3
+		SOURCE:정복 += 1000 - (ABL:순종 * 30)
+	ELSEIF ABL:순종 <= 5
+		SOURCE:정복 += 750 - (ABL:순종 * 40)
+	ELSEIF ABL:순종 <= 8
+		SOURCE:정복 += 500 - (ABL:순종 * 20)
+	ELSEIF ABL:순종 <= 11
+		SOURCE:정복 += 200 - (ABL:순종 * 20)
+	ELSE
+		SOURCE:정복 += 100 - (ABL:순종 * 10)
+	ENDIF
+	
+	;ABL:친밀 체크
+	IF ABL:친밀 <= 1
+		SOURCE:정복 -= (ABL:친밀 * 60)
+	ELSEIF ABL:친밀 <= 3
+		SOURCE:정복 -= (ABL:친밀 * 60)
+	ELSEIF ABL:친밀 <= 5
+		SOURCE:정복 -= (ABL:친밀 * 60)
+	ELSEIF ABL:친밀 <= 8
+		SOURCE:정복 -= (ABL:친밀 * 50)
+	ELSEIF ABL:친밀 <= 11
+		SOURCE:정복 -= (ABL:친밀 * 40)
+	ELSE
+		SOURCE:정복 -= (ABL:친밀 * 30)
+	ENDIF
+	
+	SIF SOURCE:정복 < 0
+		SOURCE:정복 = 0
+ENDIF
+;성공하고 있으면(자) 분노 상태 해제
+IF TFLAG:193 == 0
+	CFLAG:빡침 = 0
+	CFLAG:언짢음 = 0
+	BASE:분노 /= 2
+ELSEIF TFLAG:193 == 1
+	CFLAG:빡침 = 0
+	CFLAG:언짢음 = 0
+	BASE:분노 = 0
+ELSE
+	;굳이 없음!유감!
+ENDIF
+SIF BASE:분노 < 0
+	BASE:분노 = 0
+IF ITEM:과자상자 && MARK:TARGET:반발각인 == 1
+	IF TFLAG:193 == -1
+		TFLAG:193 = -2
+	ELSE
+		MARK:TARGET:반발각인 = 0
+		TFLAG:193 = 2
+		ITEM:과자상자 --
+	ENDIF
+ENDIF
+
+;소요시간
+IF ABL:순종 <= 5
+	TIME += 90
+ELSEIF ABL:순종 <= 10
+	TIME += 60
+ELSE
+	TIME += 45
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;실행 판정
+;-------------------------------------------------
+@COM_ABLE303
+;사과하는 실행 판정
+SIF !TFLAG:100
+	RETURN 0
+;일괄관리
+SIF GLOBAL_COMABLE(303)
+	RETURN RESULT
+;분노중이 아니다
+SIF !CFLAG:빡침 && !(ITEM:과자상자 && MARK:TARGET:반발각인 == 1)
+	RETURN 0
+;수면중
+SIF CFLAG:수면
+	RETURN 0
+;기력 0
+SIF BASE:MASTER:기력 <= 0
+	RETURN 0
+;정지 중에는 불가
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+

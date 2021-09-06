@@ -1,0 +1,503 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;奉仕系コマンド
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;80,手淫
+;==================================================
+@M_KOJO_MESSAGE_COM_K70_80
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K70_80_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K70_80_1
+;-------------------------------------------------
+;記入チェック（=0,非表示,1,表示）
+LOCAL = CFLAG:70:1006
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM) && !FLAG:시간정지
+		PRINTFORMW 「손으로 흝어내는 거네요……」
+		PRINTFORMW 「이,이런걸까요……？」
+		PRINTFORMW 「어떤가요……？ 잘 되고 있는 건가요？」
+		RETURN 1
+	ENDIF
+	;一文目をPRINTFORMLにするか迷う……
+	IF FLAG:시간정지
+	ELSEIF NOWEX:MASTER:사정
+		;サディスティック
+		IF M_KOJO_K70_SADISTIC(70)
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「슥슥 해주었으면 좋겠어요？ 제 손으로 하고 싶으신 건가요？ 갈 것 같다면 가버리셔도 된다구요%UNICODE(0x2764)%」
+				PRINTFORMW 「자아%UNICODE(0x2764)% 슥슥%UNICODE(0x2764)% 잔뜩 퓻퓻해버리자구요ー%UNICODE(0x2764)% 퓻퓻%UNICODE(0x2764)% 퓻퓻%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「으후후…%UNICODE(0x2764)% 기분 좋으신가요？ %CALLNAME:MASTER%씨,귀여워요%UNICODE(0x2764)%」
+				PRINTFORMW 「어라,가버리실 것 같나요? 좋아요%UNICODE(0x2764)% 퓻퓻,퓻퓻 해주세요%UNICODE(0x2764)% 퓻퓻%UNICODE(0x2764)% 퓻퓻%UNICODE(0x2764)%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「하와……\/\/\/ 터질 것처럼 땡땡하게 부풀어올랐네요……\/\/\/ 제가 진정시켜드릴게요……！」
+				PRINTFORMW 「응……읏！ 괜찮아요……사양하지 않아도 된다구요……%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「아하아……\/\/\/ 가버릴것 같은 거네요……\/\/\/ 제 손으로 가버리고 싶은 거네요……！」
+				PRINTFORMW 「후후%UNICODE(0x2764)% 빠르게 하는게 좋으신가요？ 꼼짝 못하게 되는게 좋으신가요？ 귀두가 좋으신가요？ 기둥이 좋으신가요？」
+			ENDSELECT
+		ENDIF
+	ELSE
+		;サディスティック
+		IF M_KOJO_K70_SADISTIC(70)
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「후후후……%UNICODE(0x2764)% 슥슥해달라는 건가요？」
+				PRINTFORMW 「잔뜩 슥슥 해드릴게요%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「손으로 해달라구요？ 자,잔뜩 만지작거려 드릴게요♪」
+				PRINTFORMW 「아하♪ %CALLNAME:MASTER%씨의 자지 귀여워%UNICODE(0x2764)%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「손으로 해달라구요？ 알겠어요」
+				PRINTFORMW 「응,으응……ㅇ,이런 느낌으로인 걸까……」
+			CASEELSE
+				PRINTFORMW 「손으로 하는거네요……네……」
+				PRINTFORMW 「으응……읏！ 기,기분 좋으신가요？」
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;81,フェラチオ
+;==================================================
+@M_KOJO_MESSAGE_COM_K70_81
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K70_81_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K70_81_1
+;-------------------------------------------------
+;記入チェック（=0,非表示,1,表示）
+LOCAL = CFLAG:70:1006
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME("フェラ") && !FLAG:시간정지
+		PRINTFORMW 「ㅇ,입으로 해달라구요！？」
+		PRINTFORMW 「ㄴ,네……괜찮아요……」
+		PRINTFORMW 「%CALLNAME:MASTER%씨가 해달라고 말한다면,저……！」
+		PRINTFORMW 「하음……읏！ 응…읏！ 쿠츄읏……%UNICODE(0x2764)% 쿠픕……%UNICODE(0x2764)%」
+		RETURN 1
+	ENDIF
+	IF FLAG:시간정지
+	ELSEIF NOWEX:MASTER:사정
+		;サディスティック
+		IF M_KOJO_K70_SADISTIC(70)
+			SELECTCASE RAND:3
+			CASE 1
+				PRINTFORMW 「응긋……긋……쌀 것 같으신가요？ 조하요,잔뜩 내어주세요%UNICODE(0x2764)%」
+				PRINTFORMW 「응%UNICODE(0x2764)% 구프읏%UNICODE(0x2764)% 응%UNICODE(0x2764)% 응,읏%UNICODE(0x2764)% 응,읏%UNICODE(0x2764)% 응%UNICODE(0x2764)%」
+			CASE 2
+				PRINTFORMW 「%CALLNAME:MASTER%씨,이렇게나 부풀어 있다니……%UNICODE(0x2764)% 제가 전부 빨아내 드릴게요%UNICODE(0x2764)%」
+				PRINTFORMW 「츄읏%UNICODE(0x2764)% 츄픗%UNICODE(0x2764)% 응긋%UNICODE(0x2764)% 구풋%UNICODE(0x2764)% 에로에로…%UNICODE(0x2764)% 구폿%UNICODE(0x2764)% 구츄읏%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「츄픗%UNICODE(0x2764)% 응긋%UNICODE(0x2764)% 응%UNICODE(0x2764)% 아어릴것 가타요？ 푸하…%UNICODE(0x2764)% 알겠어요…%UNICODE(0x2764)%」
+				PRINTFORMW 「%ONEDARI_MASTER_TINKO()%우유 잔뜩 주세요%UNICODE(0x2764)% 응푸읏%UNICODE(0x2764)% 구픗%UNICODE(0x2764)% 구폿%UNICODE(0x2764)% 」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 1
+				PRINTFORMW 「응픗%UNICODE(0x2764)% 응%UNICODE(0x2764)% 푸아…%UNICODE(0x2764)% 이대로 가버릴 것 같나요？」
+				PRINTFORMW 「부디…제 입에 내주세요……%UNICODE(0x2764)% 츄픗…%UNICODE(0x2764)% 구픗%UNICODE(0x2764)% 쯔으으읍%UNICODE(0x2764)%」
+			CASE 2
+				PRINTFORMW 「하아…%UNICODE(0x2764)% 당장이라도 가버릴 것 같네요…%UNICODE(0x2764)% 입으로 해줄 테니까요……%UNICODE(0x2764)%」
+				PRINTFORMW 「아음%UNICODE(0x2764)% 츄릅츄릅…%UNICODE(0x2764)% 응%UNICODE(0x2764)% 쿠픗%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「아아…아까부터 계속 쿠퍼액이 흐르고 있다구요……\/\/\/ 입 밖에 내고 싶으신 거에요? 네……」
+				PRINTFORMW 「핥짝…%UNICODE(0x2764)% 레로레로……%UNICODE(0x2764)% 츄풋%UNICODE(0x2764)% 응픗%UNICODE(0x2764)% 구폿%UNICODE(0x2764)%」
+			ENDSELECT
+		ENDIF
+	ELSE
+		;サディスティック
+		IF M_KOJO_K70_SADISTIC(70)
+			SELECTCASE RAND:3
+			CASE 1
+				PRINTFORMW 「%CALLNAME:MASTER%씨의 자지……%UNICODE(0x2764)%」
+				PRINTFORMW 「츄읏%UNICODE(0x2764)% 핥짜악…%UNICODE(0x2764)% 아므음%UNICODE(0x2764)% 레로%UNICODE(0x2764)%」
+			CASE 2
+				PRINTFORMW 「아하아…%UNICODE(0x2764)% 맛있네요……%UNICODE(0x2764)%」
+				PRINTFORMW 「하아음…%UNICODE(0x2764)% 구픗%UNICODE(0x2764)% 구츗%UNICODE(0x2764)% 하아%UNICODE(0x2764)% 응픗%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「입으로 먹어버릴게요ー%UNICODE(0x2764)% 핥짝핥짝…%UNICODE(0x2764)% 응츄읏%UNICODE(0x2764)% 푸흣%UNICODE(0x2764)%」
+				PRINTFORMW 「어떠시하요～？ 이분 조으신가효～？ 응픗%UNICODE(0x2764)% 쿠츄읏%UNICODE(0x2764)% 구픗%UNICODE(0x2764)%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 1
+				PRINTFORMW 「ㅇ,입으로 하는거네요……네……」
+				PRINTFORMW 「츄읏%UNICODE(0x2764)% 핥짝…%UNICODE(0x2764)% 츄픗%UNICODE(0x2764)% 쿠픕…%UNICODE(0x2764)%」
+			CASE 2
+				PRINTFORMW 「입으로 해줬으면 좋겠어요…？ 알겠어요…」
+				PRINTFORMW 「핥짝…%UNICODE(0x2764)% 레로레로……%UNICODE(0x2764)% 하아%UNICODE(0x2764)% 응픗%UNICODE(0x2764)% 쿠풋%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「그럼, 잘…잘 먹겠습니다…%UNICODE(0x2764)%」
+				PRINTFORMW 「하음……%UNICODE(0x2764)% 응픗%UNICODE(0x2764)% 쿠츗%UNICODE(0x2764)% 구풋%UNICODE(0x2764)% 으믓%UNICODE(0x2764)%」
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;82,パイズリ
+;==================================================
+@M_KOJO_MESSAGE_COM_K70_82
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K70_82_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K70_82_1
+;-------------------------------------------------
+;記入チェック（=0,非表示,1,表示）
+LOCAL = CFLAG:70:1006
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME("パイズリ") && !FLAG:시간정지
+		PRINTFORMW 「에엣！？ 가,가슴으로만 하는 건가요……？」
+		PRINTFORMW 「그런건……저한테는 무리라구요……」
+		PRINTFORMW 「시험 삼아서 인가요……ㅇ,알겠어요……」
+		RETURN 1
+	ENDIF
+	IF FLAG:시간정지
+	ELSEIF NOWEX:MASTER:사정
+		;サディスティック
+		IF M_KOJO_K70_SADISTIC(70)
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「가버릴 것 같아요？ 그럼,제 가슴으로……%UNICODE(0x2764)% 훗,읏,앗%UNICODE(0x2764)%」
+				PRINTFORMW 「핫%UNICODE(0x2764)% 핫%UNICODE(0x2764)% こんなかんじでっ%UNICODE(0x2764)% どうでしょうっ%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「응,후후…%UNICODE(0x2764)% 가버리실 것 같네요……%UNICODE(0x2764)% 제 가슴에 잔뜩 내주세요……%UNICODE(0x2764)%」
+				PRINTFORMW 「영차%UNICODE(0x2764)% 영차%UNICODE(0x2764)%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「젖가슴으로 가보고 싶다, 인가요？ ㄴ,네…ㅎ,힘낼게요……！」
+				PRINTFORMW 「으…읏！ 영차…읏！ ㅇ,열심히 하고는 있지만…！ 우읏…！」
+			CASEELSE
+				PRINTFORMW 「아…\/\/\/ 굉장히 커졌……\/\/\/ 엣, 제 가슴 때문에……？」
+				PRINTFORMW 「핫…！ 으읏…！ 핫,얼른…！싸주세요…！」
+			ENDSELECT
+		ENDIF
+	ELSE
+		;サディスティック
+		IF M_KOJO_K70_SADISTIC(70)
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「ㅍ……파이즈리를 해드릴게요%UNICODE(0x2764)% 저,저도요……！」
+				PRINTFORMW 「핫%UNICODE(0x2764)% 핫%UNICODE(0x2764)% 이런 느낌으로%UNICODE(0x2764)% 어떨까요%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「ㅂ,봉사하도록 하겠습니다…%UNICODE(0x2764)% %CALLNAME:MASTER%씨는 젖가슴을 좋아하니까요～%UNICODE(0x2764)%」
+				PRINTFORMW 「영차%UNICODE(0x2764)% 후읏%UNICODE(0x2764)% 응%UNICODE(0x2764)% 앗%UNICODE(0x2764)%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「젖가슴으로 해주었으면 해요？ ……알겠어요」
+				PRINTFORMW 「으…읏！ 영차아…앗！ 어디,어떤가요,ㄱ,기분 좋게 되고 있나요？」
+			CASEELSE
+				PRINTFORMW 「파이즈리가 좋으신 거네요……네……」
+				PRINTFORMW 「핫…！ 응…！ ㅇ,이런 느낌인 건가요…？」
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;83,素股
+;==================================================
+@M_KOJO_MESSAGE_COM_K70_83
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K70_83_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K70_83_1
+;-------------------------------------------------
+;記入チェック（=0,非表示,1,表示）
+LOCAL = CFLAG:70:1006
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM) && !FLAG:시간정지
+		IF TALENT:70:처녀
+			PRINTFORMW 「ㅈ,제가 위에……？」
+			PRINTFORMW 「엣,엣,ㅇ……이거……ㅅ,싫어……들어가버릴 것 같아요……\/\/\/」
+			PRINTFORMW 「ㄱ,괜찮은 건가요……\/\/\/ 네……」
+			PRINTFORMW 「ㅇ,움직이는 거네요……응\/\/\/ 후읏……\/\/\/」
+		ELSE
+			PRINTFORMW 「ㅇ,위에 올라타 있으면……삽입할 수가 없나요……？」
+			PRINTFORMW 「알겠어요……그럼……」
+			PRINTFORMW 「응,읏……\/\/\/ 후읏\/\/\/」
+		ENDIF
+		PRINTFORMW 「아아……%UNICODE(0x2764)% 이,이거 기분 좋아요……\/\/\/」
+		RETURN 1
+	ENDIF
+	IF FLAG:시간정지
+	ELSEIF NOWEX:MASTER:사정
+		;サディスティック
+		IF M_KOJO_K70_SADISTIC(70)
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「잇%UNICODE(0x2764)% 갈 것 같은%UNICODE(0x2764)% 건가요,읏%UNICODE(0x2764)% 아읏%UNICODE(0x2764)%」
+				PRINTFORMW 「그러면 이대로%UNICODE(0x2764)% 응%UNICODE(0x2764)% 제가 보내드릴게요%UNICODE(0x2764)% 응,읏%UNICODE(0x2764)% 응,앗%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「하앗%UNICODE(0x2764)% 아앗%UNICODE(0x2764)% 기분 좋아요오%UNICODE(0x2764)% %CALLNAME:MASTER%씨도 %UNICODE(0x2764)% 같이%UNICODE(0x2764)%」
+				PRINTFORMW 「기분 좋아지자구요%UNICODE(0x2764)% 이대로 해버리자고요%UNICODE(0x2764)% 응,읏%UNICODE(0x2764)% 응앗%UNICODE(0x2764)%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「응,읏%UNICODE(0x2764)% 앗%UNICODE(0x2764)% 후앗%UNICODE(0x2764)% %CALLNAME:MASTER%씨, 그러신가요？」
+				PRINTFORMW 「좋아요오%UNICODE(0x2764)% 이대로%UNICODE(0x2764)% 내버려%UNICODE(0x2764)% 주세요%UNICODE(0x2764)% 아응,읏%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「스마타로 가버리고 싶은 건가요？ 그러면 제가 도와드릴게요……%UNICODE(0x2764)%」
+				PRINTFORMW 「응,읏%UNICODE(0x2764)% 핫%UNICODE(0x2764)% %CALLNAME:MASTER%씨,읏%UNICODE(0x2764)% 그대로%UNICODE(0x2764)% 내주세요%UNICODE(0x2764)%」
+			ENDSELECT
+		ENDIF
+	ELSE
+		;サディスティック
+		IF M_KOJO_K70_SADISTIC(70)
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「후아～～%UNICODE(0x2764)% %CALLNAME:MASTER%씨,기분 좋아요～%UNICODE(0x2764)%」
+				PRINTFORMW 「%CALLNAME:MASTER%씨도 기분 좋으신가요～？ 아앗,아아～～읏%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「제가 많이 기분좋게 해드릴게요%UNICODE(0x2764)%」
+				PRINTFORMW 「응,하앗%UNICODE(0x2764)% 응～읏%UNICODE(0x2764)% 응,앗～～%UNICODE(0x2764)% 기분 좋아아～～%UNICODE(0x2764)% 멈추지 않아요～%UNICODE(0x2764)%」
+			ENDSELECT
+		ELSEIF TALENT:70:처녀
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「스마타인가요…\/\/\/ 조금 무섭네요……」
+				PRINTFORMW 「그래도 이거,저도 기분이 좋아져서……%UNICODE(0x2764)% 아앙%UNICODE(0x2764)% 응,아……%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「ㄷ,들어가지 않는 거지요……\/\/\/ 알겠어요……」
+				PRINTFORMW 「하아……%UNICODE(0x2764)% 앙……%UNICODE(0x2764)% %CALLNAME:MASTER%씨……기분 좋아요～%UNICODE(0x2764)%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「스마타네요…♪ 이거,저도 기분 좋아서……%UNICODE(0x2764)%」
+				PRINTFORMW 「후아～～%UNICODE(0x2764)% 응,앗%UNICODE(0x2764)% 아아～읏%UNICODE(0x2764)% %CALLNAME:MASTER%씨이…%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「아하……%UNICODE(0x2764)% 이거, 들어갈 것만 같아요%UNICODE(0x2764)%」
+				PRINTFORMW 「괜찮아…천천히 하면……%UNICODE(0x2764)% 아앗%UNICODE(0x2764)% 응,읏%UNICODE(0x2764)% 하앗%UNICODE(0x2764)%」
+				;入れちゃいます
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;84,泡踊り
+;==================================================
+@M_KOJO_MESSAGE_COM_K70_84
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K70_84_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K70_84_1
+;-------------------------------------------------
+;記入チェック（=0,非表示,1,表示）
+LOCAL = CFLAG:70:1006
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM) && !FLAG:시간정지
+		PRINTFORMW 「거품춤인가요……？」
+		PRINTFORMW 「ㅇ,알고는 있어요……！ ㄱ,그렇지만 막상 하라고 하면……\/\/\/」
+		PRINTFORMW 「으음……%UNICODE(0x2764)% 이런 느낌인가요……？」
+		PRINTFORMW 「영차…%UNICODE(0x2764)% 영차…%UNICODE(0x2764)% 아응,읏%UNICODE(0x2764)%」
+		RETURN 1
+	ENDIF
+	IF FLAG:시간정지
+	ELSEIF NOWEX:MASTER:사정
+		;サディスティック
+		IF M_KOJO_K70_SADISTIC(70)
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「갈 것 같으신가요？ 그러면 제가 편안하게 해드릴게요%UNICODE(0x2764)%」
+				PRINTFORMW 「영차앗%UNICODE(0x2764)% 영차앗%UNICODE(0x2764)% 아아,응,읏%UNICODE(0x2764)% 응,앗%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「거품으로 가버리자구요%UNICODE(0x2764)% 영차앗%UNICODE(0x2764)% 하아 응,읏%UNICODE(0x2764)% 아응,읏%UNICODE(0x2764)%」
+				PRINTFORMW 「가버려 주세요%UNICODE(0x2764)% 응,읏%UNICODE(0x2764)% 물컹물컹거려서 더%UNICODE(0x2764)% 제가 깨끗하게 해드릴게요%UNICODE(0x2764)%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「영차앗…%UNICODE(0x2764)% 영차앗…%UNICODE(0x2764)% 에？ 가버릴것 같아요？」
+				PRINTFORMW 「그러면 조금 격렬하게 할게요…%UNICODE(0x2764)% 응,읏%UNICODE(0x2764)% 응,하앗%UNICODE(0x2764)% 응,읏%UNICODE(0x2764)% 응앗%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「거품춤으로 가버리는 건가요？ 물컹물컹하게 되어버린다구요\/\/\/」
+				PRINTFORMW 「그대로 씻었으면 좋겠어요…？ 네……\/\/\/」
+				PRINTFORMW 「영차앗…%UNICODE(0x2764)% 영차앗…%UNICODE(0x2764)% 앗%UNICODE(0x2764)%」
+				PRINTFORMW 「%CALLNAME:MASTER%씨,읏…%UNICODE(0x2764)% 가…%UNICODE(0x2764)% 주세요오…%UNICODE(0x2764)%」
+			ENDSELECT
+		ENDIF
+	ELSE
+		;サディスティック
+		IF M_KOJO_K70_SADISTIC(70)
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「%CALLNAME:MASTER%씨에게는 제가 서비스해드릴게요%UNICODE(0x2764)%」
+				PRINTFORMW 「영차앗%UNICODE(0x2764)% 영차앗%UNICODE(0x2764)% 아아,응,읏%UNICODE(0x2764)% 응앗%UNICODE(0x2764)%」」
+			CASEELSE
+				PRINTFORMW 「후,후읏%UNICODE(0x2764)% 함께 거품투성이가 되어버리자구요♪」
+				PRINTFORMW 「후아～～%UNICODE(0x2764)% 응,아%UNICODE(0x2764)% 아아,～읏%UNICODE(0x2764)% %CALLNAME:MASTER%씨이…%UNICODE(0x2764)%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「거품춤이네요…♪ 이거,저도 기분이 좋아서……%UNICODE(0x2764)%」
+				PRINTFORMW 「후아～～%UNICODE(0x2764)% 응,아%UNICODE(0x2764)% 아아,～읏%UNICODE(0x2764)% %CALLNAME:MASTER%씨이…%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「알겠어요…%UNICODE(0x2764)% 제가 온몸으로 씻겨드릴게요%UNICODE(0x2764)%」
+				PRINTFORMW 「영차앗%UNICODE(0x2764)% 영차앗%UNICODE(0x2764)% 후앗%UNICODE(0x2764)% 아응,읏%UNICODE(0x2764)%」」
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;85,足扱き
+;==================================================
+@M_KOJO_MESSAGE_COM_K70_85
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K70_85_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K70_85_1
+;-------------------------------------------------
+;記入チェック（=0,非表示,1,表示）
+LOCAL = CFLAG:70:1006
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM) && !FLAG:시간정지
+		PRINTFORMW 「에에……발로 하고 싶은건가요？」
+		PRINTFORMW 「%CALLNAME:MASTER%씨,읏,그런걸 좋아했던 건가요……\/\/\/」
+		RETURN 1
+	ENDIF
+	;足コキは常時サディスティック
+	IF FLAG:시간정지
+	ELSE
+		SELECTCASE RAND:2
+		CASE 1
+			PRINTFORMW 「아하♪ 발로 흝어지는건 어떤 기분인가요？」
+			PRINTFORMW 「분한가요？ 기분 좋은가요？」
+		CASEELSE
+			PRINTFORMW 「우후%UNICODE(0x2764)% %CALLNAME:MASTER%씨의 자지, 귀여워요%UNICODE(0x2764)%」
+			PRINTFORMW 「봐요♪ 여기를 만지면 실룩거리면서……%UNICODE(0x2764)% 무척 기분 좋은 것 같아요%UNICODE(0x2764)%」
+		ENDSELECT
+		IF NOWEX:MASTER:사정
+			SELECTCASE RAND:2
+			CASE 1
+				PRINTFORMW 「어라？ 가버릴것 같은거네요%UNICODE(0x2764)% 좋아요오%UNICODE(0x2764)% 다리로 가버리라구요%UNICODE(0x2764)%」
+				PRINTFORMW 「여기가 좋은 거지요♪ 보세요%UNICODE(0x2764)% 자아%UNICODE(0x2764)% 가버려라%UNICODE(0x2764)% 가버려라ー앗%UNICODE(0x2764)%」
+			CASEELSE
+				PRINTFORMW 「어라？ 가버리고 싶은거에요？ %CALLNAME:MASTER%씨는 변태씨였군요……」
+				PRINTFORMW 「알고 있어요？ 이런 것들로 가버리다니 변태라구요？ 변태씨%UNICODE(0x2764)% 벼・언・태・애・씨%UNICODE(0x2764)% 퓻퓻%UNICODE(0x2764)% 퓨우ー웃%UNICODE(0x2764)%」
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;88,バキュームフェラ
+;==================================================
+@M_KOJO_MESSAGE_COM_K70_88
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K70_88_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K70_88_1
+;-------------------------------------------------
+;記入チェック（=0,非表示,1,表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;記入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;時姦中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;연모
+	ELSEIF TALENT:연모
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:괘씸각인 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
