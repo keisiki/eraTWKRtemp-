@@ -53,7 +53,7 @@ NEXT
 #DIM 선택중캐릭터ID
 #DIMS KARADAMEATE
 PRINTL
-PRINTL □ 개인 정보 □-----------------------------------------------------------------------
+PRINTL □ 개인 정보 □----------------------------------------------------------------------
 PRINTL  
 IF 선택중캐릭터ID == MASTER
 	IF CFLAG:MASTER:수면
@@ -115,13 +115,13 @@ ENDIF
 PRINTL 　
 IF 선택중캐릭터ID == RANDOM_CHARANUM
 	;현상, 복잡한 종족 분기 등은 없음으로
-	PRINTL □ 캐릭터 소개 □---------------------------------------------------------------------
+	PRINTL □ 캐릭터 소개 □--------------------------------------------------------------------
 	PRINTL 
 	PRINTFORML ∼모브 소녀∼　●종족：인간　●능력：%CSTR:RANDOM_CHARANUM:모브코능력%
 	PRINTFORML %CSTR:RANDOM_CHARANUM:모브코프로필1%
 	PRINTFORML %CSTR:RANDOM_CHARANUM:모브코프로필2%
 ELSEIF CSVCSTR(선택중캐릭터ID, 10) != ""
-	PRINTL □ 캐릭터 소개 □---------------------------------------------------------------------
+	PRINTL □ 캐릭터 소개 □--------------------------------------------------------------------
 	PRINTL 
 	;캐릭터 소개문을 말의 전개에 의해 개변하고 싶은 경우 「@CHARA_INFO_KOJO_KX」를 사용한다
 	TRYCALLFORM CHARA_INFO_KOJO_K{선택중캐릭터ID}
@@ -217,7 +217,7 @@ IF TALENT:선택중캐릭터ID:임신소망
 ENDIF
 CALL Valentine_History(선택중캐릭터ID)
 PRINTFORML 
-PRINTL □ 탄막스킬 □---------------------------------------------------------------------
+PRINTL □ 탄막스킬 □-----------------------------------------------------------------------
 CALL DANMAKU_OPPONENT_STATUS(선택중캐릭터ID, 1)
 
 @체류시간표시(선택중캐릭터ID)
@@ -842,7 +842,7 @@ IF FLAG:연회개최플래그
 ENDIF
 PRINTL
 IF FLAG:대본반환기한 >= 2
-	FOR LOCAL, 1,6
+	FOR LOCAL, 1,11
 		SIF ITEM:(100 + LOCAL)
 			PRINTFORML 빌린 책：%ITEMNAME:(100 + LOCAL)%
 	NEXT
